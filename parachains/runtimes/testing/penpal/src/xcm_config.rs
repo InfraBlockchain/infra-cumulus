@@ -35,11 +35,11 @@ use frame_support::{
 	},
 	weights::Weight,
 };
+use infrablockspace_parachain::primitives::Sibling;
+use infrablockspace_runtime_common::impls::ToAuthor;
 use pallet_asset_tx_payment::HandleCredit;
 use pallet_xcm::XcmPassthrough;
 use parachains_common::xcm_config::{DenyReserveTransferToRelayChain, DenyThenTry};
-use polkadot_parachain::primitives::Sibling;
-use polkadot_runtime_common::impls::ToAuthor;
 use sp_runtime::traits::Zero;
 use xcm::latest::prelude::*;
 use xcm_builder::{
@@ -206,7 +206,8 @@ pub struct AssetsToBlockAuthor<R>(PhantomData<R>);
 impl<R> HandleCredit<AccountIdOf<R>, pallet_assets::Pallet<R>> for AssetsToBlockAuthor<R>
 where
 	R: pallet_authorship::Config + pallet_assets::Config,
-	AccountIdOf<R>: From<polkadot_primitives::AccountId> + Into<polkadot_primitives::AccountId>,
+	AccountIdOf<R>:
+		From<infrablockspace_primitives::AccountId> + Into<infrablockspace_primitives::AccountId>,
 {
 	fn handle_credit(credit: CreditOf<AccountIdOf<R>, pallet_assets::Pallet<R>>) {
 		if let Some(author) = pallet_authorship::Pallet::<R>::author() {

@@ -5,7 +5,9 @@ authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [ "derive" ] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
 log = { version = "0.4.17", default-features = false }
 
 # Substrate
@@ -14,8 +16,8 @@ sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", default-fe
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-# Polkadot
-polkadot-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+# infrablockspace
+infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm-executor = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm-builder = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
@@ -25,14 +27,14 @@ xcm-builder = { git = "https://github.com/InfraBlockchain/infrablockspace", defa
 cumulus-primitives-core = { path = "../core", default-features = false }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
 	"codec/std",
 	"frame-support/std",
 	"sp-runtime/std",
 	"sp-std/std",
 	"sp-io/std",
-	"polkadot-runtime-common/std",
+	"infrablockspace-runtime-common/std",
 	"cumulus-primitives-core/std",
 	"xcm/std",
 	"xcm-builder/std",

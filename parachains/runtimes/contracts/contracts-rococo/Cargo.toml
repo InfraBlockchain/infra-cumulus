@@ -11,7 +11,9 @@ targets = ["x86_64-unknown-linux-gnu"]
 substrate-wasm-builder = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
 hex-literal = { version = "0.3.4", optional = true }
 log = { version = "0.4.17", default-features = false }
 scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
@@ -50,12 +52,12 @@ pallet-sudo = { git = "https://github.com/InfraBlockchain/infra-substrate", defa
 pallet-contracts = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-contracts-primitives = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-# Polkadot
+# infrablockspace
 kusama-runtime-constants = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 pallet-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-polkadot-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-polkadot-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-polkadot-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm-builder = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm-executor = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
@@ -75,9 +77,7 @@ parachain-info = { path = "../../../pallets/parachain-info", default-features = 
 parachains-common = { path = "../../../common", default-features = false }
 
 [features]
-default = [
-	"std",
-]
+default = ["std"]
 std = [
 	"codec/std",
 	"log/std",
@@ -104,9 +104,9 @@ std = [
 	"pallet-xcm/std",
 	"parachain-info/std",
 	"parachains-common/std",
-	"polkadot-core-primitives/std",
-	"polkadot-parachain/std",
-	"polkadot-runtime-common/std",
+	"infrablockspace-core-primitives/std",
+	"infrablockspace-parachain/std",
+	"infrablockspace-runtime-common/std",
 	"sp-api/std",
 	"sp-block-builder/std",
 	"sp-consensus-aura/std",

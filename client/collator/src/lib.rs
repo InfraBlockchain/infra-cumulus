@@ -29,12 +29,12 @@ use sp_core::traits::SpawnNamed;
 use sp_runtime::traits::{Block as BlockT, HashFor, Header as HeaderT, Zero};
 
 use cumulus_client_consensus_common::ParachainConsensus;
+use infrablockspace_primitives::{CollatorPair, Id as ParaId};
 use polkadot_node_primitives::{
 	BlockData, Collation, CollationGenerationConfig, CollationResult, MaybeCompressedPoV, PoV,
 };
 use polkadot_node_subsystem::messages::{CollationGenerationMessage, CollatorProtocolMessage};
 use polkadot_overseer::Handle as OverseerHandle;
-use polkadot_primitives::{CollatorPair, Id as ParaId};
 
 use codec::{Decode, Encode};
 use futures::{channel::oneshot, FutureExt};

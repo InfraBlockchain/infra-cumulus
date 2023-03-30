@@ -15,6 +15,7 @@
 // along with Polkadot.  If not, see <http://www.gnu.org/licenses/>.
 
 use cumulus_relay_chain_interface::RelayChainError;
+use infrablockspace_primitives::CollatorPair;
 use lru::LruCache;
 use polkadot_node_network_protocol::{
 	peer_set::PeerSetProtocolNames,
@@ -28,7 +29,6 @@ use polkadot_overseer::{
 	BlockInfo, DummySubsystem, MetricsTrait, Overseer, OverseerHandle, OverseerMetrics, SpawnGlue,
 	KNOWN_LEAVES_CACHE_SIZE,
 };
-use polkadot_primitives::CollatorPair;
 use polkadot_service::{
 	overseer::{
 		AvailabilityRecoverySubsystem, CollationGenerationSubsystem, CollatorProtocolSubsystem,

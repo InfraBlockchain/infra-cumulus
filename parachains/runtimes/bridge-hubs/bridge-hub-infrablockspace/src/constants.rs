@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Parity Technologies (UK) Ltd.
+// Copyright (C) 2023 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,30 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod account {
-	use frame_support::PalletId;
-	use sp_runtime::AccountId32;
-
-	/// Relay Chain treasury pallet id, used to convert into AccountId
-	pub const RELAY_TREASURY_PALL_ID: PalletId = PalletId(*b"py/trsry");
-	/// account used to temporarily deposit slashed imbalance before teleporting
-	pub const SLASHED_IMBALANCE_ACC_ID: AccountId32 = AccountId32::new([7u8; 32]);
-}
-
 pub mod currency {
-	use polkadot_core_primitives::Balance;
-	use polkadot_runtime_constants as constants;
+	use infrablockspace_core_primitives::Balance;
+	use infrablockspace_runtime_constants as constants;
 
 	/// The existential deposit. Set to 1/10 of its parent Relay Chain.
 	pub const EXISTENTIAL_DEPOSIT: Balance = constants::currency::EXISTENTIAL_DEPOSIT / 10;
 
 	pub const UNITS: Balance = constants::currency::UNITS;
-	pub const DOLLARS: Balance = constants::currency::DOLLARS;
 	pub const CENTS: Balance = constants::currency::CENTS;
 	pub const MILLICENTS: Balance = constants::currency::MILLICENTS;
 
 	pub const fn deposit(items: u32, bytes: u32) -> Balance {
-		// 1/100 of Polkadot.
+		// 1/100 of Polkadot
 		constants::currency::deposit(items, bytes) / 100
 	}
 }
@@ -47,12 +36,9 @@ pub mod fee {
 		constants::ExtrinsicBaseWeight, WeightToFeeCoefficient, WeightToFeeCoefficients,
 		WeightToFeePolynomial,
 	};
-	use polkadot_core_primitives::Balance;
+	use infrablockspace_core_primitives::Balance;
 	use smallvec::smallvec;
 	pub use sp_runtime::Perbill;
-
-	/// The block saturation level. Fees will be updates based on this value.
-	pub const TARGET_BLOCK_FULLNESS: Perbill = Perbill::from_percent(25);
 
 	/// Handles converting a weight scalar to a fee value, based on the scale and granularity of the
 	/// node's balance type.
@@ -69,7 +55,7 @@ pub mod fee {
 		type Balance = Balance;
 		fn polynomial() -> WeightToFeeCoefficients<Self::Balance> {
 			// in Polkadot, extrinsic base weight (smallest non-zero weight) is mapped to 1/10 CENT:
-			// in a parachain, we map to 1/10 of that, or 1/100 CENT
+			// in BridgeHub, we map to 1/10 of that, or 1/100 CENT
 			let p = super::currency::CENTS;
 			let q = 100 * Balance::from(ExtrinsicBaseWeight::get().ref_time());
 			smallvec![WeightToFeeCoefficient {

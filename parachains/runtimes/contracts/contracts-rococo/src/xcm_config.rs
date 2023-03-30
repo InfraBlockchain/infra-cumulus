@@ -23,9 +23,9 @@ use frame_support::{
 	weights::Weight,
 };
 use frame_system::EnsureRoot;
+use infrablockspace_parachain::primitives::Sibling;
 use pallet_xcm::{EnsureXcm, IsMajorityOfBody, XcmPassthrough};
 use parachains_common::xcm_config::{DenyReserveTransferToRelayChain, DenyThenTry};
-use polkadot_parachain::primitives::Sibling;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,

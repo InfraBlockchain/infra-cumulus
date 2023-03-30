@@ -24,8 +24,8 @@ use polkadot_node_network_protocol::{
 	request_response::{v1, IncomingRequest, IncomingRequestReceiver, Protocol, ReqProtocolNames},
 };
 
+use infrablockspace_primitives::CollatorPair;
 use polkadot_node_subsystem_util::metrics::prometheus::Registry;
-use polkadot_primitives::CollatorPair;
 
 use sc_authority_discovery::Service as AuthorityDiscoveryService;
 use sc_network::{Event, NetworkService};

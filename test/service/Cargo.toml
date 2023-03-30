@@ -12,7 +12,7 @@ path = "src/main.rs"
 async-trait = "0.1.63"
 clap = { version = "4.1.6", features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "3.0.0" }
-criterion = { version = "0.4.0", features = [ "async_tokio" ] }
+criterion = { version = "0.4.0", features = ["async_tokio"] }
 jsonrpsee = { version = "0.16.2", features = ["server"] }
 rand = "0.8.5"
 serde = { version = "1.0.152", features = ["derive"] }
@@ -49,13 +49,13 @@ sp-trie = { git = "https://github.com/InfraBlockchain/infra-substrate", branch =
 substrate-test-client = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sc-cli = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 polkadot-test-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
 cumulus-client-cli = { path = "../../client/cli" }
@@ -78,7 +78,7 @@ cumulus-client-pov-recovery = { path = "../../client/pov-recovery" }
 futures = "0.3.26"
 portpicker = "0.1.1"
 
-# Polkadot dependencies
+# infrablockspace dependencies
 polkadot-test-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Substrate dependencies

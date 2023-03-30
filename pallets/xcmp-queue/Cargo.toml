@@ -5,7 +5,9 @@ authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", features = [ "derive" ], default-features = false }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = [
+	"derive",
+], default-features = false }
 log = { version = "0.4.17", default-features = false }
 rand_chacha = { version = "0.3.0", default-features = false }
 scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
@@ -17,8 +19,8 @@ sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", default-fe
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-# Polkadot
-polkadot-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+# infrablockspace
+infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm-executor = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 
@@ -34,14 +36,14 @@ frame-benchmarking = { default-features = false, optional = true, git = "https:/
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 pallet-balances = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
+# infrablockspace
 xcm-builder = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
 cumulus-pallet-parachain-system = { path = "../parachain-system" }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
 	"codec/std",
 	"scale-info/std",
@@ -49,7 +51,7 @@ std = [
 	"frame-support/std",
 	"frame-system/std",
 	"log/std",
-	"polkadot-runtime-common/std",
+	"infrablockspace-runtime-common/std",
 	"sp-io/std",
 	"sp-runtime/std",
 	"sp-std/std",

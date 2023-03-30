@@ -1,13 +1,13 @@
 [package]
-name = "polkadot-parachain-bin"
+name = "infrablockspace-parachain-bin"
 version = "0.9.370"
 authors = ["Parity Technologies <admin@parity.io>"]
 build = "build.rs"
 edition = "2021"
-description = "Runs a polkadot parachain node which could be a collator."
+description = "Runs a infrablockspace parachain node which could be a collator."
 
 [[bin]]
-name = "polkadot-parachain"
+name = "infrablockspace-parachain"
 path = "src/main.rs"
 
 [dependencies]
@@ -26,11 +26,11 @@ seedling-runtime = { path = "../parachains/runtimes/starters/seedling" }
 statemint-runtime = { path = "../parachains/runtimes/assets/statemint" }
 statemine-runtime = { path = "../parachains/runtimes/assets/statemine" }
 westmint-runtime = { path = "../parachains/runtimes/assets/westmint" }
-collectives-polkadot-runtime = { path = "../parachains/runtimes/collectives/collectives-polkadot" }
+collectives-infrablockspace-runtime = { path = "../parachains/runtimes/collectives/collectives-infrablockspace" }
 contracts-rococo-runtime = { path = "../parachains/runtimes/contracts/contracts-rococo" }
 bridge-hub-rococo-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-rococo" }
 bridge-hub-kusama-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-kusama" }
-bridge-hub-polkadot-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-polkadot" }
+bridge-hub-infrablockspace-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-infrablockspace" }
 penpal-runtime = { path = "../parachains/runtimes/testing/penpal" }
 jsonrpsee = { version = "0.16.2", features = ["server"] }
 parachains-common = { path = "../parachains/common" }
@@ -74,10 +74,10 @@ frame-rpc-system = { package = "substrate-frame-rpc-system", git = "https://gith
 pallet-transaction-payment-rpc = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 substrate-state-trie-migration-rpc = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
@@ -101,12 +101,14 @@ tempfile = "3.4.0"
 tokio = { version = "1.25.0", features = ["macros", "time", "parking_lot"] }
 wait-timeout = "0.2"
 # purge_chain_works works with rococo-local and needs to allow this
-polkadot-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master", features = ["rococo-native"] }
+infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master", features = [
+	"rococo-native",
+] }
 
 [features]
 default = []
 runtime-benchmarks = [
-	"polkadot-service/runtime-benchmarks",
+	"infrablockspace-service/runtime-benchmarks",
 	"statemint-runtime/runtime-benchmarks",
 	"statemine-runtime/runtime-benchmarks",
 	"westmint-runtime/runtime-benchmarks",

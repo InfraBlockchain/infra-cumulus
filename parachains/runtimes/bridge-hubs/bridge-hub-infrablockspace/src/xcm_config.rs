@@ -22,12 +22,12 @@ use frame_support::{
 	match_types, parameter_types,
 	traits::{ConstU32, Contains, Everything, Nothing},
 };
+use infrablockspace_parachain::primitives::Sibling;
+use infrablockspace_runtime_common::impls::ToAuthor;
 use pallet_xcm::XcmPassthrough;
 use parachains_common::xcm_config::{
 	ConcreteNativeAssetFrom, DenyReserveTransferToRelayChain, DenyThenTry,
 };
-use polkadot_parachain::primitives::Sibling;
-use polkadot_runtime_common::impls::ToAuthor;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,

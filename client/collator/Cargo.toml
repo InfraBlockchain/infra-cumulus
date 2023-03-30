@@ -5,7 +5,7 @@ authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", features = [ "derive" ] }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"] }
 futures = "0.3.21"
 parking_lot = "0.12.0"
 tracing = "0.1.25"
@@ -17,11 +17,11 @@ sp-consensus = { git = "https://github.com/InfraBlockchain/infra-substrate", bra
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
 cumulus-client-consensus-common = { path = "../consensus/common" }
@@ -36,8 +36,8 @@ sp-maybe-compressed-blob = { git = "https://github.com/InfraBlockchain/infra-sub
 sp-state-machine = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-tracing = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-node-subsystem-test-helpers = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-node-subsystem-test-helpers = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
 cumulus-test-client = { path = "../../test/client" }
