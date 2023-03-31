@@ -6,7 +6,9 @@ edition = "2021"
 description = "Adds functionality to migrate from a Solo to a Parachain"
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
 scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
 
 # Substrate
@@ -16,14 +18,14 @@ pallet-sudo = { git = "https://github.com/InfraBlockchain/infra-substrate", defa
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-# Polkadot
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+# infrablockspace
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 
 # Cumulus
 cumulus-pallet-parachain-system = { default-features = false, path = "../parachain-system" }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
 	"codec/std",
 	"scale-info/std",
@@ -31,7 +33,7 @@ std = [
 	"frame-support/std",
 	"frame-system/std",
 	"pallet-sudo/std",
-	"polkadot-primitives/std",
+	"infrablockspace-primitives/std",
 	"sp-runtime/std",
 	"sp-std/std",
 ]

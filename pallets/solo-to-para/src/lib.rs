@@ -19,8 +19,8 @@
 use cumulus_pallet_parachain_system as parachain_system;
 use frame_support::pallet_prelude::*;
 use frame_system::pallet_prelude::*;
+use infrablockspace_primitives::PersistedValidationData;
 pub use pallet::*;
-use polkadot_primitives::PersistedValidationData;
 use sp_std::vec::Vec;
 
 #[frame_support::pallet]

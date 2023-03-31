@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 async-trait = "0.1.63"
-codec = { package = "parity-scale-codec", version = "3.0.0", features = [ "derive" ] }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"] }
 futures = "0.3.26"
 futures-timer = "3.0.2"
 parking_lot = "0.12.1"
@@ -21,10 +21,10 @@ sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch =
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-state-machine = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
 cumulus-relay-chain-interface = { path = "../relay-chain-interface" }
@@ -43,8 +43,8 @@ sp-keyring = { git = "https://github.com/InfraBlockchain/infra-substrate", branc
 sp-keystore = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 substrate-test-utils = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-client = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-client = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 polkadot-test-client = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus

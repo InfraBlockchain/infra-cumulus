@@ -6,7 +6,7 @@ description = "Cumulus-specific networking protocol"
 edition = "2021"
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", features = [ "derive" ] }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"] }
 futures = "0.3.26"
 futures-timer = "3.0.2"
 rand = "0.8.5"
@@ -19,15 +19,15 @@ sp-consensus = { git = "https://github.com/InfraBlockchain/infra-substrate", bra
 sp-maybe-compressed-blob = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
 cumulus-primitives-core = { path = "../../primitives/core" }
-cumulus-relay-chain-interface = {path = "../relay-chain-interface"}
+cumulus-relay-chain-interface = { path = "../relay-chain-interface" }
 async-trait = "0.1.64"
 
 [dev-dependencies]

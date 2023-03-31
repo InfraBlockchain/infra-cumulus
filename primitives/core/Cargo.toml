@@ -5,7 +5,9 @@ authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [ "derive" ] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
 
 # Substrate
 sp-api = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
@@ -13,21 +15,21 @@ sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", defau
 sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-trie = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-# Polkadot
-polkadot-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-polkadot-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+# infrablockspace
+infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
 	"codec/std",
 	"sp-api/std",
 	"sp-runtime/std",
 	"sp-std/std",
 	"sp-trie/std",
-	"polkadot-core-primitives/std",
-	"polkadot-parachain/std",
-	"polkadot-primitives/std",
+	"infrablockspace-core-primitives/std",
+	"infrablockspace-parachain/std",
+	"infrablockspace-primitives/std",
 ]

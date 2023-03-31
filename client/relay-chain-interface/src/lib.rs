@@ -16,8 +16,8 @@
 
 use std::{collections::BTreeMap, pin::Pin, sync::Arc};
 
-use polkadot_overseer::prometheus::PrometheusError;
-use polkadot_service::SubstrateServiceError;
+use infrablockspace_overseer::prometheus::PrometheusError;
+use infrablockspace_service::SubstrateServiceError;
 use sc_client_api::StorageProof;
 
 use futures::Stream;
@@ -34,7 +34,7 @@ pub use cumulus_primitives_core::{
 	},
 	InboundDownwardMessage, ParaId, PersistedValidationData,
 };
-pub use polkadot_overseer::Handle as OverseerHandle;
+pub use infrablockspace_overseer::Handle as OverseerHandle;
 pub use sp_state_machine::StorageValue;
 
 pub type RelayChainResult<T> = Result<T, RelayChainError>;
@@ -62,7 +62,7 @@ pub enum RelayChainError {
 	#[error("Scale codec deserialization error: {0}")]
 	DeserializationError(CodecError),
 	#[error("Polkadot service error: {0}")]
-	ServiceError(#[from] polkadot_service::Error),
+	ServiceError(#[from] infrablockspace_service::Error),
 	#[error("Substrate service error: {0}")]
 	SubServiceError(#[from] SubstrateServiceError),
 	#[error("Prometheus error: {0}")]

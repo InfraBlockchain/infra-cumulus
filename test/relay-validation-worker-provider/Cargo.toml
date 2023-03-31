@@ -7,8 +7,8 @@ build = "build.rs"
 
 [dependencies]
 
-# Polkadot
-polkadot-node-core-pvf = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-node-core-pvf = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 [build-dependencies]
 toml = "0.7.2"

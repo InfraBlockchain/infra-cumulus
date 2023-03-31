@@ -30,7 +30,7 @@ pub use bytes;
 pub use codec::decode_from_bytes;
 #[cfg(not(feature = "std"))]
 #[doc(hidden)]
-pub use polkadot_parachain;
+pub use infrablockspace_parachain;
 #[cfg(not(feature = "std"))]
 #[doc(hidden)]
 pub use sp_runtime::traits::GetRuntimeBlockType;
@@ -38,14 +38,14 @@ pub use sp_runtime::traits::GetRuntimeBlockType;
 #[doc(hidden)]
 pub use sp_std;
 
-/// Basically the same as [`ValidationParams`](polkadot_parachain::primitives::ValidationParams),
+/// Basically the same as [`ValidationParams`](infrablockspace_parachain::primitives::ValidationParams),
 /// but a little bit optimized for our use case here.
 ///
 /// `block_data` and `head_data` are represented as [`bytes::Bytes`] to make them reuse
 /// the memory of the input parameter of the exported `validate_blocks` function.
 ///
 /// The layout of this type must match exactly the layout of
-/// [`ValidationParams`](polkadot_parachain::primitives::ValidationParams) to have the same
+/// [`ValidationParams`](infrablockspace_parachain::primitives::ValidationParams) to have the same
 /// SCALE encoding.
 #[derive(codec::Decode)]
 #[cfg_attr(feature = "std", derive(codec::Encode))]

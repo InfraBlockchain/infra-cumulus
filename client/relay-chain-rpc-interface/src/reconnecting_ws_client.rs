@@ -27,6 +27,7 @@ use futures::{
 	stream::FuturesUnordered,
 	FutureExt, StreamExt,
 };
+use infrablockspace_service::TaskManager;
 use jsonrpsee::{
 	core::{
 		client::{Client as JsonRpcClient, ClientT, Subscription, SubscriptionClientT},
@@ -37,7 +38,6 @@ use jsonrpsee::{
 	ws_client::WsClientBuilder,
 };
 use lru::LruCache;
-use polkadot_service::TaskManager;
 use std::{num::NonZeroUsize, sync::Arc};
 use tokio::sync::mpsc::{
 	channel as tokio_channel, Receiver as TokioReceiver, Sender as TokioSender,

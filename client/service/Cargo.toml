@@ -28,8 +28,8 @@ sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch =
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-transaction-pool = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
-# Polkadot
-polkadot-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+# infrablockspace
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
 
 # Cumulus
 cumulus-client-cli = { path = "../cli" }

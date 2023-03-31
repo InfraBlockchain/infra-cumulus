@@ -18,21 +18,21 @@ use collator_overseer::{CollatorOverseerGenArgs, NewMinimalNode};
 
 use cumulus_relay_chain_interface::{RelayChainError, RelayChainInterface, RelayChainResult};
 use cumulus_relay_chain_rpc_interface::{RelayChainRpcInterface, Url};
-use polkadot_network_bridge::{peer_sets_info, IsAuthority};
-use polkadot_node_network_protocol::{
+use infrablockspace_network_bridge::{peer_sets_info, IsAuthority};
+use infrablockspace_node_network_protocol::{
 	peer_set::PeerSetProtocolNames,
 	request_response::{v1, IncomingRequest, IncomingRequestReceiver, Protocol, ReqProtocolNames},
 };
 
-use polkadot_node_subsystem_util::metrics::prometheus::Registry;
-use polkadot_primitives::CollatorPair;
+use infrablockspace_node_subsystem_util::metrics::prometheus::Registry;
+use infrablockspace_primitives::CollatorPair;
 
 use sc_authority_discovery::Service as AuthorityDiscoveryService;
 use sc_network::{Event, NetworkService};
 use sc_network_common::service::NetworkEventStream;
 use std::sync::Arc;
 
-use polkadot_service::{Configuration, TaskManager};
+use infrablockspace_service::{Configuration, TaskManager};
 
 use futures::StreamExt;
 
@@ -83,7 +83,7 @@ fn build_authority_discovery_service<Block: BlockT>(
 }
 
 pub async fn build_minimal_relay_chain_node(
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	task_manager: &mut TaskManager,
 	relay_chain_url: Vec<Url>,
 ) -> RelayChainResult<(Arc<(dyn RelayChainInterface + 'static)>, Option<CollatorPair>)> {
@@ -94,7 +94,7 @@ pub async fn build_minimal_relay_chain_node(
 	.await?;
 	let collator_pair = CollatorPair::generate().0;
 	let collator_node = new_minimal_relay_chain(
-		polkadot_config,
+		infrablockspace_config,
 		collator_pair.clone(),
 		Arc::new(BlockChainRpcClient::new(client.clone())),
 	)

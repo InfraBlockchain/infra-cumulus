@@ -27,9 +27,9 @@ use sp_core::traits::SpawnNamed;
 use sp_runtime::traits::{Block as BlockT, Header as HeaderT};
 
 use cumulus_relay_chain_interface::RelayChainInterface;
-use polkadot_node_primitives::{CollationSecondedSignal, Statement};
-use polkadot_parachain::primitives::HeadData;
-use polkadot_primitives::{
+use infrablockspace_node_primitives::{CollationSecondedSignal, Statement};
+use infrablockspace_parachain::primitives::HeadData;
+use infrablockspace_primitives::{
 	CandidateReceipt, CompactStatement, Hash as PHash, Id as ParaId, OccupiedCoreAssumption,
 	SigningContext, UncheckedSigned,
 };

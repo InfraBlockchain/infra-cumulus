@@ -14,8 +14,8 @@
 // limitations under the License.
 
 pub mod currency {
+	use infrablockspace_core_primitives::Balance;
 	use kusama_runtime_constants as constants;
-	use polkadot_core_primitives::Balance;
 
 	/// The existential deposit. Set to 1/10 of its parent Relay Chain.
 	pub const EXISTENTIAL_DEPOSIT: Balance = constants::currency::EXISTENTIAL_DEPOSIT / 10;
@@ -36,7 +36,7 @@ pub mod fee {
 		constants::ExtrinsicBaseWeight, WeightToFeeCoefficient, WeightToFeeCoefficients,
 		WeightToFeePolynomial,
 	};
-	use polkadot_core_primitives::Balance;
+	use infrablockspace_core_primitives::Balance;
 	use smallvec::smallvec;
 	pub use sp_runtime::Perbill;
 
