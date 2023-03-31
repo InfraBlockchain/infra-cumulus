@@ -139,7 +139,7 @@ pub fn new_partial(
 #[sc_tracing::logging::prefix_logs_with("Parachain")]
 async fn start_node_impl(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	hwbench: Option<sc_sysinfo::HwBench>,
@@ -154,7 +154,7 @@ async fn start_node_impl(
 	let mut task_manager = params.task_manager;
 
 	let (relay_chain_interface, collator_key) = build_relay_chain_interface(
-		polkadot_config,
+		infrablockspace_config,
 		&parachain_config,
 		telemetry_worker_handle,
 		&mut task_manager,
@@ -163,7 +163,7 @@ async fn start_node_impl(
 	)
 	.await
 	.map_err(|e| match e {
-		RelayChainError::ServiceError(polkadot_service::Error::Sub(x)) => x,
+		RelayChainError::ServiceError(infrablockspace_service::Error::Sub(x)) => x,
 		s => s.to_string().into(),
 	})?;
 
@@ -418,10 +418,11 @@ fn build_consensus(
 /// Start a parachain node.
 pub async fn start_parachain_node(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	hwbench: Option<sc_sysinfo::HwBench>,
 ) -> sc_service::error::Result<(TaskManager, Arc<ParachainClient>)> {
-	start_node_impl(parachain_config, polkadot_config, collator_options, para_id, hwbench).await
+	start_node_impl(parachain_config, infrablockspace_config, collator_options, para_id, hwbench)
+		.await
 }

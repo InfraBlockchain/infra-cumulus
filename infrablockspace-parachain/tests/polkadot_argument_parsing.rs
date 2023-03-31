@@ -21,7 +21,7 @@ mod common;
 #[tokio::test]
 #[cfg(unix)]
 #[ignore]
-async fn polkadot_argument_parsing() {
+async fn infrablockspace_argument_parsing() {
 	use nix::sys::signal::Signal::{SIGINT, SIGTERM};
 	let base_dir = tempdir().expect("could not create a temp dir");
 

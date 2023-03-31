@@ -51,8 +51,8 @@ impl FromStr for BridgeHubRuntimeType {
 	fn from_str(value: &str) -> Result<Self, Self::Err> {
 		match value {
 			polkadot::BRIDGE_HUB_POLKADOT => Ok(BridgeHubRuntimeType::Polkadot),
-			polkadot::BRIDGE_HUB_POLKADOT_LOCAL => Ok(BridgeHubRuntimeType::PolkadotLocal),
-			polkadot::BRIDGE_HUB_POLKADOT_DEVELOPMENT =>
+			polkadot::BRIDGE_HUB_infrablockspace_LOCAL => Ok(BridgeHubRuntimeType::PolkadotLocal),
+			polkadot::BRIDGE_HUB_infrablockspace_DEVELOPMENT =>
 				Ok(BridgeHubRuntimeType::PolkadotDevelopment),
 			kusama::BRIDGE_HUB_KUSAMA => Ok(BridgeHubRuntimeType::Kusama),
 			kusama::BRIDGE_HUB_KUSAMA_LOCAL => Ok(BridgeHubRuntimeType::KusamaLocal),
@@ -99,13 +99,13 @@ impl BridgeHubRuntimeType {
 					&include_bytes!("../../../parachains/chain-specs/bridge-hub-polkadot.json")[..],
 				)?)),
 			BridgeHubRuntimeType::PolkadotLocal => Ok(Box::new(polkadot::local_config(
-				polkadot::BRIDGE_HUB_POLKADOT_LOCAL,
+				polkadot::BRIDGE_HUB_infrablockspace_LOCAL,
 				"Polkadot BridgeHub Local",
 				"polkadot-local",
 				ParaId::new(1002),
 			))),
 			BridgeHubRuntimeType::PolkadotDevelopment => Ok(Box::new(polkadot::local_config(
-				polkadot::BRIDGE_HUB_POLKADOT_DEVELOPMENT,
+				polkadot::BRIDGE_HUB_infrablockspace_DEVELOPMENT,
 				"Polkadot BridgeHub Development",
 				"polkadot-dev",
 				ParaId::new(1002),
@@ -170,7 +170,7 @@ impl BridgeHubRuntimeType {
 		match self {
 			BridgeHubRuntimeType::Polkadot |
 			BridgeHubRuntimeType::PolkadotLocal |
-			BridgeHubRuntimeType::PolkadotDevelopment => &bridge_hub_polkadot_runtime::VERSION,
+			BridgeHubRuntimeType::PolkadotDevelopment => &bridge_hub_infrablockspace_runtime::VERSION,
 			BridgeHubRuntimeType::Kusama |
 			BridgeHubRuntimeType::KusamaLocal |
 			BridgeHubRuntimeType::KusamaDevelopment => &bridge_hub_kusama_runtime::VERSION,
@@ -375,7 +375,7 @@ pub mod rococo {
 			aura: Default::default(),
 			aura_ext: Default::default(),
 			parachain_system: Default::default(),
-			polkadot_xcm: bridge_hub_rococo_runtime::PolkadotXcmConfig {
+			infrablockspace_xcm: bridge_hub_rococo_runtime::PolkadotXcmConfig {
 				safe_xcm_version: Some(SAFE_XCM_VERSION),
 			},
 		}
@@ -532,7 +532,7 @@ pub mod kusama {
 			aura: Default::default(),
 			aura_ext: Default::default(),
 			parachain_system: Default::default(),
-			polkadot_xcm: bridge_hub_kusama_runtime::PolkadotXcmConfig {
+			infrablockspace_xcm: bridge_hub_kusama_runtime::PolkadotXcmConfig {
 				safe_xcm_version: Some(SAFE_XCM_VERSION),
 			},
 		}
@@ -559,15 +559,15 @@ pub mod polkadot {
 	use sp_core::sr25519;
 
 	pub(crate) const BRIDGE_HUB_POLKADOT: &str = "bridge-hub-polkadot";
-	pub(crate) const BRIDGE_HUB_POLKADOT_LOCAL: &str = "bridge-hub-polkadot-local";
-	pub(crate) const BRIDGE_HUB_POLKADOT_DEVELOPMENT: &str = "bridge-hub-polkadot-dev";
-	const BRIDGE_HUB_POLKADOT_ED: BridgeHubBalance =
-		bridge_hub_polkadot_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
+	pub(crate) const BRIDGE_HUB_infrablockspace_LOCAL: &str = "bridge-hub-polkadot-local";
+	pub(crate) const BRIDGE_HUB_infrablockspace_DEVELOPMENT: &str = "bridge-hub-polkadot-dev";
+	const BRIDGE_HUB_infrablockspace_ED: BridgeHubBalance =
+		bridge_hub_infrablockspace_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 
 	/// Specialized `ChainSpec` for the normal parachain runtime.
 	pub type BridgeHubChainSpec =
-		sc_service::GenericChainSpec<bridge_hub_polkadot_runtime::GenesisConfig, Extensions>;
-	pub type RuntimeApi = bridge_hub_polkadot_runtime::RuntimeApi;
+		sc_service::GenericChainSpec<bridge_hub_infrablockspace_runtime::GenesisConfig, Extensions>;
+	pub type RuntimeApi = bridge_hub_infrablockspace_runtime::RuntimeApi;
 
 	pub fn local_config(
 		id: &str,
@@ -629,34 +629,36 @@ pub mod polkadot {
 		invulnerables: Vec<(AccountId, AuraId)>,
 		endowed_accounts: Vec<AccountId>,
 		id: ParaId,
-	) -> bridge_hub_polkadot_runtime::GenesisConfig {
-		bridge_hub_polkadot_runtime::GenesisConfig {
-			system: bridge_hub_polkadot_runtime::SystemConfig {
-				code: bridge_hub_polkadot_runtime::WASM_BINARY
+	) -> bridge_hub_infrablockspace_runtime::GenesisConfig {
+		bridge_hub_infrablockspace_runtime::GenesisConfig {
+			system: bridge_hub_infrablockspace_runtime::SystemConfig {
+				code: bridge_hub_infrablockspace_runtime::WASM_BINARY
 					.expect("WASM binary was not build, please build it!")
 					.to_vec(),
 			},
-			balances: bridge_hub_polkadot_runtime::BalancesConfig {
+			balances: bridge_hub_infrablockspace_runtime::BalancesConfig {
 				balances: endowed_accounts
 					.iter()
 					.cloned()
-					.map(|k| (k, BRIDGE_HUB_POLKADOT_ED * 4096))
+					.map(|k| (k, BRIDGE_HUB_infrablockspace_ED * 4096))
 					.collect(),
 			},
-			parachain_info: bridge_hub_polkadot_runtime::ParachainInfoConfig { parachain_id: id },
-			collator_selection: bridge_hub_polkadot_runtime::CollatorSelectionConfig {
+			parachain_info: bridge_hub_infrablockspace_runtime::ParachainInfoConfig {
+				parachain_id: id,
+			},
+			collator_selection: bridge_hub_infrablockspace_runtime::CollatorSelectionConfig {
 				invulnerables: invulnerables.iter().cloned().map(|(acc, _)| acc).collect(),
-				candidacy_bond: BRIDGE_HUB_POLKADOT_ED * 16,
+				candidacy_bond: BRIDGE_HUB_infrablockspace_ED * 16,
 				..Default::default()
 			},
-			session: bridge_hub_polkadot_runtime::SessionConfig {
+			session: bridge_hub_infrablockspace_runtime::SessionConfig {
 				keys: invulnerables
 					.into_iter()
 					.map(|(acc, aura)| {
 						(
-							acc.clone(),                                       // account id
-							acc,                                               // validator id
-							bridge_hub_polkadot_runtime::SessionKeys { aura }, // session keys
+							acc.clone(),                                              // account id
+							acc,                                                      // validator id
+							bridge_hub_infrablockspace_runtime::SessionKeys { aura }, // session keys
 						)
 					})
 					.collect(),
@@ -664,7 +666,7 @@ pub mod polkadot {
 			aura: Default::default(),
 			aura_ext: Default::default(),
 			parachain_system: Default::default(),
-			polkadot_xcm: bridge_hub_polkadot_runtime::PolkadotXcmConfig {
+			infrablockspace_xcm: bridge_hub_infrablockspace_runtime::PolkadotXcmConfig {
 				safe_xcm_version: Some(SAFE_XCM_VERSION),
 			},
 		}

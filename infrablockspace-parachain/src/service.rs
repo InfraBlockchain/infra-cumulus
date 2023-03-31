@@ -139,11 +139,11 @@ impl sc_executor::NativeExecutionDispatch for CollectivesPolkadotRuntimeExecutor
 	type ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
 
 	fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-		collectives_polkadot_runtime::api::dispatch(method, data)
+		collectives_infrablockspace_runtime::api::dispatch(method, data)
 	}
 
 	fn native_version() -> sc_executor::NativeVersion {
-		collectives_polkadot_runtime::native_version()
+		collectives_infrablockspace_runtime::native_version()
 	}
 }
 
@@ -154,11 +154,11 @@ impl sc_executor::NativeExecutionDispatch for BridgeHubPolkadotRuntimeExecutor {
 	type ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
 
 	fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-		bridge_hub_polkadot_runtime::api::dispatch(method, data)
+		bridge_hub_infrablockspace_runtime::api::dispatch(method, data)
 	}
 
 	fn native_version() -> sc_executor::NativeVersion {
-		bridge_hub_polkadot_runtime::native_version()
+		bridge_hub_infrablockspace_runtime::native_version()
 	}
 }
 
@@ -319,7 +319,7 @@ where
 #[sc_tracing::logging::prefix_logs_with("Parachain")]
 async fn start_shell_node_impl<RuntimeApi, RB, BIQ, BIC>(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	rpc_ext_builder: RB,
@@ -375,7 +375,7 @@ where
 	let mut task_manager = params.task_manager;
 
 	let (relay_chain_interface, collator_key) = build_relay_chain_interface(
-		polkadot_config,
+		infrablockspace_config,
 		&parachain_config,
 		telemetry_worker_handle,
 		&mut task_manager,
@@ -384,7 +384,7 @@ where
 	)
 	.await
 	.map_err(|e| match e {
-		RelayChainError::ServiceError(polkadot_service::Error::Sub(x)) => x,
+		RelayChainError::ServiceError(infrablockspace_service::Error::Sub(x)) => x,
 		s => s.to_string().into(),
 	})?;
 
@@ -509,7 +509,7 @@ where
 #[sc_tracing::logging::prefix_logs_with("Parachain")]
 async fn start_node_impl<RuntimeApi, RB, BIQ, BIC>(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	_rpc_ext_builder: RB,
@@ -565,7 +565,7 @@ where
 
 	let mut task_manager = params.task_manager;
 	let (relay_chain_interface, collator_key) = build_relay_chain_interface(
-		polkadot_config,
+		infrablockspace_config,
 		&parachain_config,
 		telemetry_worker_handle,
 		&mut task_manager,
@@ -574,7 +574,7 @@ where
 	)
 	.await
 	.map_err(|e| match e {
-		RelayChainError::ServiceError(polkadot_service::Error::Sub(x)) => x,
+		RelayChainError::ServiceError(infrablockspace_service::Error::Sub(x)) => x,
 		s => s.to_string().into(),
 	})?;
 
@@ -749,7 +749,7 @@ pub fn rococo_parachain_build_import_queue(
 /// Start a rococo parachain node.
 pub async fn start_rococo_parachain_node(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	hwbench: Option<sc_sysinfo::HwBench>,
@@ -759,7 +759,7 @@ pub async fn start_rococo_parachain_node(
 )> {
 	start_node_impl::<rococo_parachain_runtime::RuntimeApi, _, _, _>(
 		parachain_config,
-		polkadot_config,
+		infrablockspace_config,
 		collator_options,
 		para_id,
 		|_| Ok(RpcModule::new(())),
@@ -869,7 +869,7 @@ where
 /// Start a polkadot-shell parachain node.
 pub async fn start_shell_node<RuntimeApi>(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	hwbench: Option<sc_sysinfo::HwBench>,
@@ -889,7 +889,7 @@ where
 {
 	start_shell_node_impl::<RuntimeApi, _, _, _>(
 		parachain_config,
-		polkadot_config,
+		infrablockspace_config,
 		collator_options,
 		para_id,
 		|_| Ok(RpcModule::new(())),
@@ -1117,7 +1117,7 @@ where
 /// (collective-polkadot and statemine/t use this)
 pub async fn start_generic_aura_node<RuntimeApi, AuraId: AppKey>(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	hwbench: Option<sc_sysinfo::HwBench>,
@@ -1142,7 +1142,7 @@ where
 {
 	start_node_impl::<RuntimeApi, _, _, _>(
 		parachain_config,
-		polkadot_config,
+		infrablockspace_config,
 		collator_options,
 		para_id,
 		|_| Ok(RpcModule::new(())),
@@ -1282,7 +1282,7 @@ where
 #[sc_tracing::logging::prefix_logs_with("Parachain")]
 async fn start_contracts_rococo_node_impl<RuntimeApi, RB, BIQ, BIC>(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	_rpc_ext_builder: RB,
@@ -1338,7 +1338,7 @@ where
 	let mut task_manager = params.task_manager;
 
 	let (relay_chain_interface, collator_key) = build_relay_chain_interface(
-		polkadot_config,
+		infrablockspace_config,
 		&parachain_config,
 		telemetry_worker_handle,
 		&mut task_manager,
@@ -1347,7 +1347,7 @@ where
 	)
 	.await
 	.map_err(|e| match e {
-		RelayChainError::ServiceError(polkadot_service::Error::Sub(x)) => x,
+		RelayChainError::ServiceError(infrablockspace_service::Error::Sub(x)) => x,
 		s => s.to_string().into(),
 	})?;
 
@@ -1521,7 +1521,7 @@ pub fn contracts_rococo_build_import_queue(
 /// Start a parachain node.
 pub async fn start_contracts_rococo_node(
 	parachain_config: Configuration,
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	collator_options: CollatorOptions,
 	para_id: ParaId,
 	hwbench: Option<sc_sysinfo::HwBench>,
@@ -1531,7 +1531,7 @@ pub async fn start_contracts_rococo_node(
 )> {
 	start_contracts_rococo_node_impl::<contracts_rococo_runtime::RuntimeApi, _, _, _>(
 		parachain_config,
-		polkadot_config,
+		infrablockspace_config,
 		collator_options,
 		para_id,
 		|_| Ok(RpcModule::new(())),

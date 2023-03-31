@@ -29,12 +29,14 @@ use sp_core::traits::SpawnNamed;
 use sp_runtime::traits::{Block as BlockT, HashFor, Header as HeaderT, Zero};
 
 use cumulus_client_consensus_common::ParachainConsensus;
-use infrablockspace_primitives::{CollatorPair, Id as ParaId};
-use polkadot_node_primitives::{
+use infrablockspace_node_primitives::{
 	BlockData, Collation, CollationGenerationConfig, CollationResult, MaybeCompressedPoV, PoV,
 };
-use polkadot_node_subsystem::messages::{CollationGenerationMessage, CollatorProtocolMessage};
-use polkadot_overseer::Handle as OverseerHandle;
+use infrablockspace_node_subsystem::messages::{
+	CollationGenerationMessage, CollatorProtocolMessage,
+};
+use infrablockspace_overseer::Handle as OverseerHandle;
+use infrablockspace_primitives::{CollatorPair, Id as ParaId};
 
 use codec::{Decode, Encode};
 use futures::{channel::oneshot, FutureExt};
@@ -292,8 +294,9 @@ where
 			b.storage_proof().encode().len() as f64 / 1024f64,
 		);
 
-		let pov =
-			polkadot_node_primitives::maybe_compress_pov(PoV { block_data: BlockData(b.encode()) });
+		let pov = infrablockspace_node_primitives::maybe_compress_pov(PoV {
+			block_data: BlockData(b.encode()),
+		});
 
 		tracing::info!(
 			target: LOG_TARGET,
@@ -386,8 +389,8 @@ mod tests {
 	};
 	use cumulus_test_runtime::{Block, Header};
 	use futures::{channel::mpsc, executor::block_on, StreamExt};
-	use polkadot_node_subsystem_test_helpers::ForwardSubsystem;
-	use polkadot_overseer::{dummy::dummy_overseer_builder, HeadSupportsParachains};
+	use infrablockspace_node_subsystem_test_helpers::ForwardSubsystem;
+	use infrablockspace_overseer::{dummy::dummy_overseer_builder, HeadSupportsParachains};
 	use sp_consensus::BlockOrigin;
 	use sp_core::{testing::TaskExecutor, Pair};
 	use sp_runtime::traits::BlakeTwo256;

@@ -172,9 +172,9 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 
 		// -- Polkadot Collectives
 		"collectives-polkadot-dev" =>
-			Box::new(chain_spec::collectives::collectives_polkadot_development_config()),
+			Box::new(chain_spec::collectives::collectives_infrablockspace_development_config()),
 		"collectives-polkadot-local" =>
-			Box::new(chain_spec::collectives::collectives_polkadot_local_config()),
+			Box::new(chain_spec::collectives::collectives_infrablockspace_local_config()),
 		"collectives-polkadot" =>
 			Box::new(chain_spec::collectives::CollectivesPolkadotChainSpec::from_json_bytes(
 				&include_bytes!("../../parachains/chain-specs/collectives-polkadot.json")[..],
@@ -256,16 +256,16 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 /// E.g. "penpal-kusama-2004" yields ("penpal-kusama", Some(2004))
 fn extract_parachain_id(id: &str) -> (&str, &str, Option<ParaId>) {
 	const KUSAMA_TEST_PARA_PREFIX: &str = "penpal-kusama-";
-	const POLKADOT_TEST_PARA_PREFIX: &str = "penpal-polkadot-";
+	const infrablockspace_TEST_PARA_PREFIX: &str = "penpal-polkadot-";
 
 	let (norm_id, orig_id, para) = if id.starts_with(KUSAMA_TEST_PARA_PREFIX) {
 		let suffix = &id[KUSAMA_TEST_PARA_PREFIX.len()..];
 		let para_id: u32 = suffix.parse().expect("Invalid parachain-id suffix");
 		(&id[..KUSAMA_TEST_PARA_PREFIX.len() - 1], id, Some(para_id))
-	} else if id.starts_with(POLKADOT_TEST_PARA_PREFIX) {
-		let suffix = &id[POLKADOT_TEST_PARA_PREFIX.len()..];
+	} else if id.starts_with(infrablockspace_TEST_PARA_PREFIX) {
+		let suffix = &id[infrablockspace_TEST_PARA_PREFIX.len()..];
 		let para_id: u32 = suffix.parse().expect("Invalid parachain-id suffix");
-		(&id[..POLKADOT_TEST_PARA_PREFIX.len() - 1], id, Some(para_id))
+		(&id[..infrablockspace_TEST_PARA_PREFIX.len() - 1], id, Some(para_id))
 	} else {
 		(id, id, None)
 	};
@@ -314,7 +314,7 @@ impl SubstrateCli for Cli {
 			Runtime::Statemine => &statemine_runtime::VERSION,
 			Runtime::Westmint => &westmint_runtime::VERSION,
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend =>
-				&collectives_polkadot_runtime::VERSION,
+				&collectives_infrablockspace_runtime::VERSION,
 			Runtime::Shell => &shell_runtime::VERSION,
 			Runtime::Seedling => &seedling_runtime::VERSION,
 			Runtime::ContractsRococo => &contracts_rococo_runtime::VERSION,
@@ -358,11 +358,11 @@ impl SubstrateCli for RelayChainCli {
 	}
 
 	fn load_spec(&self, id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
-		polkadot_cli::Cli::from_iter([RelayChainCli::executable_name()].iter()).load_spec(id)
+		infrablockspace_cli::Cli::from_iter([RelayChainCli::executable_name()].iter()).load_spec(id)
 	}
 
 	fn native_runtime_version(chain_spec: &Box<dyn ChainSpec>) -> &'static RuntimeVersion {
-		polkadot_cli::Cli::native_runtime_version(chain_spec)
+		infrablockspace_cli::Cli::native_runtime_version(chain_spec)
 	}
 }
 
@@ -392,7 +392,7 @@ macro_rules! construct_benchmark_partials {
 				$code
 			},
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => {
-				let $partials = new_partial::<collectives_polkadot_runtime::RuntimeApi, _>(
+				let $partials = new_partial::<collectives_infrablockspace_runtime::RuntimeApi, _>(
 					&$config,
 					crate::service::aura_build_import_queue::<_, AuraId>,
 				)?;
@@ -439,7 +439,7 @@ macro_rules! construct_async_run {
 			},
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => {
 				runner.async_run(|$config| {
-					let $components = new_partial::<collectives_polkadot_runtime::RuntimeApi, _>(
+					let $components = new_partial::<collectives_infrablockspace_runtime::RuntimeApi, _>(
 						&$config,
 						crate::service::aura_build_import_queue::<_, AuraId>,
 					)?;
@@ -596,19 +596,19 @@ pub fn run() -> Result<()> {
 			let runner = cli.create_runner(cmd)?;
 
 			runner.sync_run(|config| {
-				let polkadot_cli = RelayChainCli::new(
+				let infrablockspace_cli = RelayChainCli::new(
 					&config,
 					[RelayChainCli::executable_name()].iter().chain(cli.relaychain_args.iter()),
 				);
 
-				let polkadot_config = SubstrateCli::create_configuration(
-					&polkadot_cli,
-					&polkadot_cli,
+				let infrablockspace_config = SubstrateCli::create_configuration(
+					&infrablockspace_cli,
+					&infrablockspace_cli,
 					config.tokio_handle.clone(),
 				)
 				.map_err(|err| format!("Relay chain argument error: {}", err))?;
 
-				cmd.run(config, polkadot_config)
+				cmd.run(config, infrablockspace_config)
 			})
 		},
 		Some(Subcommand::ExportGenesisState(cmd)) => {
@@ -821,7 +821,7 @@ pub fn run() -> Result<()> {
 					.map(|e| e.para_id)
 					.ok_or_else(|| "Could not find parachain extension in chain-spec.")?;
 
-				let polkadot_cli = RelayChainCli::new(
+				let infrablockspace_cli = RelayChainCli::new(
 					&config,
 					[RelayChainCli::executable_name()].iter().chain(cli.relaychain_args.iter()),
 				);
@@ -839,8 +839,8 @@ pub fn run() -> Result<()> {
 				let genesis_state = format!("0x{:?}", HexDisplay::from(&block.header().encode()));
 
 				let tokio_handle = config.tokio_handle.clone();
-				let polkadot_config =
-					SubstrateCli::create_configuration(&polkadot_cli, &polkadot_cli, tokio_handle)
+				let infrablockspace_config =
+					SubstrateCli::create_configuration(&infrablockspace_cli, &infrablockspace_cli, tokio_handle)
 						.map_err(|err| format!("Relay chain argument error: {}", err))?;
 
 				info!("Parachain id: {:?}", id);
@@ -856,36 +856,36 @@ pub fn run() -> Result<()> {
 					Runtime::Statemint => crate::service::start_generic_aura_node::<
 						statemint_runtime::RuntimeApi,
 						StatemintAuraId,
-					>(config, polkadot_config, collator_options, id, hwbench)
+					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into),
 					Runtime::Statemine => crate::service::start_generic_aura_node::<
 						statemine_runtime::RuntimeApi,
 						AuraId,
-					>(config, polkadot_config, collator_options, id, hwbench)
+					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into),
 					Runtime::Westmint => crate::service::start_generic_aura_node::<
 						westmint_runtime::RuntimeApi,
 						AuraId,
-					>(config, polkadot_config, collator_options, id, hwbench)
+					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into),
 					Runtime::CollectivesPolkadot | Runtime::CollectivesWestend =>
 						crate::service::start_generic_aura_node::<
-							collectives_polkadot_runtime::RuntimeApi,
+							collectives_infrablockspace_runtime::RuntimeApi,
 							AuraId,
-						>(config, polkadot_config, collator_options, id, hwbench)
+						>(config, infrablockspace_config, collator_options, id, hwbench)
 						.await
 						.map(|r| r.0)
 						.map_err(Into::into),
 					Runtime::Shell =>
 						crate::service::start_shell_node::<shell_runtime::RuntimeApi>(
 							config,
-							polkadot_config,
+							infrablockspace_config,
 							collator_options,
 							id,
 							hwbench,
@@ -895,13 +895,13 @@ pub fn run() -> Result<()> {
 						.map_err(Into::into),
 					Runtime::Seedling => crate::service::start_shell_node::<
 						seedling_runtime::RuntimeApi,
-					>(config, polkadot_config, collator_options, id, hwbench)
+					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into),
 					Runtime::ContractsRococo => crate::service::start_contracts_rococo_node(
 						config,
-						polkadot_config,
+						infrablockspace_config,
 						collator_options,
 						id,
 						hwbench,
@@ -916,7 +916,7 @@ pub fn run() -> Result<()> {
 							crate::service::start_generic_aura_node::<
 								chain_spec::bridge_hubs::polkadot::RuntimeApi,
 								AuraId,
-							>(config, polkadot_config, collator_options, id, hwbench)
+							>(config, infrablockspace_config, collator_options, id, hwbench)
 								.await
 								.map(|r| r.0),
 						chain_spec::bridge_hubs::BridgeHubRuntimeType::Kusama |
@@ -925,14 +925,14 @@ pub fn run() -> Result<()> {
 							crate::service::start_generic_aura_node::<
 								chain_spec::bridge_hubs::kusama::RuntimeApi,
 								AuraId,
-							>(config, polkadot_config, collator_options, id, hwbench)
+							>(config, infrablockspace_config, collator_options, id, hwbench)
 							.await
 							.map(|r| r.0),
 						chain_spec::bridge_hubs::BridgeHubRuntimeType::Westend =>
 							crate::service::start_generic_aura_node::<
 								chain_spec::bridge_hubs::westend::RuntimeApi,
 								AuraId,
-							>(config, polkadot_config, collator_options, id, hwbench)
+							>(config, infrablockspace_config, collator_options, id, hwbench)
 							.await
 							.map(|r| r.0),
 						chain_spec::bridge_hubs::BridgeHubRuntimeType::Rococo |
@@ -941,7 +941,7 @@ pub fn run() -> Result<()> {
 							crate::service::start_generic_aura_node::<
 								chain_spec::bridge_hubs::rococo::RuntimeApi,
 								AuraId,
-							>(config, polkadot_config, collator_options, id, hwbench)
+							>(config, infrablockspace_config, collator_options, id, hwbench)
 							.await
 							.map(|r| r.0),
 						chain_spec::bridge_hubs::BridgeHubRuntimeType::Wococo |
@@ -949,7 +949,7 @@ pub fn run() -> Result<()> {
 							crate::service::start_generic_aura_node::<
 								chain_spec::bridge_hubs::wococo::RuntimeApi,
 								AuraId,
-							>(config, polkadot_config, collator_options, id, hwbench)
+							>(config, infrablockspace_config, collator_options, id, hwbench)
 							.await
 							.map(|r| r.0),
 					}
@@ -957,7 +957,7 @@ pub fn run() -> Result<()> {
 					Runtime::Penpal(_) | Runtime::Default =>
 						crate::service::start_rococo_parachain_node(
 							config,
-							polkadot_config,
+							infrablockspace_config,
 							collator_options,
 							id,
 							hwbench,

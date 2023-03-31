@@ -255,7 +255,7 @@ pub fn prepare_node_config(mut parachain_config: Configuration) -> Configuration
 /// Will return a minimal relay chain node with RPC
 /// client or an inprocess node, based on the [`CollatorOptions`] passed in.
 pub async fn build_relay_chain_interface(
-	polkadot_config: Configuration,
+	infrablockspace_config: Configuration,
 	parachain_config: &Configuration,
 	telemetry_worker_handle: Option<TelemetryWorkerHandle>,
 	task_manager: &mut TaskManager,
@@ -264,14 +264,14 @@ pub async fn build_relay_chain_interface(
 ) -> RelayChainResult<(Arc<(dyn RelayChainInterface + 'static)>, Option<CollatorPair>)> {
 	if !collator_options.relay_chain_rpc_urls.is_empty() {
 		build_minimal_relay_chain_node(
-			polkadot_config,
+			infrablockspace_config,
 			task_manager,
 			collator_options.relay_chain_rpc_urls,
 		)
 		.await
 	} else {
 		build_inprocess_relay_chain(
-			polkadot_config,
+			infrablockspace_config,
 			parachain_config,
 			telemetry_worker_handle,
 			task_manager,

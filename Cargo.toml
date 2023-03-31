@@ -38,7 +38,6 @@ members = [
 	"parachains/runtimes/assets/common",
 	"parachains/runtimes/assets/statemint",
 	"parachains/runtimes/assets/statemine",
-	"parachains/runtimes/assets/westmint",
 	"parachains/runtimes/bridge-hubs/bridge-hub-rococo",
 	"parachains/runtimes/bridge-hubs/bridge-hub-kusama",
 	"parachains/runtimes/bridge-hubs/bridge-hub-infrablockspace",

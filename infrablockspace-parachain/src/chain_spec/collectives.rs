@@ -23,21 +23,21 @@ use sc_service::ChainType;
 use sp_core::sr25519;
 
 pub type CollectivesPolkadotChainSpec =
-	sc_service::GenericChainSpec<collectives_polkadot_runtime::GenesisConfig, Extensions>;
+	sc_service::GenericChainSpec<collectives_infrablockspace_runtime::GenesisConfig, Extensions>;
 
-const COLLECTIVES_POLKADOT_ED: CollectivesBalance =
-	collectives_polkadot_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
+const COLLECTIVES_infrablockspace_ED: CollectivesBalance =
+	collectives_infrablockspace_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 
 /// Generate the session keys from individual elements.
 ///
 /// The input must be a tuple of individual keys (a single arg for now since we have just one key).
-pub fn collectives_polkadot_session_keys(
+pub fn collectives_infrablockspace_session_keys(
 	keys: AuraId,
-) -> collectives_polkadot_runtime::SessionKeys {
-	collectives_polkadot_runtime::SessionKeys { aura: keys }
+) -> collectives_infrablockspace_runtime::SessionKeys {
+	collectives_infrablockspace_runtime::SessionKeys { aura: keys }
 }
 
-pub fn collectives_polkadot_development_config() -> CollectivesPolkadotChainSpec {
+pub fn collectives_infrablockspace_development_config() -> CollectivesPolkadotChainSpec {
 	let mut properties = sc_chain_spec::Properties::new();
 	properties.insert("ss58Format".into(), 0.into());
 	properties.insert("tokenSymbol".into(), "DOT".into());
@@ -47,10 +47,10 @@ pub fn collectives_polkadot_development_config() -> CollectivesPolkadotChainSpec
 		// Name
 		"Polkadot Collectives Development",
 		// ID
-		"collectives_polkadot_dev",
+		"collectives_infrablockspace_dev",
 		ChainType::Local,
 		move || {
-			collectives_polkadot_genesis(
+			collectives_infrablockspace_genesis(
 				// initial collators.
 				vec![(
 					get_account_id_from_seed::<sr25519::Public>("Alice"),
@@ -77,7 +77,7 @@ pub fn collectives_polkadot_development_config() -> CollectivesPolkadotChainSpec
 }
 
 /// Collectives Polkadot Local Config.
-pub fn collectives_polkadot_local_config() -> CollectivesPolkadotChainSpec {
+pub fn collectives_infrablockspace_local_config() -> CollectivesPolkadotChainSpec {
 	let mut properties = sc_chain_spec::Properties::new();
 	properties.insert("ss58Format".into(), 0.into());
 	properties.insert("tokenSymbol".into(), "DOT".into());
@@ -87,10 +87,10 @@ pub fn collectives_polkadot_local_config() -> CollectivesPolkadotChainSpec {
 		// Name
 		"Polkadot Collectives Local",
 		// ID
-		"collectives_polkadot_local",
+		"collectives_infrablockspace_local",
 		ChainType::Local,
 		move || {
-			collectives_polkadot_genesis(
+			collectives_infrablockspace_genesis(
 				// initial collators.
 				vec![
 					(
@@ -128,38 +128,40 @@ pub fn collectives_polkadot_local_config() -> CollectivesPolkadotChainSpec {
 	)
 }
 
-fn collectives_polkadot_genesis(
+fn collectives_infrablockspace_genesis(
 	invulnerables: Vec<(AccountId, AuraId)>,
 	endowed_accounts: Vec<AccountId>,
 	id: ParaId,
-) -> collectives_polkadot_runtime::GenesisConfig {
-	collectives_polkadot_runtime::GenesisConfig {
-		system: collectives_polkadot_runtime::SystemConfig {
-			code: collectives_polkadot_runtime::WASM_BINARY
+) -> collectives_infrablockspace_runtime::GenesisConfig {
+	collectives_infrablockspace_runtime::GenesisConfig {
+		system: collectives_infrablockspace_runtime::SystemConfig {
+			code: collectives_infrablockspace_runtime::WASM_BINARY
 				.expect("WASM binary was not build, please build it!")
 				.to_vec(),
 		},
-		balances: collectives_polkadot_runtime::BalancesConfig {
+		balances: collectives_infrablockspace_runtime::BalancesConfig {
 			balances: endowed_accounts
 				.iter()
 				.cloned()
-				.map(|k| (k, COLLECTIVES_POLKADOT_ED * 4096))
+				.map(|k| (k, COLLECTIVES_infrablockspace_ED * 4096))
 				.collect(),
 		},
-		parachain_info: collectives_polkadot_runtime::ParachainInfoConfig { parachain_id: id },
-		collator_selection: collectives_polkadot_runtime::CollatorSelectionConfig {
+		parachain_info: collectives_infrablockspace_runtime::ParachainInfoConfig {
+			parachain_id: id,
+		},
+		collator_selection: collectives_infrablockspace_runtime::CollatorSelectionConfig {
 			invulnerables: invulnerables.iter().cloned().map(|(acc, _)| acc).collect(),
-			candidacy_bond: COLLECTIVES_POLKADOT_ED * 16,
+			candidacy_bond: COLLECTIVES_infrablockspace_ED * 16,
 			..Default::default()
 		},
-		session: collectives_polkadot_runtime::SessionConfig {
+		session: collectives_infrablockspace_runtime::SessionConfig {
 			keys: invulnerables
 				.into_iter()
 				.map(|(acc, aura)| {
 					(
-						acc.clone(),                             // account id
-						acc,                                     // validator id
-						collectives_polkadot_session_keys(aura), // session keys
+						acc.clone(),                                    // account id
+						acc,                                            // validator id
+						collectives_infrablockspace_session_keys(aura), // session keys
 					)
 				})
 				.collect(),
@@ -169,7 +171,7 @@ fn collectives_polkadot_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		polkadot_xcm: collectives_polkadot_runtime::PolkadotXcmConfig {
+		infrablockspace_xcm: collectives_infrablockspace_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 		alliance: Default::default(),

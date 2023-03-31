@@ -21,7 +21,7 @@ mod common;
 #[tokio::test]
 #[cfg(unix)]
 #[ignore]
-async fn interrupt_polkadot_mdns_issue_test() {
+async fn interrupt_infrablockspace_mdns_issue_test() {
 	use nix::sys::signal::Signal::{SIGINT, SIGTERM};
 
 	let base_dir = tempdir().expect("could not create a temp dir");

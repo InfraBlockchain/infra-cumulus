@@ -22,17 +22,17 @@ use cumulus_relay_chain_interface::{
 };
 use cumulus_test_service::runtime::{Block, Hash, Header};
 use futures::{executor::block_on, poll, task::Poll, FutureExt, Stream, StreamExt};
+use infrablockspace_node_primitives::{SignedFullStatement, Statement};
 use infrablockspace_primitives::{
 	CandidateCommitments, CandidateDescriptor, CollatorPair, CommittedCandidateReceipt,
 	Hash as PHash, HeadData, InboundDownwardMessage, InboundHrmpMessage, OccupiedCoreAssumption,
 	PersistedValidationData, SessionIndex, SigningContext, ValidationCodeHash, ValidatorId,
 };
-use parking_lot::Mutex;
-use polkadot_node_primitives::{SignedFullStatement, Statement};
-use polkadot_test_client::{
+use infrablockspace_test_client::{
 	Client as PClient, ClientBlockImportExt, DefaultTestClientBuilderExt, FullBackend as PBackend,
 	InitPolkadotBlockBuilder, TestClientBuilder, TestClientBuilderExt,
 };
+use parking_lot::Mutex;
 use sc_client_api::{Backend, BlockchainEvents};
 use sp_blockchain::HeaderBackend;
 use sp_consensus::BlockOrigin;
@@ -525,7 +525,11 @@ fn relay_parent_not_imported_when_block_announce_is_processed() {
 		let (mut validator, api) = make_validator_and_api();
 
 		let mut client = api.relay_client.clone();
-		let block = client.init_polkadot_block_builder().build().expect("Build new block").block;
+		let block = client
+			.init_infrablockspace_block_builder()
+			.build()
+			.expect("Build new block")
+			.block;
 
 		let (signal, header) = make_gossip_message_and_header(api, block.hash(), 0).await;
 
