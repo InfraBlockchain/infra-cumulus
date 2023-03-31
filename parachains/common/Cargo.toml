@@ -9,38 +9,40 @@ description = "Logic which is common to all parachain runtimes"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = [
+	"derive",
+], default-features = false }
 scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
 
 # Substrate
-frame-support = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-frame-system = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-pallet-asset-tx-payment = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-pallet-assets = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-pallet-authorship = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-pallet-balances = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-sp-consensus-aura = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-sp-core = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-sp-io = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
-sp-std = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "master" }
+frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+frame-system = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-asset-tx-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-authorship = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-balances = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-consensus-aura = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-# Polkadot
-polkadot-primitives = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "master" }
-xcm = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "master" }
-xcm-builder = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "master" }
-xcm-executor = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "master" }
+# infrablockspace
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+xcm-builder = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+xcm-executor = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 
 # Cumulus
 pallet-collator-selection = { path = "../../pallets/collator-selection", default-features = false }
 cumulus-primitives-utility = { path = "../../primitives/utility", default-features = false }
 
 [dev-dependencies]
-pallet-authorship = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-io = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
+pallet-authorship = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 [build-dependencies]
-substrate-wasm-builder = { git = "https://github.com/paritytech/substrate", branch = "master" }
+substrate-wasm-builder = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 [features]
 default = ["std"]
@@ -51,7 +53,7 @@ std = [
 	"pallet-assets/std",
 	"pallet-authorship/std",
 	"pallet-balances/std",
-	"polkadot-primitives/std",
+	"infrablockspace-primitives/std",
 	"sp-consensus-aura/std",
 	"sp-io/std",
 	"sp-std/std",

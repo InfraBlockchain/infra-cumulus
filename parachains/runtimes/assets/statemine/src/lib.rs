@@ -70,8 +70,8 @@ use xcm_config::{KsmLocation, TrustBackedAssetsConvertedConcreteId, XcmConfig};
 pub use sp_runtime::BuildStorage;
 
 // Polkadot imports
+use infrablockspace_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
 use pallet_xcm::{EnsureXcm, IsMajorityOfBody, IsVoiceOfBody};
-use polkadot_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
 use xcm::latest::BodyId;
 use xcm_executor::XcmExecutor;
 

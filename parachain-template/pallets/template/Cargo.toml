@@ -5,7 +5,7 @@ description = "FRAME pallet template for defining custom runtime logic."
 version = "0.1.0"
 license = "Unlicense"
 homepage = "https://substrate.io"
-repository = "https://github.com/paritytech/substrate/"
+repository = "https://github.com/InfraBlockchain/infra-substrate/"
 edition = "2021"
 
 [package.metadata.docs.rs]
@@ -16,17 +16,17 @@ codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive
 scale-info = { version = "2.2.0", default-features = false, features = ["derive"] }
 
 # Substrate
-frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true, branch = "master" }
-frame-support = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-frame-system = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
+frame-benchmarking = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, optional = true, branch = "master" }
+frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+frame-system = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 [dev-dependencies]
 serde = { version = "1.0.132" }
 
 # Substrate
-sp-core = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-io = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
+sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 [features]
 default = ["std"]

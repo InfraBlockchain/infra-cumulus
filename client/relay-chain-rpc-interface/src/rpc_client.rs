@@ -27,9 +27,9 @@ use cumulus_primitives_core::{
 };
 use cumulus_relay_chain_interface::{RelayChainError, RelayChainResult};
 use futures::channel::mpsc::Receiver;
+use infrablockspace_service::{BlockNumber, TaskManager};
 use jsonrpsee::{core::params::ArrayParams, rpc_params};
 use parity_scale_codec::{Decode, Encode};
-use polkadot_service::{BlockNumber, TaskManager};
 use sc_client_api::StorageData;
 use sc_rpc_api::{state::ReadProof, system::Health};
 use serde::de::DeserializeOwned;
@@ -261,7 +261,7 @@ impl RelayChainRpcClient {
 	/// Get hash of n-th block.
 	pub async fn chain_get_block_hash(
 		&self,
-		block_number: Option<polkadot_service::BlockNumber>,
+		block_number: Option<infrablockspace_service::BlockNumber>,
 	) -> Result<Option<RelayHash>, RelayChainError> {
 		let params = rpc_params![block_number];
 		self.request("chain_getBlockHash", params).await

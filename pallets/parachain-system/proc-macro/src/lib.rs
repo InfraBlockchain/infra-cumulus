@@ -136,7 +136,7 @@ pub fn register_validate_block(input: proc_macro::TokenStream) -> proc_macro::To
 						#check_inherents,
 					>(params);
 
-					#crate_::validate_block::polkadot_parachain::write_result(&res)
+					#crate_::validate_block::infrablockspace_parachain::write_result(&res)
 				}
 			}
 		}

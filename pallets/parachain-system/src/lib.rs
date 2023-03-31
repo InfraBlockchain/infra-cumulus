@@ -45,7 +45,7 @@ use frame_support::{
 	RuntimeDebug,
 };
 use frame_system::{ensure_none, ensure_root};
-use polkadot_parachain::primitives::RelayChainBlockNumber;
+use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
@@ -964,7 +964,7 @@ impl<T: Config> Pallet<T> {
 	/// Put a new validation function into a particular location where polkadot
 	/// monitors for updates. Calling this function notifies polkadot that a new
 	/// upgrade has been scheduled.
-	fn notify_polkadot_of_pending_upgrade(code: &[u8]) {
+	fn notify_infrablockspace_of_pending_upgrade(code: &[u8]) {
 		NewValidationCode::<T>::put(code);
 		<DidSetValidationCode<T>>::put(true);
 	}
@@ -997,10 +997,10 @@ impl<T: Config> Pallet<T> {
 		// places, synchronized: both polkadot and the individual parachain
 		// have to upgrade on the same relay chain block.
 		//
-		// `notify_polkadot_of_pending_upgrade` notifies polkadot; the `PendingValidationCode`
+		// `notify_infrablockspace_of_pending_upgrade` notifies polkadot; the `PendingValidationCode`
 		// storage keeps track locally for the parachain upgrade, which will
 		// be applied later: when the relay-chain communicates go-ahead signal to us.
-		Self::notify_polkadot_of_pending_upgrade(&validation_function);
+		Self::notify_infrablockspace_of_pending_upgrade(&validation_function);
 		<PendingValidationCode<T>>::put(validation_function);
 		Self::deposit_event(Event::ValidationFunctionStored);
 

@@ -75,8 +75,8 @@ use xcm_builder::{
 use xcm_executor::traits::JustTry;
 
 // XCM imports
+use infrablockspace_parachain::primitives::Sibling;
 use pallet_xcm::{EnsureXcm, IsMajorityOfBody, XcmPassthrough};
-use polkadot_parachain::primitives::Sibling;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowTopLevelPaidExecutionFrom,

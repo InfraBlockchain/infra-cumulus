@@ -101,11 +101,11 @@ impl SubstrateCli for RelayChainCli {
 	}
 
 	fn load_spec(&self, id: &str) -> std::result::Result<Box<dyn sc_service::ChainSpec>, String> {
-		polkadot_cli::Cli::from_iter([RelayChainCli::executable_name()].iter()).load_spec(id)
+		infrablockspace_cli::Cli::from_iter([RelayChainCli::executable_name()].iter()).load_spec(id)
 	}
 
 	fn native_runtime_version(chain_spec: &Box<dyn ChainSpec>) -> &'static RuntimeVersion {
-		polkadot_cli::Cli::native_runtime_version(chain_spec)
+		infrablockspace_cli::Cli::native_runtime_version(chain_spec)
 	}
 }
 
@@ -158,19 +158,19 @@ pub fn run() -> Result<()> {
 			let runner = cli.create_runner(cmd)?;
 
 			runner.sync_run(|config| {
-				let polkadot_cli = RelayChainCli::new(
+				let infrablockspace_cli = RelayChainCli::new(
 					&config,
 					[RelayChainCli::executable_name()].iter().chain(cli.relay_chain_args.iter()),
 				);
 
-				let polkadot_config = SubstrateCli::create_configuration(
-					&polkadot_cli,
-					&polkadot_cli,
+				let infrablockspace_config = SubstrateCli::create_configuration(
+					&infrablockspace_cli,
+					&infrablockspace_cli,
 					config.tokio_handle.clone(),
 				)
 				.map_err(|err| format!("Relay chain argument error: {}", err))?;
 
-				cmd.run(config, polkadot_config)
+				cmd.run(config, infrablockspace_config)
 			})
 		},
 		Some(Subcommand::ExportGenesisState(cmd)) => {
@@ -276,7 +276,7 @@ pub fn run() -> Result<()> {
 					.map(|e| e.para_id)
 					.ok_or_else(|| "Could not find parachain ID in chain-spec.")?;
 
-				let polkadot_cli = RelayChainCli::new(
+				let infrablockspace_cli = RelayChainCli::new(
 					&config,
 					[RelayChainCli::executable_name()].iter().chain(cli.relay_chain_args.iter()),
 				);
@@ -284,7 +284,7 @@ pub fn run() -> Result<()> {
 				let id = ParaId::from(para_id);
 
 				let parachain_account =
-					AccountIdConversion::<polkadot_primitives::AccountId>::into_account_truncating(&id);
+					AccountIdConversion::<infrablockspace_primitives::AccountId>::into_account_truncating(&id);
 
 				let state_version = Cli::native_runtime_version(&config.chain_spec).state_version();
 				let block: Block = generate_genesis_block(&*config.chain_spec, state_version)
@@ -292,8 +292,8 @@ pub fn run() -> Result<()> {
 				let genesis_state = format!("0x{:?}", HexDisplay::from(&block.header().encode()));
 
 				let tokio_handle = config.tokio_handle.clone();
-				let polkadot_config =
-					SubstrateCli::create_configuration(&polkadot_cli, &polkadot_cli, tokio_handle)
+				let infrablockspace_config =
+					SubstrateCli::create_configuration(&infrablockspace_cli, &infrablockspace_cli, tokio_handle)
 						.map_err(|err| format!("Relay chain argument error: {}", err))?;
 
 				info!("Parachain id: {:?}", id);
@@ -307,7 +307,7 @@ pub fn run() -> Result<()> {
 
 				crate::service::start_parachain_node(
 					config,
-					polkadot_config,
+					infrablockspace_config,
 					collator_options,
 					id,
 					hwbench,

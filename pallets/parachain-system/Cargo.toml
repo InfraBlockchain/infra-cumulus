@@ -7,28 +7,32 @@ description = "Base pallet for cumulus-based parachains"
 
 [dependencies]
 bytes = { version = "1.4.0", default-features = false }
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
 environmental = { version = "1.1.4", default-features = false }
 impl-trait-for-tuples = "0.2.1"
 log = { version = "0.4.17", default-features = false }
 scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
 
 # Substrate
-frame-support = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-frame-system = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-core = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-externalities = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-inherents = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-io = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-state-machine = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-std = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-trie = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
-sp-version = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "master" }
+frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+frame-system = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-externalities = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-inherents = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-state-machine = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-trie = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+sp-version = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-# Polkadot
-polkadot-parachain = { git = "https://github.com/paritytech/polkadot", default-features = false, features = [ "wasm-api" ], branch = "master" }
-xcm = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "master" }
+# infrablockspace
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, features = [
+	"wasm-api",
+], branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
 
 # Cumulus
 cumulus-pallet-parachain-system-proc-macro = { path = "proc-macro", default-features = false }
@@ -40,17 +44,17 @@ hex-literal = "0.3.4"
 lazy_static = "1.4"
 
 # Substrate
-sc-client-api = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-keyring = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-tracing = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-version = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sc-client-api = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+sp-keyring = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+sp-tracing = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+sp-version = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # Cumulus
 cumulus-test-client = { path = "../../test/client" }
 cumulus-test-relay-sproof-builder = { path = "../../test/relay-sproof-builder" }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
 	"codec/std",
 	"environmental/std",
@@ -71,8 +75,6 @@ std = [
 	"xcm/std",
 ]
 
-runtime-benchmarks = [
-	"sp-runtime/runtime-benchmarks"
-]
+runtime-benchmarks = ["sp-runtime/runtime-benchmarks"]
 
 try-runtime = ["frame-support/try-runtime"]

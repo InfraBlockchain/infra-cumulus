@@ -22,19 +22,23 @@ use cumulus_primitives_core::{
 	PersistedValidationData,
 };
 
+use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;
 use sp_api::{ApiExt, ProvideRuntimeApi};
 use sp_consensus::BlockStatus;
-use sp_core::traits::SpawnNamed;
+use sp_core::{traits::SpawnNamed, ConstU32};
 use sp_runtime::traits::{Block as BlockT, HashFor, Header as HeaderT, Zero};
+use sp_std::convert::TryInto;
 
 use cumulus_client_consensus_common::ParachainConsensus;
-use polkadot_node_primitives::{
+use infrablockspace_node_primitives::{
 	BlockData, Collation, CollationGenerationConfig, CollationResult, MaybeCompressedPoV, PoV,
 };
-use polkadot_node_subsystem::messages::{CollationGenerationMessage, CollatorProtocolMessage};
-use polkadot_overseer::Handle as OverseerHandle;
-use polkadot_primitives::{CollatorPair, Id as ParaId};
+use infrablockspace_node_subsystem::messages::{
+	CollationGenerationMessage, CollatorProtocolMessage,
+};
+use infrablockspace_overseer::Handle as OverseerHandle;
+use infrablockspace_primitives::{AccountId, CollatorPair, Id as ParaId};
 
 use codec::{Decode, Encode};
 use futures::{channel::oneshot, FutureExt};
@@ -217,6 +221,16 @@ where
 			})
 			.ok()?;
 
+		// This code should be replaced with actual data fetched from get_vote_info api
+		let dummy_vote_vec = {
+			let v = vec![(AccountId::new([0u8; 32]), 0 as u64)];
+
+			let bounded_v: BoundedVec<(AccountId, u64), ConstU32<1024>> =
+				v.try_into().expect("exceeded the # of validators available to vote.");
+
+			bounded_v
+		};
+
 		Some(Collation {
 			upward_messages,
 			new_validation_code: collation_info.new_validation_code,
@@ -225,6 +239,7 @@ where
 			hrmp_watermark: collation_info.hrmp_watermark,
 			head_data: collation_info.head_data,
 			proof_of_validity: MaybeCompressedPoV::Compressed(pov),
+			vote_info: dummy_vote_vec,
 		})
 	}
 
@@ -292,8 +307,9 @@ where
 			b.storage_proof().encode().len() as f64 / 1024f64,
 		);
 
-		let pov =
-			polkadot_node_primitives::maybe_compress_pov(PoV { block_data: BlockData(b.encode()) });
+		let pov = infrablockspace_node_primitives::maybe_compress_pov(PoV {
+			block_data: BlockData(b.encode()),
+		});
 
 		tracing::info!(
 			target: LOG_TARGET,
@@ -386,8 +402,8 @@ mod tests {
 	};
 	use cumulus_test_runtime::{Block, Header};
 	use futures::{channel::mpsc, executor::block_on, StreamExt};
-	use polkadot_node_subsystem_test_helpers::ForwardSubsystem;
-	use polkadot_overseer::{dummy::dummy_overseer_builder, HeadSupportsParachains};
+	use infrablockspace_node_subsystem_test_helpers::ForwardSubsystem;
+	use infrablockspace_overseer::{dummy::dummy_overseer_builder, HeadSupportsParachains};
 	use sp_consensus::BlockOrigin;
 	use sp_core::{testing::TaskExecutor, Pair};
 	use sp_runtime::traits::BlakeTwo256;

@@ -46,10 +46,12 @@ use cumulus_relay_chain_minimal_node::build_minimal_relay_chain_node;
 use cumulus_test_runtime::{Hash, Header, NodeBlock as Block, RuntimeApi};
 
 use frame_system_rpc_runtime_api::AccountNonceApi;
-use polkadot_node_subsystem::{errors::RecoveryError, messages::AvailabilityRecoveryMessage};
-use polkadot_overseer::Handle as OverseerHandle;
-use polkadot_primitives::{CollatorPair, Hash as PHash, PersistedValidationData};
-use polkadot_service::ProvideRuntimeApi;
+use infrablockspace_node_subsystem::{
+	errors::RecoveryError, messages::AvailabilityRecoveryMessage,
+};
+use infrablockspace_overseer::Handle as OverseerHandle;
+use infrablockspace_primitives::{CollatorPair, Hash as PHash, PersistedValidationData};
+use infrablockspace_service::ProvideRuntimeApi;
 use sc_client_api::execution_extensions::ExecutionStrategies;
 use sc_consensus::ImportQueue;
 use sc_network::{multiaddr, NetworkBlock, NetworkService};
@@ -247,9 +249,9 @@ async fn build_relay_chain_interface(
 	let relay_chain_full_node = polkadot_test_service::new_full(
 		relay_chain_config,
 		if let Some(ref key) = collator_key {
-			polkadot_service::IsCollator::Yes(key.clone())
+			infrablockspace_service::IsCollator::Yes(key.clone())
 		} else {
-			polkadot_service::IsCollator::Yes(CollatorPair::generate().0)
+			infrablockspace_service::IsCollator::Yes(CollatorPair::generate().0)
 		},
 		None,
 	)?;
@@ -310,7 +312,7 @@ where
 	)
 	.await
 	.map_err(|e| match e {
-		RelayChainError::ServiceError(polkadot_service::Error::Sub(x)) => x,
+		RelayChainError::ServiceError(infrablockspace_service::Error::Sub(x)) => x,
 		s => s.to_string().into(),
 	})?;
 

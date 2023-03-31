@@ -8,9 +8,9 @@ use frame_support::{
 	traits::{ConstU32, Everything, Nothing},
 	weights::Weight,
 };
+use infrablockspace_parachain::primitives::Sibling;
+use infrablockspace_runtime_common::impls::ToAuthor;
 use pallet_xcm::XcmPassthrough;
-use polkadot_parachain::primitives::Sibling;
-use polkadot_runtime_common::impls::ToAuthor;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowTopLevelPaidExecutionFrom,
