@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Subcommand",""]],"struct":[["ExportGenesisStateCommand",""],["ExportGenesisWasmCommand","Command for exporting the genesis wasm file."],["RelayChainCli",""],["TestCollatorCli",""]]};

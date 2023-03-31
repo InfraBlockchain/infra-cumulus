@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["FungiblesAccessError","The possible errors that can happen querying the storage of assets."]],"trait":[["FungiblesApi","The API for querying account’s balances from runtime."]]};

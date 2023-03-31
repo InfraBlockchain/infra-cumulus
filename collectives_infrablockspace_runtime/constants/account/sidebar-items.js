@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["RELAY_TREASURY_PALL_ID","Relay Chain treasury pallet id, used to convert into AccountId"],["SLASHED_IMBALANCE_ACC_ID","account used to temporarily deposit slashed imbalance before teleporting"]]};

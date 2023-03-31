@@ -1,0 +1,10 @@
+(function() {var implementors = {
+"cumulus_pallet_dmp_queue":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"cumulus_pallet_dmp_queue/pallet/enum.Error.html\" title=\"enum cumulus_pallet_dmp_queue::pallet::Error\">Error</a>&lt;T&gt;"]],
+"cumulus_pallet_parachain_system":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"cumulus_pallet_parachain_system/pallet/enum.Error.html\" title=\"enum cumulus_pallet_parachain_system::pallet::Error\">Error</a>&lt;T&gt;"]],
+"cumulus_pallet_solo_to_para":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"cumulus_pallet_solo_to_para/pallet/enum.Error.html\" title=\"enum cumulus_pallet_solo_to_para::pallet::Error\">Error</a>&lt;T&gt;"]],
+"cumulus_pallet_xcm":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"cumulus_pallet_xcm/pallet/enum.Error.html\" title=\"enum cumulus_pallet_xcm::pallet::Error\">Error</a>&lt;T&gt;"]],
+"cumulus_pallet_xcmp_queue":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"cumulus_pallet_xcmp_queue/pallet/enum.Error.html\" title=\"enum cumulus_pallet_xcmp_queue::pallet::Error\">Error</a>&lt;T&gt;"]],
+"cumulus_ping":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"cumulus_ping/pallet/enum.Error.html\" title=\"enum cumulus_ping::pallet::Error\">Error</a>&lt;T&gt;"]],
+"pallet_collator_selection":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"pallet_collator_selection/pallet/enum.Error.html\" title=\"enum pallet_collator_selection::pallet::Error\">Error</a>&lt;T&gt;"]],
+"pallet_template":[["impl&lt;T&gt; PalletError for <a class=\"enum\" href=\"pallet_template/pallet/enum.Error.html\" title=\"enum pallet_template::pallet::Error\">Error</a>&lt;T&gt;"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

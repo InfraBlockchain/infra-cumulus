@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"collectives_infrablockspace_runtime":[["impl Config&lt;Instance1&gt; for <a class=\"struct\" href=\"collectives_infrablockspace_runtime/struct.Runtime.html\" title=\"struct collectives_infrablockspace_runtime::Runtime\">Runtime</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
