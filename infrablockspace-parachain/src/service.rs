@@ -117,21 +117,6 @@ impl sc_executor::NativeExecutionDispatch for StatemineRuntimeExecutor {
 	}
 }
 
-/// Native Westmint executor instance.
-pub struct WestmintRuntimeExecutor;
-
-impl sc_executor::NativeExecutionDispatch for WestmintRuntimeExecutor {
-	type ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
-
-	fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-		westmint_runtime::api::dispatch(method, data)
-	}
-
-	fn native_version() -> sc_executor::NativeVersion {
-		westmint_runtime::native_version()
-	}
-}
-
 // Native Polkadot Collectives executor instance.
 pub struct CollectivesPolkadotRuntimeExecutor;
 

@@ -22,11 +22,13 @@ use cumulus_primitives_core::{
 	PersistedValidationData,
 };
 
+use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;
 use sp_api::{ApiExt, ProvideRuntimeApi};
 use sp_consensus::BlockStatus;
-use sp_core::traits::SpawnNamed;
+use sp_core::{traits::SpawnNamed, ConstU32};
 use sp_runtime::traits::{Block as BlockT, HashFor, Header as HeaderT, Zero};
+use sp_std::convert::TryInto;
 
 use cumulus_client_consensus_common::ParachainConsensus;
 use infrablockspace_node_primitives::{
@@ -36,7 +38,7 @@ use infrablockspace_node_subsystem::messages::{
 	CollationGenerationMessage, CollatorProtocolMessage,
 };
 use infrablockspace_overseer::Handle as OverseerHandle;
-use infrablockspace_primitives::{CollatorPair, Id as ParaId};
+use infrablockspace_primitives::{AccountId, CollatorPair, Id as ParaId};
 
 use codec::{Decode, Encode};
 use futures::{channel::oneshot, FutureExt};
@@ -219,6 +221,16 @@ where
 			})
 			.ok()?;
 
+		// This code should be replaced with actual data fetched from get_vote_info api
+		let dummy_vote_vec = {
+			let v = vec![(AccountId::new([0u8; 32]), 0 as u64)];
+
+			let bounded_v: BoundedVec<(AccountId, u64), ConstU32<1024>> =
+				v.try_into().expect("exceeded the # of validators available to vote.");
+
+			bounded_v
+		};
+
 		Some(Collation {
 			upward_messages,
 			new_validation_code: collation_info.new_validation_code,
@@ -227,6 +239,7 @@ where
 			hrmp_watermark: collation_info.hrmp_watermark,
 			head_data: collation_info.head_data,
 			proof_of_validity: MaybeCompressedPoV::Compressed(pov),
+			vote_info: dummy_vote_vec,
 		})
 	}
 

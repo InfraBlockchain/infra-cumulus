@@ -28,12 +28,9 @@ pub type StatemintChainSpec =
 	sc_service::GenericChainSpec<statemint_runtime::GenesisConfig, Extensions>;
 pub type StatemineChainSpec =
 	sc_service::GenericChainSpec<statemine_runtime::GenesisConfig, Extensions>;
-pub type WestmintChainSpec =
-	sc_service::GenericChainSpec<westmint_runtime::GenesisConfig, Extensions>;
 
 const STATEMINT_ED: StatemintBalance = statemint_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 const STATEMINE_ED: StatemintBalance = statemine_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
-const WESTMINT_ED: StatemintBalance = westmint_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 
 /// Generate the session keys from individual elements.
 ///
@@ -47,13 +44,6 @@ pub fn statemint_session_keys(keys: StatemintAuraId) -> statemint_runtime::Sessi
 /// The input must be a tuple of individual keys (a single arg for now since we have just one key).
 pub fn statemine_session_keys(keys: AuraId) -> statemine_runtime::SessionKeys {
 	statemine_runtime::SessionKeys { aura: keys }
-}
-
-/// Generate the session keys from individual elements.
-///
-/// The input must be a tuple of individual keys (a single arg for now since we have just one key).
-pub fn westmint_session_keys(keys: AuraId) -> westmint_runtime::SessionKeys {
-	westmint_runtime::SessionKeys { aura: keys }
 }
 
 pub fn statemint_development_config() -> StatemintChainSpec {
@@ -241,7 +231,7 @@ fn statemint_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		infrablockspace_xcm: statemint_runtime::PolkadotXcmConfig {
+		polkadot_xcm: statemint_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 	}
@@ -428,189 +418,7 @@ fn statemine_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		infrablockspace_xcm: statemine_runtime::PolkadotXcmConfig {
-			safe_xcm_version: Some(SAFE_XCM_VERSION),
-		},
-	}
-}
-
-pub fn westmint_development_config() -> WestmintChainSpec {
-	let mut properties = sc_chain_spec::Properties::new();
-	properties.insert("tokenSymbol".into(), "WND".into());
-	properties.insert("tokenDecimals".into(), 12.into());
-
-	WestmintChainSpec::from_genesis(
-		// Name
-		"Westmint Development",
-		// ID
-		"westmint_dev",
-		ChainType::Local,
-		move || {
-			westmint_genesis(
-				// initial collators.
-				vec![(
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					get_collator_keys_from_seed::<AuraId>("Alice"),
-				)],
-				vec![
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					get_account_id_from_seed::<sr25519::Public>("Bob"),
-					get_account_id_from_seed::<sr25519::Public>("Alice//stash"),
-					get_account_id_from_seed::<sr25519::Public>("Bob//stash"),
-				],
-				1000.into(),
-			)
-		},
-		Vec::new(),
-		None,
-		None,
-		None,
-		Some(properties),
-		Extensions { relay_chain: "westend".into(), para_id: 1000 },
-	)
-}
-
-pub fn westmint_local_config() -> WestmintChainSpec {
-	let mut properties = sc_chain_spec::Properties::new();
-	properties.insert("tokenSymbol".into(), "WND".into());
-	properties.insert("tokenDecimals".into(), 12.into());
-
-	WestmintChainSpec::from_genesis(
-		// Name
-		"Westmint Local",
-		// ID
-		"westmint_local",
-		ChainType::Local,
-		move || {
-			westmint_genesis(
-				// initial collators.
-				vec![
-					(
-						get_account_id_from_seed::<sr25519::Public>("Alice"),
-						get_collator_keys_from_seed::<AuraId>("Alice"),
-					),
-					(
-						get_account_id_from_seed::<sr25519::Public>("Bob"),
-						get_collator_keys_from_seed::<AuraId>("Bob"),
-					),
-				],
-				vec![
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					get_account_id_from_seed::<sr25519::Public>("Bob"),
-					get_account_id_from_seed::<sr25519::Public>("Charlie"),
-					get_account_id_from_seed::<sr25519::Public>("Dave"),
-					get_account_id_from_seed::<sr25519::Public>("Eve"),
-					get_account_id_from_seed::<sr25519::Public>("Ferdie"),
-					get_account_id_from_seed::<sr25519::Public>("Alice//stash"),
-					get_account_id_from_seed::<sr25519::Public>("Bob//stash"),
-					get_account_id_from_seed::<sr25519::Public>("Charlie//stash"),
-					get_account_id_from_seed::<sr25519::Public>("Dave//stash"),
-					get_account_id_from_seed::<sr25519::Public>("Eve//stash"),
-					get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
-				],
-				1000.into(),
-			)
-		},
-		Vec::new(),
-		None,
-		None,
-		None,
-		Some(properties),
-		Extensions { relay_chain: "westend-local".into(), para_id: 1000 },
-	)
-}
-
-pub fn westmint_config() -> WestmintChainSpec {
-	let mut properties = sc_chain_spec::Properties::new();
-	properties.insert("tokenSymbol".into(), "WND".into());
-	properties.insert("tokenDecimals".into(), 12.into());
-
-	WestmintChainSpec::from_genesis(
-		// Name
-		"Westmint",
-		// ID
-		"westmint",
-		ChainType::Live,
-		move || {
-			westmint_genesis(
-				// initial collators.
-				vec![
-					(
-						hex!("9cfd429fa002114f33c1d3e211501d62830c9868228eb3b4b8ae15a83de04325")
-							.into(),
-						hex!("9cfd429fa002114f33c1d3e211501d62830c9868228eb3b4b8ae15a83de04325")
-							.unchecked_into(),
-					),
-					(
-						hex!("12a03fb4e7bda6c9a07ec0a11d03c24746943e054ff0bb04938970104c783876")
-							.into(),
-						hex!("12a03fb4e7bda6c9a07ec0a11d03c24746943e054ff0bb04938970104c783876")
-							.unchecked_into(),
-					),
-					(
-						hex!("1256436307dfde969324e95b8c62cb9101f520a39435e6af0f7ac07b34e1931f")
-							.into(),
-						hex!("1256436307dfde969324e95b8c62cb9101f520a39435e6af0f7ac07b34e1931f")
-							.unchecked_into(),
-					),
-					(
-						hex!("98102b7bca3f070f9aa19f58feed2c0a4e107d203396028ec17a47e1ed80e322")
-							.into(),
-						hex!("98102b7bca3f070f9aa19f58feed2c0a4e107d203396028ec17a47e1ed80e322")
-							.unchecked_into(),
-					),
-				],
-				Vec::new(),
-				1000.into(),
-			)
-		},
-		Vec::new(),
-		None,
-		None,
-		None,
-		Some(properties),
-		Extensions { relay_chain: "westend".into(), para_id: 1000 },
-	)
-}
-
-fn westmint_genesis(
-	invulnerables: Vec<(AccountId, AuraId)>,
-	endowed_accounts: Vec<AccountId>,
-	id: ParaId,
-) -> westmint_runtime::GenesisConfig {
-	westmint_runtime::GenesisConfig {
-		system: westmint_runtime::SystemConfig {
-			code: westmint_runtime::WASM_BINARY
-				.expect("WASM binary was not build, please build it!")
-				.to_vec(),
-		},
-		balances: westmint_runtime::BalancesConfig {
-			balances: endowed_accounts.iter().cloned().map(|k| (k, WESTMINT_ED * 4096)).collect(),
-		},
-		parachain_info: westmint_runtime::ParachainInfoConfig { parachain_id: id },
-		collator_selection: westmint_runtime::CollatorSelectionConfig {
-			invulnerables: invulnerables.iter().cloned().map(|(acc, _)| acc).collect(),
-			candidacy_bond: WESTMINT_ED * 16,
-			..Default::default()
-		},
-		session: westmint_runtime::SessionConfig {
-			keys: invulnerables
-				.into_iter()
-				.map(|(acc, aura)| {
-					(
-						acc.clone(),                 // account id
-						acc,                         // validator id
-						westmint_session_keys(aura), // session keys
-					)
-				})
-				.collect(),
-		},
-		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
-		// of this.
-		aura: Default::default(),
-		aura_ext: Default::default(),
-		parachain_system: Default::default(),
-		infrablockspace_xcm: westmint_runtime::PolkadotXcmConfig {
+		polkadot_xcm: statemine_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 	}

@@ -114,7 +114,7 @@ pub(crate) fn testnet_genesis(
 		aura: rococo_parachain_runtime::AuraConfig { authorities: initial_authorities },
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		infrablockspace_xcm: rococo_parachain_runtime::PolkadotXcmConfig {
+		polkadot_xcm: rococo_parachain_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 	}

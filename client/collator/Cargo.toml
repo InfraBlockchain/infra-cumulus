@@ -13,9 +13,11 @@ tracing = "0.1.25"
 # Substrate
 sc-client-api = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-api = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-consensus = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
 infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }

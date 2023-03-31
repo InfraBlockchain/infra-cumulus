@@ -16,7 +16,7 @@
 
 use std::{net::SocketAddr, path::PathBuf};
 
-use polkadot_service::{ChainSpec, ParaId, PrometheusConfig};
+use infrablockspace_service::{ChainSpec, ParaId, PrometheusConfig};
 use sc_cli::{
 	CliConfiguration, DefaultConfigurationValues, ImportParams, KeystoreParams, NetworkParams,
 	Result as CliResult, RuntimeVersion, SharedParams, SubstrateCli,
@@ -102,7 +102,7 @@ impl CliConfiguration for ExportGenesisWasmCommand {
 #[derive(Debug)]
 pub struct RelayChainCli {
 	/// The actual relay chain cli object.
-	pub base: polkadot_cli::RunCmd,
+	pub base: infrablockspace_cli::RunCmd,
 
 	/// Optional chain id that should be passed to the relay chain.
 	pub chain_id: Option<String>,
@@ -342,11 +342,13 @@ impl SubstrateCli for RelayChainCli {
 	}
 
 	fn load_spec(&self, id: &str) -> std::result::Result<Box<dyn sc_service::ChainSpec>, String> {
-		<polkadot_cli::Cli as SubstrateCli>::from_iter([RelayChainCli::executable_name()].iter())
-			.load_spec(id)
+		<infrablockspace_cli::Cli as SubstrateCli>::from_iter(
+			[RelayChainCli::executable_name()].iter(),
+		)
+		.load_spec(id)
 	}
 
 	fn native_runtime_version(chain_spec: &Box<dyn ChainSpec>) -> &'static RuntimeVersion {
-		polkadot_cli::Cli::native_runtime_version(chain_spec)
+		infrablockspace_cli::Cli::native_runtime_version(chain_spec)
 	}
 }

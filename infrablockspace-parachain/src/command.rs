@@ -20,7 +20,7 @@ use crate::{
 	service::{
 		new_partial, Block, BridgeHubKusamaRuntimeExecutor, BridgeHubPolkadotRuntimeExecutor,
 		BridgeHubRococoRuntimeExecutor, CollectivesPolkadotRuntimeExecutor,
-		StatemineRuntimeExecutor, StatemintRuntimeExecutor, WestmintRuntimeExecutor,
+		StatemineRuntimeExecutor, StatemintRuntimeExecutor,
 	},
 };
 use codec::Encode;
@@ -49,7 +49,6 @@ enum Runtime {
 	Seedling,
 	Statemint,
 	Statemine,
-	Westmint,
 	Penpal(ParaId),
 	ContractsRococo,
 	CollectivesPolkadot,
@@ -96,8 +95,6 @@ fn runtime(id: &str) -> Runtime {
 		Runtime::Statemint
 	} else if id.starts_with("statemine") {
 		Runtime::Statemine
-	} else if id.starts_with("westmint") {
-		Runtime::Westmint
 	} else if id.starts_with("penpal") {
 		Runtime::Penpal(para_id.unwrap_or(ParaId::new(0)))
 	} else if id.starts_with("contracts-rococo") {
@@ -160,16 +157,6 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 			&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
 		)?),
 
-		// -- Westmint
-		"westmint-dev" => Box::new(chain_spec::statemint::westmint_development_config()),
-		"westmint-local" => Box::new(chain_spec::statemint::westmint_local_config()),
-		// the chain spec as used for generating the upgrade genesis values
-		"westmint-genesis" => Box::new(chain_spec::statemint::westmint_config()),
-		// the shell-based chain spec as used for syncing
-		"westmint" => Box::new(chain_spec::statemint::WestmintChainSpec::from_json_bytes(
-			&include_bytes!("../../parachains/chain-specs/westmint.json")[..],
-		)?),
-
 		// -- Polkadot Collectives
 		"collectives-polkadot-dev" =>
 			Box::new(chain_spec::collectives::collectives_infrablockspace_development_config()),
@@ -228,8 +215,6 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 					Box::new(chain_spec::statemint::StatemintChainSpec::from_json_file(path)?),
 				Runtime::Statemine =>
 					Box::new(chain_spec::statemint::StatemineChainSpec::from_json_file(path)?),
-				Runtime::Westmint =>
-					Box::new(chain_spec::statemint::WestmintChainSpec::from_json_file(path)?),
 				Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => Box::new(
 					chain_spec::collectives::CollectivesPolkadotChainSpec::from_json_file(path)?,
 				),
@@ -312,7 +297,6 @@ impl SubstrateCli for Cli {
 		match chain_spec.runtime() {
 			Runtime::Statemint => &statemint_runtime::VERSION,
 			Runtime::Statemine => &statemine_runtime::VERSION,
-			Runtime::Westmint => &westmint_runtime::VERSION,
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend =>
 				&collectives_infrablockspace_runtime::VERSION,
 			Runtime::Shell => &shell_runtime::VERSION,
@@ -377,13 +361,6 @@ macro_rules! construct_benchmark_partials {
 				)?;
 				$code
 			},
-			Runtime::Westmint => {
-				let $partials = new_partial::<westmint_runtime::RuntimeApi, _>(
-					&$config,
-					crate::service::aura_build_import_queue::<_, AuraId>,
-				)?;
-				$code
-			},
 			Runtime::Statemint => {
 				let $partials = new_partial::<statemint_runtime::RuntimeApi, _>(
 					&$config,
@@ -407,16 +384,6 @@ macro_rules! construct_async_run {
 	(|$components:ident, $cli:ident, $cmd:ident, $config:ident| $( $code:tt )* ) => {{
 		let runner = $cli.create_runner($cmd)?;
 		match runner.config().chain_spec.runtime() {
-			Runtime::Westmint => {
-				runner.async_run(|$config| {
-					let $components = new_partial::<westmint_runtime::RuntimeApi, _>(
-						&$config,
-						crate::service::aura_build_import_queue::<_, AuraId>,
-					)?;
-					let task_manager = $components.task_manager;
-					{ $( $code )* }.map(|v| (v, task_manager))
-				})
-			},
 			Runtime::Statemine => {
 				runner.async_run(|$config| {
 					let $components = new_partial::<statemine_runtime::RuntimeApi, _>(
@@ -637,7 +604,6 @@ pub fn run() -> Result<()> {
 							match config.chain_spec.runtime() {
 							Runtime::Statemine =>
 								cmd.run::<Block, StatemineRuntimeExecutor>(config),
-							Runtime::Westmint => cmd.run::<Block, WestmintRuntimeExecutor>(config),
 							Runtime::Statemint =>
 								cmd.run::<Block, StatemintRuntimeExecutor>(config),
 							Runtime::CollectivesPolkadot | Runtime::CollectivesWestend =>
@@ -862,13 +828,6 @@ pub fn run() -> Result<()> {
 					.map_err(Into::into),
 					Runtime::Statemine => crate::service::start_generic_aura_node::<
 						statemine_runtime::RuntimeApi,
-						AuraId,
-					>(config, infrablockspace_config, collator_options, id, hwbench)
-					.await
-					.map(|r| r.0)
-					.map_err(Into::into),
-					Runtime::Westmint => crate::service::start_generic_aura_node::<
-						westmint_runtime::RuntimeApi,
 						AuraId,
 					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await

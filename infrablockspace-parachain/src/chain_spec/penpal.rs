@@ -120,7 +120,7 @@ fn penpal_testnet_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		infrablockspace_xcm: penpal_runtime::PolkadotXcmConfig {
+		polkadot_xcm: penpal_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 		sudo: penpal_runtime::SudoConfig {
