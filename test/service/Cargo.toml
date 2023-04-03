@@ -52,7 +52,7 @@ sc-cli = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = 
 # infrablockspace
 infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 infrablockspace-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
-polkadot-test-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-test-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
@@ -79,14 +79,14 @@ futures = "0.3.26"
 portpicker = "0.1.1"
 
 # infrablockspace dependencies
-polkadot-test-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-test-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Substrate dependencies
 sc-cli = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 substrate-test-utils = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 [features]
-runtime-benchmarks = ["polkadot-test-service/runtime-benchmarks"]
+runtime-benchmarks = ["infrablockspace-test-service/runtime-benchmarks"]
 
 [[bench]]
 name = "transaction_throughput"

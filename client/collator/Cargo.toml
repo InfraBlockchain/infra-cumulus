@@ -20,6 +20,9 @@ sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branc
 frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-pot = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
+# Runtime Api
+pot-runtime-api = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+
 # infrablockspace
 infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
