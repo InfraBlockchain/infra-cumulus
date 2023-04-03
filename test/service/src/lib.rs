@@ -246,7 +246,7 @@ async fn build_relay_chain_interface(
 		.map(|r| r.0)
 	}
 
-	let relay_chain_full_node = polkadot_test_service::new_full(
+	let relay_chain_full_node = infrablockspace_test_service::new_full(
 		relay_chain_config,
 		if let Some(ref key) = collator_key {
 			infrablockspace_service::IsCollator::Yes(key.clone())
@@ -557,7 +557,7 @@ impl TestNodeBuilder {
 	/// node.
 	pub fn connect_to_relay_chain_node(
 		mut self,
-		node: &polkadot_test_service::PolkadotTestNode,
+		node: &infrablockspace_test_service::PolkadotTestNode,
 	) -> Self {
 		self.relay_chain_nodes.push(node.addr.clone());
 		self
@@ -569,7 +569,7 @@ impl TestNodeBuilder {
 	/// node.
 	pub fn connect_to_relay_chain_nodes<'a>(
 		mut self,
-		nodes: impl IntoIterator<Item = &'a polkadot_test_service::PolkadotTestNode>,
+		nodes: impl IntoIterator<Item = &'a infrablockspace_test_service::PolkadotTestNode>,
 	) -> Self {
 		self.relay_chain_nodes.extend(nodes.into_iter().map(|n| n.addr.clone()));
 		self
@@ -630,7 +630,7 @@ impl TestNodeBuilder {
 		)
 		.expect("could not generate Configuration");
 
-		let mut relay_chain_config = polkadot_test_service::node_config(
+		let mut relay_chain_config = infrablockspace_test_service::node_config(
 			self.storage_update_func_relay_chain.unwrap_or_else(|| Box::new(|| ())),
 			self.tokio_handle,
 			self.key,
@@ -858,15 +858,15 @@ pub fn construct_extrinsic(
 /// Run a relay-chain validator node.
 ///
 /// This is essentially a wrapper around
-/// [`run_validator_node`](polkadot_test_service::run_validator_node).
+/// [`run_validator_node`](infrablockspace_test_client::run_validator_node).
 pub fn run_relay_chain_validator_node(
 	tokio_handle: tokio::runtime::Handle,
 	key: Sr25519Keyring,
 	storage_update_func: impl Fn(),
 	boot_nodes: Vec<MultiaddrWithPeerId>,
 	websocket_port: Option<u16>,
-) -> polkadot_test_service::PolkadotTestNode {
-	let mut config = polkadot_test_service::node_config(
+) -> infrablockspace_test_service::PolkadotTestNode {
+	let mut config = infrablockspace_test_service::node_config(
 		storage_update_func,
 		tokio_handle,
 		key,
@@ -878,7 +878,7 @@ pub fn run_relay_chain_validator_node(
 		config.rpc_ws = Some(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), port));
 	}
 
-	polkadot_test_service::run_validator_node(
+	infrablockspace_test_service::run_validator_node(
 		config,
 		Some(cumulus_test_relay_validation_worker_provider::VALIDATION_WORKER.into()),
 	)

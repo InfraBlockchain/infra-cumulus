@@ -45,7 +45,7 @@ substrate-test-utils = { git = "https://github.com/InfraBlockchain/infra-substra
 
 # infrablockspace
 infrablockspace-client = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
-polkadot-test-client = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-test-client = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Cumulus
 cumulus-primitives-core = { path = "../../primitives/core" }
