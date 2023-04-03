@@ -25,7 +25,7 @@ use sp_core::sr25519;
 pub type CollectivesPolkadotChainSpec =
 	sc_service::GenericChainSpec<collectives_infrablockspace_runtime::GenesisConfig, Extensions>;
 
-const COLLECTIVES_infrablockspace_ED: CollectivesBalance =
+const COLLECTIVES_INFRABLOCKSPACE_ED: CollectivesBalance =
 	collectives_infrablockspace_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 
 /// Generate the session keys from individual elements.
@@ -143,7 +143,7 @@ fn collectives_infrablockspace_genesis(
 			balances: endowed_accounts
 				.iter()
 				.cloned()
-				.map(|k| (k, COLLECTIVES_infrablockspace_ED * 4096))
+				.map(|k| (k, COLLECTIVES_INFRABLOCKSPACE_ED * 4096))
 				.collect(),
 		},
 		parachain_info: collectives_infrablockspace_runtime::ParachainInfoConfig {
@@ -151,7 +151,7 @@ fn collectives_infrablockspace_genesis(
 		},
 		collator_selection: collectives_infrablockspace_runtime::CollatorSelectionConfig {
 			invulnerables: invulnerables.iter().cloned().map(|(acc, _)| acc).collect(),
-			candidacy_bond: COLLECTIVES_infrablockspace_ED * 16,
+			candidacy_bond: COLLECTIVES_INFRABLOCKSPACE_ED * 16,
 			..Default::default()
 		},
 		session: collectives_infrablockspace_runtime::SessionConfig {

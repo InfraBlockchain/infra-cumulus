@@ -241,16 +241,16 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 /// E.g. "penpal-kusama-2004" yields ("penpal-kusama", Some(2004))
 fn extract_parachain_id(id: &str) -> (&str, &str, Option<ParaId>) {
 	const KUSAMA_TEST_PARA_PREFIX: &str = "penpal-kusama-";
-	const infrablockspace_TEST_PARA_PREFIX: &str = "penpal-polkadot-";
+	const INFRABLOCKSPACE_TEST_PARA_PREFIX: &str = "penpal-polkadot-";
 
 	let (norm_id, orig_id, para) = if id.starts_with(KUSAMA_TEST_PARA_PREFIX) {
 		let suffix = &id[KUSAMA_TEST_PARA_PREFIX.len()..];
 		let para_id: u32 = suffix.parse().expect("Invalid parachain-id suffix");
 		(&id[..KUSAMA_TEST_PARA_PREFIX.len() - 1], id, Some(para_id))
-	} else if id.starts_with(infrablockspace_TEST_PARA_PREFIX) {
-		let suffix = &id[infrablockspace_TEST_PARA_PREFIX.len()..];
+	} else if id.starts_with(INFRABLOCKSPACE_TEST_PARA_PREFIX) {
+		let suffix = &id[INFRABLOCKSPACE_TEST_PARA_PREFIX.len()..];
 		let para_id: u32 = suffix.parse().expect("Invalid parachain-id suffix");
-		(&id[..infrablockspace_TEST_PARA_PREFIX.len() - 1], id, Some(para_id))
+		(&id[..INFRABLOCKSPACE_TEST_PARA_PREFIX.len() - 1], id, Some(para_id))
 	} else {
 		(id, id, None)
 	};

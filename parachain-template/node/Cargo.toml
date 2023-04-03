@@ -56,10 +56,10 @@ substrate-prometheus-endpoint = { git = "https://github.com/InfraBlockchain/infr
 try-runtime-cli = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master", optional = true }
 
 # infrablockspace
-infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 
 # Cumulus
 cumulus-client-cli = { path = "../../client/cli" }

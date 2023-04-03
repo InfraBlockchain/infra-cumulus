@@ -5,8 +5,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 cumulus-primitives-core = { path = "../../primitives/core" }
 

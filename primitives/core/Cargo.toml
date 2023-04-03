@@ -16,10 +16,10 @@ sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-f
 sp-trie = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
-infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 
 [features]
 default = ["std"]

@@ -53,14 +53,14 @@ pallet-contracts = { git = "https://github.com/InfraBlockchain/infra-substrate",
 pallet-contracts-primitives = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
-kusama-runtime-constants = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-pallet-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-xcm-builder = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-xcm-executor = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+kusama-runtime-constants = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+pallet-xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm-builder = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm-executor = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 
 # Cumulus
 cumulus-pallet-aura-ext = { path = "../../../../pallets/aura-ext", default-features = false }

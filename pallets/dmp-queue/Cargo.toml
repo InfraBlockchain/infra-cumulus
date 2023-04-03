@@ -19,7 +19,7 @@ sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", defau
 sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 
 # Cumulus
 cumulus-primitives-core = { path = "../../primitives/core", default-features = false }

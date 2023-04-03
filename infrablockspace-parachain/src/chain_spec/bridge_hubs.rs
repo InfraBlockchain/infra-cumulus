@@ -51,8 +51,8 @@ impl FromStr for BridgeHubRuntimeType {
 	fn from_str(value: &str) -> Result<Self, Self::Err> {
 		match value {
 			polkadot::BRIDGE_HUB_POLKADOT => Ok(BridgeHubRuntimeType::Polkadot),
-			polkadot::BRIDGE_HUB_infrablockspace_LOCAL => Ok(BridgeHubRuntimeType::PolkadotLocal),
-			polkadot::BRIDGE_HUB_infrablockspace_DEVELOPMENT =>
+			polkadot::BRIDGE_HUB_INFRABLOCKSPACE_LOCAL => Ok(BridgeHubRuntimeType::PolkadotLocal),
+			polkadot::BRIDGE_HUB_INFRABLOCKSPACE_DEVELOPMENT =>
 				Ok(BridgeHubRuntimeType::PolkadotDevelopment),
 			kusama::BRIDGE_HUB_KUSAMA => Ok(BridgeHubRuntimeType::Kusama),
 			kusama::BRIDGE_HUB_KUSAMA_LOCAL => Ok(BridgeHubRuntimeType::KusamaLocal),
@@ -99,13 +99,13 @@ impl BridgeHubRuntimeType {
 					&include_bytes!("../../../parachains/chain-specs/bridge-hub-polkadot.json")[..],
 				)?)),
 			BridgeHubRuntimeType::PolkadotLocal => Ok(Box::new(polkadot::local_config(
-				polkadot::BRIDGE_HUB_infrablockspace_LOCAL,
+				polkadot::BRIDGE_HUB_INFRABLOCKSPACE_LOCAL,
 				"Polkadot BridgeHub Local",
 				"polkadot-local",
 				ParaId::new(1002),
 			))),
 			BridgeHubRuntimeType::PolkadotDevelopment => Ok(Box::new(polkadot::local_config(
-				polkadot::BRIDGE_HUB_infrablockspace_DEVELOPMENT,
+				polkadot::BRIDGE_HUB_INFRABLOCKSPACE_DEVELOPMENT,
 				"Polkadot BridgeHub Development",
 				"polkadot-dev",
 				ParaId::new(1002),
@@ -559,9 +559,9 @@ pub mod polkadot {
 	use sp_core::sr25519;
 
 	pub(crate) const BRIDGE_HUB_POLKADOT: &str = "bridge-hub-polkadot";
-	pub(crate) const BRIDGE_HUB_infrablockspace_LOCAL: &str = "bridge-hub-polkadot-local";
-	pub(crate) const BRIDGE_HUB_infrablockspace_DEVELOPMENT: &str = "bridge-hub-polkadot-dev";
-	const BRIDGE_HUB_infrablockspace_ED: BridgeHubBalance =
+	pub(crate) const BRIDGE_HUB_INFRABLOCKSPACE_LOCAL: &str = "bridge-hub-polkadot-local";
+	pub(crate) const BRIDGE_HUB_INFRABLOCKSPACE_DEVELOPMENT: &str = "bridge-hub-polkadot-dev";
+	const BRIDGE_HUB_INFRABLOCKSPACE_ED: BridgeHubBalance =
 		bridge_hub_infrablockspace_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 
 	/// Specialized `ChainSpec` for the normal parachain runtime.
@@ -640,7 +640,7 @@ pub mod polkadot {
 				balances: endowed_accounts
 					.iter()
 					.cloned()
-					.map(|k| (k, BRIDGE_HUB_infrablockspace_ED * 4096))
+					.map(|k| (k, BRIDGE_HUB_INFRABLOCKSPACE_ED * 4096))
 					.collect(),
 			},
 			parachain_info: bridge_hub_infrablockspace_runtime::ParachainInfoConfig {
@@ -648,7 +648,7 @@ pub mod polkadot {
 			},
 			collator_selection: bridge_hub_infrablockspace_runtime::CollatorSelectionConfig {
 				invulnerables: invulnerables.iter().cloned().map(|(acc, _)| acc).collect(),
-				candidacy_bond: BRIDGE_HUB_infrablockspace_ED * 16,
+				candidacy_bond: BRIDGE_HUB_INFRABLOCKSPACE_ED * 16,
 				..Default::default()
 			},
 			session: bridge_hub_infrablockspace_runtime::SessionConfig {

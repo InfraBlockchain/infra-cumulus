@@ -22,7 +22,7 @@ sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branc
 sp-trie = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Cumulus
 cumulus-primitives-core = { path = "../../../primitives/core" }
