@@ -29,10 +29,10 @@ sp-trie = { git = "https://github.com/InfraBlockchain/infra-substrate", default-
 sp-version = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
-infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, features = [
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, features = [
 	"wasm-api",
 ], branch = "master" }
-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 
 # Cumulus
 cumulus-pallet-parachain-system-proc-macro = { path = "proc-macro", default-features = false }

@@ -6,13 +6,13 @@ edition = "2021"
 
 [dependencies]
 # infrablockspace deps
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-node-subsystem-util = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-node-network-protocol = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-network-bridge = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-node-subsystem-util = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-node-network-protocol = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-network-bridge = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # substrate deps
 sc-authority-discovery = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }

@@ -50,12 +50,12 @@ substrate-test-client = { git = "https://github.com/InfraBlockchain/infra-substr
 sc-cli = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-test-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+polkadot-test-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Cumulus
 cumulus-client-cli = { path = "../../client/cli" }
@@ -79,7 +79,7 @@ futures = "0.3.26"
 portpicker = "0.1.1"
 
 # infrablockspace dependencies
-polkadot-test-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+polkadot-test-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Substrate dependencies
 sc-cli = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }

@@ -8,7 +8,7 @@ build = "build.rs"
 [dependencies]
 
 # infrablockspace
-infrablockspace-node-core-pvf = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-node-core-pvf = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 [build-dependencies]
 toml = "0.7.2"

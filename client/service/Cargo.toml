@@ -29,7 +29,7 @@ sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branc
 sp-transaction-pool = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Cumulus
 cumulus-client-cli = { path = "../cli" }
