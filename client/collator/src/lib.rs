@@ -21,6 +21,7 @@ use cumulus_primitives_core::{
 	relay_chain::Hash as PHash, CollationInfo, CollectCollationInfo, ParachainBlockData,
 	PersistedValidationData,
 };
+use pot_runtime_api::runtime_decl_for_PoTApi::PoTApi;
 
 use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;
