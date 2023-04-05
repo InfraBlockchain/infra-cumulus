@@ -54,8 +54,8 @@ use frame_support::{
 	weights::{ConstantMultiplier, Weight},
 	PalletId,
 };
-use pallet_pot::VoteWeight;
 use frame_system::limits::{BlockLength, BlockWeights};
+use pallet_pot::VoteWeight;
 pub use parachains_common as common;
 use parachains_common::{
 	impls::DealWithFees, opaque, AccountId, BlockNumber, Hash, Header, Index, Signature,

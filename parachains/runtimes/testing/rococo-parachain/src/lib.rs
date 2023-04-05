@@ -57,8 +57,8 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot, EnsureSigned,
 };
-use pallet_pot::VoteWeight;
 pub use pallet_balances::Call as BalancesCall;
+use pallet_pot::VoteWeight;
 pub use pallet_timestamp::Call as TimestampCall;
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 #[cfg(any(feature = "std", test))]

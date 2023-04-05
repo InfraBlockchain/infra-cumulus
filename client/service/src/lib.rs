@@ -30,7 +30,7 @@ use futures::{
 	channel::{mpsc, oneshot},
 	FutureExt, StreamExt,
 };
-use infrablockspace_primitives::{CollatorPair, OccupiedCoreAssumption, AccountId};
+use infrablockspace_primitives::{AccountId, CollatorPair, OccupiedCoreAssumption};
 use sc_client_api::{
 	Backend as BackendT, BlockBackend, BlockchainEvents, Finalizer, ProofProvider, UsageProvider,
 };

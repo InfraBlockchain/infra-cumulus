@@ -55,8 +55,8 @@ pub use frame_support::{
 	},
 	StorageValue,
 };
-use pallet_pot::VoteWeight;
 use frame_system::limits::{BlockLength, BlockWeights};
+use pallet_pot::VoteWeight;
 use parachains_common::{AccountId, Signature};
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
