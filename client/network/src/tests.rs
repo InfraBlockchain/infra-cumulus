@@ -30,7 +30,7 @@ use infrablockspace_primitives::{
 };
 use infrablockspace_test_client::{
 	Client as PClient, ClientBlockImportExt, DefaultTestClientBuilderExt, FullBackend as PBackend,
-	InitPolkadotBlockBuilder, TestClientBuilder, TestClientBuilderExt,
+	InitInfraBsBlockBuilder, TestClientBuilder, TestClientBuilderExt,
 };
 use parking_lot::Mutex;
 use sc_client_api::{Backend, BlockchainEvents};
