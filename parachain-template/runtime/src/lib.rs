@@ -620,12 +620,6 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
-		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
-			Pot::get_vote_info()
-		}
-	}
-
 	impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentCallApi<Block, Balance, RuntimeCall>
 		for Runtime
 	{
@@ -652,6 +646,12 @@ impl_runtime_apis! {
 	impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
 		fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
 			ParachainSystem::collect_collation_info(header)
+		}
+	}
+
+	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
+		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
+			Pot::get_vote_info()
 		}
 	}
 

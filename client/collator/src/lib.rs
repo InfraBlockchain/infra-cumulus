@@ -21,7 +21,7 @@ use cumulus_primitives_core::{
 	relay_chain::Hash as PHash, CollationInfo, CollectCollationInfo, ParachainBlockData,
 	PersistedValidationData,
 };
-use pot_runtime_api::runtime_decl_for_PoTApi::PoTApi;
+use pot_runtime_api::PoTApi;
 
 use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;
@@ -74,7 +74,8 @@ where
 	Block: BlockT,
 	BS: BlockBackend<Block>,
 	RA: ProvideRuntimeApi<Block>,
-	RA::Api: CollectCollationInfo<Block> + PoTApi<Block, AccountId>,
+	RA::Api: CollectCollationInfo<Block>,
+	RA::Api: PoTApi<Block, AccountId>,
 {
 	/// Create a new instance.
 	fn new(
@@ -360,7 +361,8 @@ pub async fn start_collator<Block, RA, BS, Spawner>(
 	BS: BlockBackend<Block> + Send + Sync + 'static,
 	Spawner: SpawnNamed + Clone + Send + Sync + 'static,
 	RA: ProvideRuntimeApi<Block> + Send + Sync + 'static,
-	RA::Api: CollectCollationInfo<Block> + PoTApi<Block, AccountId>,
+	RA::Api: CollectCollationInfo<Block>,
+	RA::Api: PoTApi<Block, AccountId>,
 {
 	let collator = Collator::new(
 		block_status,
