@@ -51,7 +51,7 @@ use sp_core::{traits::SpawnNamed, Decode};
 use sp_runtime::traits::{Block as BlockT, BlockIdTo};
 use std::{sync::Arc, time::Duration};
 
-use pot_runtime_api::runtime_decl_for_PoTApi::PoTApi;
+use pot_runtime_api::PoTApi;
 
 // Given the sporadic nature of the explicit recovery operation and the
 // possibility to retry infinite times this value is more than enough.
@@ -108,7 +108,8 @@ where
 		+ BlockchainEvents<Block>
 		+ ProvideRuntimeApi<Block>
 		+ 'static,
-	Client::Api: CollectCollationInfo<Block> + PoTApi<Block, AccountId>,
+	Client::Api: CollectCollationInfo<Block>,
+	Client::Api: PoTApi<Block, AccountId>,
 	for<'b> &'b Client: BlockImport<Block>,
 	Spawner: SpawnNamed + Clone + Send + Sync + 'static,
 	RCInterface: RelayChainInterface + Clone + 'static,
