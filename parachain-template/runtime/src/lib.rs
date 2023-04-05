@@ -456,7 +456,7 @@ impl pallet_template::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 }
 
-/// Configure the pallet pot 
+/// Configure the pallet pot
 impl pallet_pot::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type MaxVotedValidators = MaxVotedValidators;

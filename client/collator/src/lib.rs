@@ -23,9 +23,9 @@ use cumulus_primitives_core::{
 };
 
 // PoT Related
+use infrablockspace_primitives::MaxValidators;
 use pallet_pot::VoteWeight;
 use pot_runtime_api::PoTApi;
-use infrablockspace_primitives::MaxValidators;
 
 use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;
@@ -185,9 +185,9 @@ where
 
 		Ok(Some(collation_info))
 	}
-	
+
 	/// Fetch the vote info from the runtime
-	/// 
+	///
 	/// Returns `Ok(Some(_))` on success, `Err(_)` on error or `Ok(None)` if the runtime api isn't implemented by the runtime.
 	/// Fetched vote info will be sent to the relay chain with the collation.
 	fn fetch_vote_info(
@@ -210,7 +210,7 @@ where
 			};
 
 		let vote_info = runtime_api.get_vote_info(block_hash)?;
-		let bounded: BoundedVec<_,_> = vote_info
+		let bounded: BoundedVec<_, _> = vote_info
 			.into_iter()
 			.collect::<Vec<_>>()
 			.try_into()
