@@ -30,7 +30,7 @@ use futures::{
 	channel::{mpsc, oneshot},
 	FutureExt, StreamExt,
 };
-use infrablockspace_primitives::{CollatorPair, OccupiedCoreAssumption};
+use infrablockspace_primitives::{CollatorPair, OccupiedCoreAssumption, AccountId};
 use sc_client_api::{
 	Backend as BackendT, BlockBackend, BlockchainEvents, Finalizer, ProofProvider, UsageProvider,
 };
@@ -50,6 +50,8 @@ use sp_blockchain::{HeaderBackend, HeaderMetadata};
 use sp_core::{traits::SpawnNamed, Decode};
 use sp_runtime::traits::{Block as BlockT, BlockIdTo};
 use std::{sync::Arc, time::Duration};
+
+use pot_runtime_api::runtime_decl_for_PoTApi::PoTApi;
 
 // Given the sporadic nature of the explicit recovery operation and the
 // possibility to retry infinite times this value is more than enough.
@@ -106,7 +108,7 @@ where
 		+ BlockchainEvents<Block>
 		+ ProvideRuntimeApi<Block>
 		+ 'static,
-	Client::Api: CollectCollationInfo<Block>,
+	Client::Api: CollectCollationInfo<Block> + PoTApi<Block, AccountId>,
 	for<'b> &'b Client: BlockImport<Block>,
 	Spawner: SpawnNamed + Clone + Send + Sync + 'static,
 	RCInterface: RelayChainInterface + Clone + 'static,
@@ -337,7 +339,8 @@ where
 		+ ProofProvider<Block>
 		+ 'static,
 	Client::Api: CollectCollationInfo<Block>
-		+ sp_transaction_pool::runtime_api::TaggedTransactionQueue<Block>,
+		+ sp_transaction_pool::runtime_api::TaggedTransactionQueue<Block>
+		+ pot_runtime_api::PoTApi<Block, AccountId>,
 	for<'b> &'b Client: BlockImport<Block>,
 	RCInterface: RelayChainInterface + Clone + 'static,
 	IQ: ImportQueue<Block> + 'static,

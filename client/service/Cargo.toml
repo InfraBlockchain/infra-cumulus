@@ -27,6 +27,7 @@ sp-consensus = { git = "https://github.com/InfraBlockchain/infra-substrate", bra
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-transaction-pool = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+pot-runtime-api = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace
 infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
