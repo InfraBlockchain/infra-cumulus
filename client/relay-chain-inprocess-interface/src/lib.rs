@@ -393,7 +393,7 @@ mod tests {
 	use infrablockspace_primitives::Block as PBlock;
 	use infrablockspace_test_client::{
 		construct_transfer_extrinsic, BlockBuilderExt, Client, ClientBlockImportExt,
-		DefaultTestClientBuilderExt, ExecutionStrategy, InitPolkadotBlockBuilder,
+		DefaultTestClientBuilderExt, ExecutionStrategy, InitInfraBsBlockBuilder,
 		TestClientBuilder, TestClientBuilderExt,
 	};
 	use sp_consensus::{BlockOrigin, SyncOracle};
