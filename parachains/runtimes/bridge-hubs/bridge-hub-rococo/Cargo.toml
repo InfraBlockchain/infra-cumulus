@@ -48,6 +48,10 @@ sp-session = { git = "https://github.com/InfraBlockchain/infra-substrate", defau
 sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-transaction-pool = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-version = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-pot = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+
+# Runtime Api
+pot-runtime-api = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
 rococo-runtime-constants = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
@@ -105,6 +109,8 @@ std = [
 	"pallet-transaction-payment/std",
 	"pallet-utility/std",
 	"pallet-xcm/std",
+	"pallet-pot/std",
+	"pot-runtime-api/std",
 	"parachain-info/std",
 	"parachains-common/std",
 	"infrablockspace-core-primitives/std",

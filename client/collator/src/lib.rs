@@ -74,7 +74,7 @@ where
 	Block: BlockT,
 	BS: BlockBackend<Block>,
 	RA: ProvideRuntimeApi<Block>,
-	RA::Api: CollectCollationInfo<Block>,
+	RA::Api: CollectCollationInfo<Block> + PoTApi<Block, AccountId>,
 {
 	/// Create a new instance.
 	fn new(
@@ -360,7 +360,7 @@ pub async fn start_collator<Block, RA, BS, Spawner>(
 	BS: BlockBackend<Block> + Send + Sync + 'static,
 	Spawner: SpawnNamed + Clone + Send + Sync + 'static,
 	RA: ProvideRuntimeApi<Block> + Send + Sync + 'static,
-	RA::Api: CollectCollationInfo<Block>,
+	RA::Api: CollectCollationInfo<Block> + PoTApi<Block, AccountId>,
 {
 	let collator = Collator::new(
 		block_status,
