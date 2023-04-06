@@ -400,7 +400,7 @@ version = "1.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "hex-literal",
+ "hex-literal 0.3.4",
  "pallet-balances",
  "pallet-collator-selection",
  "pallet-session",
@@ -772,7 +772,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
@@ -835,7 +835,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
@@ -898,7 +898,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
@@ -1336,7 +1336,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
@@ -1445,7 +1445,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
@@ -2094,7 +2094,7 @@ dependencies = [
  "environmental",
  "frame-support",
  "frame-system",
- "hex-literal",
+ "hex-literal 0.4.1",
  "impl-trait-for-tuples",
  "infrablockspace-parachain",
  "lazy_static",
@@ -4011,6 +4011,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7ebdb29d2ea9ed0083cd8cece49bbd968021bd99b0849edb4a9a7ee0fdf6a4e0"
 
 [[package]]
+name = "hex-literal"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
+
+[[package]]
 name = "hkdf"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4998,7 +5004,7 @@ dependencies = [
  "frame-benchmarking",
  "frame-benchmarking-cli",
  "futures",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-cli",
  "infrablockspace-primitives",
  "infrablockspace-service",
@@ -5062,7 +5068,7 @@ version = "0.9.37"
 source = "git+https://github.com/InfraBlockchain/infrablockspace?branch=master#d520c773777944f5160f3e7aaa8d197e01f0ae45"
 dependencies = [
  "bitvec",
- "hex-literal",
+ "hex-literal 0.3.4",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "parity-scale-codec",
@@ -5228,7 +5234,7 @@ dependencies = [
  "frame-support",
  "frame-system-rpc-runtime-api",
  "futures",
- "hex-literal",
+ "hex-literal 0.3.4",
  "infrablockspace-approval-distribution",
  "infrablockspace-availability-bitfield-distribution",
  "infrablockspace-availability-distribution",
@@ -5645,7 +5651,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.3.4",
  "infrablockspace-primitives",
  "infrablockspace-runtime-common",
  "infrablockspace-runtime-parachains",
@@ -8399,7 +8405,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
  "log",
@@ -8642,7 +8648,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-parachain",
  "infrablockspace-primitives",
  "infrablockspace-runtime-common",
@@ -8902,7 +8908,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.3.4",
  "infrablockspace-primitives",
  "infrablockspace-runtime-common",
  "infrablockspace-runtime-parachains",
@@ -9868,7 +9874,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.3.4",
  "infrablockspace-parachain",
  "infrablockspace-primitives",
  "infrablockspace-runtime-common",
@@ -12628,7 +12634,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
@@ -12695,7 +12701,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "hex-literal",
+ "hex-literal 0.4.1",
  "infrablockspace-core-primitives",
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
