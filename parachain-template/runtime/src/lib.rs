@@ -40,6 +40,7 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot,
 };
+use pallet_pot::VoteWeight;
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 pub use sp_runtime::{MultiAddress, Perbill, Permill};
 use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
@@ -426,6 +427,9 @@ parameter_types! {
 	pub const SessionLength: BlockNumber = 6 * HOURS;
 	pub const MaxInvulnerables: u32 = 100;
 	pub const ExecutiveBody: BodyId = BodyId::Executive;
+	// pot
+	pub const MaxVotedValidators: u32 = 1024;
+	pub const WeightFactor: u64 = 1;
 }
 
 // We allow root only to execute privileged collator selection operations.
@@ -450,6 +454,13 @@ impl pallet_collator_selection::Config for Runtime {
 /// Configure the pallet template in pallets/template.
 impl pallet_template::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
+}
+
+/// Configure the pallet pot
+impl pallet_pot::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type MaxVotedValidators = MaxVotedValidators;
+	type WeightFactor = WeightFactor;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -484,6 +495,9 @@ construct_runtime!(
 
 		// Template
 		TemplatePallet: pallet_template = 40,
+
+		// Custom stuff
+		Pot: pallet_pot = 41,
 	}
 );
 
@@ -632,6 +646,12 @@ impl_runtime_apis! {
 	impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
 		fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
 			ParachainSystem::collect_collation_info(header)
+		}
+	}
+
+	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
+		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
+			Pot::get_vote_info()
 		}
 	}
 

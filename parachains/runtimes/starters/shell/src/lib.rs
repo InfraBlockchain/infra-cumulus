@@ -63,6 +63,7 @@ pub use frame_support::{
 	StorageValue,
 };
 use frame_system::limits::{BlockLength, BlockWeights};
+use pallet_pot::VoteWeight;
 use parachains_common::{AccountId, Signature};
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
@@ -182,6 +183,16 @@ impl cumulus_pallet_parachain_system::Config for Runtime {
 	type CheckAssociatedRelayNumber = RelayNumberStrictlyIncreases;
 }
 
+parameter_types! {
+	pub const MaxVotedValidators: u32 = 1024;
+	pub const WeightFactor: u64 = 1;
+}
+impl pallet_pot::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type MaxVotedValidators = MaxVotedValidators;
+	type WeightFactor = WeightFactor;
+}
+
 impl parachain_info::Config for Runtime {}
 
 construct_runtime! {
@@ -198,6 +209,9 @@ construct_runtime! {
 
 		// DMP handler.
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Call, Storage, Event<T>, Origin},
+
+		// Pot
+		Pot: pallet_pot::{Pallet, Storage, Event<T>}
 	}
 }
 
@@ -338,6 +352,12 @@ impl_runtime_apis! {
 	impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
 		fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
 			ParachainSystem::collect_collation_info(header)
+		}
+	}
+
+	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
+		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
+			Pot::get_vote_info()
 		}
 	}
 }

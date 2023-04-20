@@ -58,6 +58,7 @@ use frame_system::{
 	EnsureRoot, EnsureSigned,
 };
 pub use pallet_balances::Call as BalancesCall;
+use pallet_pot::VoteWeight;
 pub use pallet_timestamp::Call as TimestampCall;
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 #[cfg(any(feature = "std", test))]
@@ -273,6 +274,16 @@ impl cumulus_pallet_parachain_system::Config for Runtime {
 impl parachain_info::Config for Runtime {}
 
 impl cumulus_pallet_aura_ext::Config for Runtime {}
+
+parameter_types! {
+	pub const MaxVotedValidators: u32 = 1024;
+	pub const WeightFactor: u64 = 1;
+}
+impl pallet_pot::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type MaxVotedValidators = MaxVotedValidators;
+	type WeightFactor = WeightFactor;
+}
 
 parameter_types! {
 	pub const RocLocation: MultiLocation = MultiLocation::parent();
@@ -568,6 +579,9 @@ construct_runtime! {
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Call, Event<T>, Origin} = 52,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 53,
 
+		// Pot
+		Pot: pallet_pot::{Pallet, Storage, Event<T>} = 60,
+
 		Spambot: cumulus_ping::{Pallet, Call, Storage, Event<T>} = 99,
 	}
 }
@@ -759,6 +773,12 @@ impl_runtime_apis! {
 	impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
 		fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
 			ParachainSystem::collect_collation_info(header)
+		}
+	}
+
+	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
+		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
+			Pot::get_vote_info()
 		}
 	}
 }

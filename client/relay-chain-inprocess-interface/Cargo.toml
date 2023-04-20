@@ -22,11 +22,11 @@ sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branc
 sp-state-machine = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace
-infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master", default-features = false, features = [
+infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master", default-features = false, features = [
     "cli",
 ] }
-infrablockspace-client = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-service = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-client = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-service = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Cumulus
 cumulus-primitives-core = { path = "../../primitives/core" }
@@ -38,8 +38,8 @@ cumulus-relay-chain-interface = { path = "../relay-chain-interface" }
 sp-keyring = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-polkadot-test-client = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-test-client = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 metered = { package = "prioritized-metered-channel", version = "0.2.0" }
 
 # Cumulus

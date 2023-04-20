@@ -22,6 +22,11 @@ use cumulus_primitives_core::{
 	PersistedValidationData,
 };
 
+// PoT Related
+use infrablockspace_primitives::MaxValidators;
+use pallet_pot::VoteWeight;
+use pot_runtime_api::PoTApi;
+
 use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;
 use sp_api::{ApiExt, ProvideRuntimeApi};
@@ -74,6 +79,7 @@ where
 	BS: BlockBackend<Block>,
 	RA: ProvideRuntimeApi<Block>,
 	RA::Api: CollectCollationInfo<Block>,
+	RA::Api: PoTApi<Block, AccountId>,
 {
 	/// Create a new instance.
 	fn new(
@@ -180,6 +186,39 @@ where
 		Ok(Some(collation_info))
 	}
 
+	/// Fetch the vote info from the runtime
+	///
+	/// Returns `Ok(Some(_))` on success, `Err(_)` on error or `Ok(None)` if the runtime api isn't implemented by the runtime.
+	/// Fetched vote info will be sent to the relay chain with the collation.
+	fn fetch_vote_info(
+		&self,
+		block_hash: Block::Hash,
+	) -> Result<Option<BoundedVec<(AccountId, VoteWeight), MaxValidators>>, sp_api::ApiError> {
+		let runtime_api = self.runtime_api.runtime_api();
+
+		// Should be used later
+		let _api_version =
+			match runtime_api.api_version::<dyn PoTApi<Block, AccountId>>(block_hash)? {
+				Some(version) => version,
+				None => {
+					tracing::error!(
+						target: LOG_TARGET,
+						"Could not fetch `PoTApi` runtime api version."
+					);
+					return Ok(None)
+				},
+			};
+
+		let vote_info = runtime_api.get_vote_info(block_hash)?;
+		let bounded: BoundedVec<_, _> = vote_info
+			.into_iter()
+			.collect::<Vec<_>>()
+			.try_into()
+			.expect("Vote info is bounded by MaxValidators; qed");
+
+		Ok(Some(bounded))
+	}
+
 	fn build_collation(
 		&self,
 		block: ParachainBlockData<Block>,
@@ -193,6 +232,18 @@ where
 					target: LOG_TARGET,
 					error = ?e,
 					"Failed to collect collation info.",
+				)
+			})
+			.ok()
+			.flatten()?;
+
+		let vote_info = self
+			.fetch_vote_info(block_hash)
+			.map_err(|e| {
+				tracing::error!(
+					target: LOG_TARGET,
+					error = ?e,
+					"Failed to collect vote info.",
 				)
 			})
 			.ok()
@@ -221,16 +272,6 @@ where
 			})
 			.ok()?;
 
-		// This code should be replaced with actual data fetched from get_vote_info api
-		let dummy_vote_vec = {
-			let v = vec![(AccountId::new([0u8; 32]), 0 as u64)];
-
-			let bounded_v: BoundedVec<(AccountId, u64), ConstU32<1024>> =
-				v.try_into().expect("exceeded the # of validators available to vote.");
-
-			bounded_v
-		};
-
 		Some(Collation {
 			upward_messages,
 			new_validation_code: collation_info.new_validation_code,
@@ -239,7 +280,7 @@ where
 			hrmp_watermark: collation_info.hrmp_watermark,
 			head_data: collation_info.head_data,
 			proof_of_validity: MaybeCompressedPoV::Compressed(pov),
-			vote_info: dummy_vote_vec,
+			vote_info,
 		})
 	}
 
@@ -360,6 +401,7 @@ pub async fn start_collator<Block, RA, BS, Spawner>(
 	Spawner: SpawnNamed + Clone + Send + Sync + 'static,
 	RA: ProvideRuntimeApi<Block> + Send + Sync + 'static,
 	RA::Api: CollectCollationInfo<Block>,
+	RA::Api: PoTApi<Block, AccountId>,
 {
 	let collator = Collator::new(
 		block_status,

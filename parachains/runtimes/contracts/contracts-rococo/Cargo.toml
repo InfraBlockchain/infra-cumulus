@@ -51,16 +51,20 @@ pallet-utility = { git = "https://github.com/InfraBlockchain/infra-substrate", d
 pallet-sudo = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-contracts = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-contracts-primitives = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-pot = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+
+# Runtime Api
+pot-runtime-api = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
-kusama-runtime-constants = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-pallet-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-xcm-builder = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
-xcm-executor = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+kusama-runtime-constants = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+pallet-xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm-builder = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm-executor = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 
 # Cumulus
 cumulus-pallet-aura-ext = { path = "../../../../pallets/aura-ext", default-features = false }
@@ -102,6 +106,8 @@ std = [
 	"pallet-transaction-payment/std",
 	"pallet-utility/std",
 	"pallet-xcm/std",
+	"pallet-pot/std",
+	"pot-runtime-api/std",
 	"parachain-info/std",
 	"parachains-common/std",
 	"infrablockspace-core-primitives/std",

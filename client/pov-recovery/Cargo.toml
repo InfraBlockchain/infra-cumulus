@@ -20,10 +20,10 @@ sp-maybe-compressed-blob = { git = "https://github.com/InfraBlockchain/infra-sub
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace
-infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
-infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infrablockspace", branch = "master" }
+infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-node-subsystem = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-overseer = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
+infrablockspace-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
 
 # Cumulus
 cumulus-primitives-core = { path = "../../primitives/core" }

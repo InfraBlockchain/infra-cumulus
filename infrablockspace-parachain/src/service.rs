@@ -322,7 +322,8 @@ where
 			StateBackend = sc_client_api::StateBackendFor<ParachainBackend, Block>,
 		> + sp_offchain::OffchainWorkerApi<Block>
 		+ sp_block_builder::BlockBuilder<Block>
-		+ cumulus_primitives_core::CollectCollationInfo<Block>,
+		+ cumulus_primitives_core::CollectCollationInfo<Block>
+		+ pot_runtime_api::PoTApi<Block, AccountId>,
 	sc_client_api::StateBackendFor<ParachainBackend, Block>: sp_api::StateBackend<BlakeTwo256>,
 	RB: Fn(Arc<ParachainClient<RuntimeApi>>) -> Result<jsonrpsee::RpcModule<()>, sc_service::Error>
 		+ 'static,
@@ -512,9 +513,10 @@ where
 			StateBackend = sc_client_api::StateBackendFor<ParachainBackend, Block>,
 		> + sp_offchain::OffchainWorkerApi<Block>
 		+ sp_block_builder::BlockBuilder<Block>
-		+ cumulus_primitives_core::CollectCollationInfo<Block>
+		+ frame_rpc_system::AccountNonceApi<Block, AccountId, Nonce>
 		+ pallet_transaction_payment_rpc::TransactionPaymentRuntimeApi<Block, Balance>
-		+ frame_rpc_system::AccountNonceApi<Block, AccountId, Nonce>,
+		+ cumulus_primitives_core::CollectCollationInfo<Block>
+		+ pot_runtime_api::PoTApi<Block, AccountId>,
 	sc_client_api::StateBackendFor<ParachainBackend, Block>: sp_api::StateBackend<BlakeTwo256>,
 	RB: Fn(Arc<ParachainClient<RuntimeApi>>) -> Result<jsonrpsee::RpcModule<()>, sc_service::Error>,
 	BIQ: FnOnce(
@@ -869,7 +871,8 @@ where
 			StateBackend = sc_client_api::StateBackendFor<ParachainBackend, Block>,
 		> + sp_offchain::OffchainWorkerApi<Block>
 		+ sp_block_builder::BlockBuilder<Block>
-		+ cumulus_primitives_core::CollectCollationInfo<Block>,
+		+ cumulus_primitives_core::CollectCollationInfo<Block>
+		+ pot_runtime_api::PoTApi<Block, AccountId>,
 	sc_client_api::StateBackendFor<ParachainBackend, Block>: sp_api::StateBackend<BlakeTwo256>,
 {
 	start_shell_node_impl::<RuntimeApi, _, _, _>(
@@ -1117,10 +1120,11 @@ where
 			StateBackend = sc_client_api::StateBackendFor<ParachainBackend, Block>,
 		> + sp_offchain::OffchainWorkerApi<Block>
 		+ sp_block_builder::BlockBuilder<Block>
-		+ cumulus_primitives_core::CollectCollationInfo<Block>
 		+ sp_consensus_aura::AuraApi<Block, <<AuraId as AppKey>::Pair as Pair>::Public>
+		+ frame_rpc_system::AccountNonceApi<Block, AccountId, Nonce>
 		+ pallet_transaction_payment_rpc::TransactionPaymentRuntimeApi<Block, Balance>
-		+ frame_rpc_system::AccountNonceApi<Block, AccountId, Nonce>,
+		+ cumulus_primitives_core::CollectCollationInfo<Block>
+		+ pot_runtime_api::PoTApi<Block, AccountId>,
 	sc_client_api::StateBackendFor<ParachainBackend, Block>: sp_api::StateBackend<BlakeTwo256>,
 	<<AuraId as AppKey>::Pair as Pair>::Signature:
 		TryFrom<Vec<u8>> + std::hash::Hash + sp_runtime::traits::Member + Codec,
@@ -1285,9 +1289,10 @@ where
 			StateBackend = sc_client_api::StateBackendFor<ParachainBackend, Block>,
 		> + sp_offchain::OffchainWorkerApi<Block>
 		+ sp_block_builder::BlockBuilder<Block>
-		+ cumulus_primitives_core::CollectCollationInfo<Block>
+		+ frame_rpc_system::AccountNonceApi<Block, AccountId, Nonce>
 		+ pallet_transaction_payment_rpc::TransactionPaymentRuntimeApi<Block, Balance>
-		+ frame_rpc_system::AccountNonceApi<Block, AccountId, Nonce>,
+		+ cumulus_primitives_core::CollectCollationInfo<Block>
+		+ pot_runtime_api::PoTApi<Block, AccountId>,
 	sc_client_api::StateBackendFor<ParachainBackend, Block>: sp_api::StateBackend<BlakeTwo256>,
 	RB: Fn(Arc<ParachainClient<RuntimeApi>>) -> Result<jsonrpsee::RpcModule<()>, sc_service::Error>,
 	BIQ: FnOnce(

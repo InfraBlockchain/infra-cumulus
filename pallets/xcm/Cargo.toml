@@ -14,7 +14,7 @@ sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", defau
 frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 frame-system = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
-xcm = { git = "https://github.com/InfraBlockchain/infrablockspace", default-features = false, branch = "master" }
+xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 
 cumulus-primitives-core = { path = "../../primitives/core", default-features = false }
 

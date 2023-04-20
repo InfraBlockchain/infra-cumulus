@@ -55,6 +55,7 @@ use frame_support::{
 	PalletId,
 };
 use frame_system::limits::{BlockLength, BlockWeights};
+use pallet_pot::VoteWeight;
 pub use parachains_common as common;
 use parachains_common::{
 	impls::DealWithFees, opaque, AccountId, BlockNumber, Hash, Header, Index, Signature,
@@ -320,6 +321,16 @@ impl pallet_sudo::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 }
 
+parameter_types! {
+	pub const MaxVotedValidators: u32 = 1024;
+	pub const WeightFactor: u64 = 1;
+}
+impl pallet_pot::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type MaxVotedValidators = MaxVotedValidators;
+	type WeightFactor = WeightFactor;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -359,6 +370,9 @@ construct_runtime!(
 		// Handy utilities.
 		Utility: pallet_utility::{Pallet, Call, Event} = 50,
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 51,
+
+		// Pot
+		Pot: pallet_pot::{Pallet, Storage, Event<T>} = 60,
 
 		// Sudo
 		Sudo: pallet_sudo::{Pallet, Call, Config<T>, Event<T>, Storage} = 100,
@@ -517,6 +531,12 @@ impl_runtime_apis! {
 	impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
 		fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
 			ParachainSystem::collect_collation_info(header)
+		}
+	}
+
+	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
+		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
+			Pot::get_vote_info()
 		}
 	}
 

@@ -393,8 +393,8 @@ mod tests {
 	use infrablockspace_primitives::Block as PBlock;
 	use infrablockspace_test_client::{
 		construct_transfer_extrinsic, BlockBuilderExt, Client, ClientBlockImportExt,
-		DefaultTestClientBuilderExt, ExecutionStrategy, InitPolkadotBlockBuilder,
-		TestClientBuilder, TestClientBuilderExt,
+		DefaultTestClientBuilderExt, ExecutionStrategy, InitInfraBsBlockBuilder, TestClientBuilder,
+		TestClientBuilderExt,
 	};
 	use sp_consensus::{BlockOrigin, SyncOracle};
 	use sp_runtime::traits::Block as BlockT;
@@ -421,7 +421,7 @@ mod tests {
 		let backend = builder.backend();
 		let client = Arc::new(builder.build());
 
-		let block_builder = client.init_infrablockspace_block_builder();
+		let block_builder = client.init_infrabs_block_builder();
 		let block = block_builder.build().expect("Finalizes the block").block;
 		let dummy_network: Arc<dyn SyncOracle + Sync + Send> = Arc::new(DummyNetwork {});
 
@@ -490,9 +490,9 @@ mod tests {
 			sp_keyring::Sr25519Keyring::Bob,
 			1000,
 		);
-		let mut block_builder = client.init_infrablockspace_block_builder();
+		let mut block_builder = client.init_infrabs_block_builder();
 		// Push an extrinsic to get a different block hash.
-		block_builder.push_infrablockspace_extrinsic(ext).expect("Push extrinsic");
+		block_builder.push_infrabs_extrinsic(ext).expect("Push extrinsic");
 		let block2 = block_builder.build().expect("Build second block").block;
 		let hash2 = block2.hash();
 

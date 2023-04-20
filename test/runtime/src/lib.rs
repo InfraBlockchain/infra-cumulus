@@ -59,6 +59,7 @@ pub use frame_support::{
 };
 use frame_system::limits::{BlockLength, BlockWeights};
 pub use pallet_balances::Call as BalancesCall;
+use pallet_pot::VoteWeight;
 pub use pallet_sudo::Call as SudoCall;
 pub use pallet_timestamp::Call as TimestampCall;
 #[cfg(any(feature = "std", test))]
@@ -230,6 +231,9 @@ parameter_types! {
 	pub const CreationFee: u128 = 0;
 	pub const TransactionByteFee: u128 = 1;
 	pub const MaxReserves: u32 = 50;
+	// PoT
+	pub const MaxVotedValidators: u32 = 1024;
+	pub const WeightFactor: u64 = 1;
 }
 
 impl pallet_balances::Config for Runtime {
@@ -272,6 +276,12 @@ impl cumulus_pallet_parachain_system::Config for Runtime {
 	type CheckAssociatedRelayNumber = cumulus_pallet_parachain_system::AnyRelayNumber;
 }
 
+impl pallet_pot::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type MaxVotedValidators = MaxVotedValidators;
+	type WeightFactor = WeightFactor;
+}
+
 parameter_types! {
 	pub storage ParachainId: cumulus_primitives_core::ParaId = 100.into();
 }
@@ -290,6 +300,7 @@ construct_runtime! {
 		Balances: pallet_balances,
 		Sudo: pallet_sudo,
 		TransactionPayment: pallet_transaction_payment,
+		Pot: pallet_pot,
 		TestPallet: test_pallet,
 	}
 }
@@ -447,6 +458,12 @@ impl_runtime_apis! {
 	impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
 		fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
 			ParachainSystem::collect_collation_info(header)
+		}
+	}
+
+	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
+		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
+			Pot::get_vote_info()
 		}
 	}
 }
