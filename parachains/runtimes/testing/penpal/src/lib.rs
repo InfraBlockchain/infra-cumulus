@@ -720,12 +720,6 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
-		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
-			Pot::get_vote_info()
-		}
-	}
-
 	#[cfg(feature = "try-runtime")]
 	impl frame_try_runtime::TryRuntime<Block> for Runtime {
 		fn on_runtime_upgrade(checks: frame_try_runtime::UpgradeCheckSelect) -> (Weight, Weight) {

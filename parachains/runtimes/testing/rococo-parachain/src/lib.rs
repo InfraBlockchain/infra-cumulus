@@ -775,12 +775,6 @@ impl_runtime_apis! {
 			ParachainSystem::collect_collation_info(header)
 		}
 	}
-
-	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
-		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
-			Pot::get_vote_info()
-		}
-	}
 }
 
 struct CheckInherents;

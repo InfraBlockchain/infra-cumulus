@@ -51,8 +51,6 @@ use sp_core::{traits::SpawnNamed, Decode};
 use sp_runtime::traits::{Block as BlockT, BlockIdTo};
 use std::{sync::Arc, time::Duration};
 
-use pot_runtime_api::PoTApi;
-
 // Given the sporadic nature of the explicit recovery operation and the
 // possibility to retry infinite times this value is more than enough.
 // In practice here we expect no more than one queued messages.
@@ -109,7 +107,6 @@ where
 		+ ProvideRuntimeApi<Block>
 		+ 'static,
 	Client::Api: CollectCollationInfo<Block>,
-	Client::Api: PoTApi<Block, AccountId>,
 	for<'b> &'b Client: BlockImport<Block>,
 	Spawner: SpawnNamed + Clone + Send + Sync + 'static,
 	RCInterface: RelayChainInterface + Clone + 'static,
@@ -340,8 +337,7 @@ where
 		+ ProofProvider<Block>
 		+ 'static,
 	Client::Api: CollectCollationInfo<Block>
-		+ sp_transaction_pool::runtime_api::TaggedTransactionQueue<Block>
-		+ pot_runtime_api::PoTApi<Block, AccountId>,
+		+ sp_transaction_pool::runtime_api::TaggedTransactionQueue<Block>,
 	for<'b> &'b Client: BlockImport<Block>,
 	RCInterface: RelayChainInterface + Clone + 'static,
 	IQ: ImportQueue<Block> + 'static,
