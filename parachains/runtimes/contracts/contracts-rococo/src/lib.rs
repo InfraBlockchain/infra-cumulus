@@ -534,12 +534,6 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl pot_runtime_api::PoTApi<Block, AccountId> for Runtime {
-		fn get_vote_info() -> Vec<(AccountId, VoteWeight)> {
-			Pot::get_vote_info()
-		}
-	}
-
 	impl pallet_contracts::ContractsApi<Block, AccountId, Balance, BlockNumber, Hash> for Runtime {
 		fn call(
 			origin: AccountId,
