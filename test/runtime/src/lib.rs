@@ -59,7 +59,6 @@ pub use frame_support::{
 };
 use frame_system::limits::{BlockLength, BlockWeights};
 pub use pallet_balances::Call as BalancesCall;
-use pallet_pot::VoteWeight;
 pub use pallet_sudo::Call as SudoCall;
 pub use pallet_timestamp::Call as TimestampCall;
 #[cfg(any(feature = "std", test))]
@@ -276,12 +275,6 @@ impl cumulus_pallet_parachain_system::Config for Runtime {
 	type CheckAssociatedRelayNumber = cumulus_pallet_parachain_system::AnyRelayNumber;
 }
 
-impl pallet_pot::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type MaxVotedValidators = MaxVotedValidators;
-	type WeightFactor = WeightFactor;
-}
-
 parameter_types! {
 	pub storage ParachainId: cumulus_primitives_core::ParaId = 100.into();
 }
@@ -300,7 +293,6 @@ construct_runtime! {
 		Balances: pallet_balances,
 		Sudo: pallet_sudo,
 		TransactionPayment: pallet_transaction_payment,
-		Pot: pallet_pot,
 		TestPallet: test_pallet,
 	}
 }

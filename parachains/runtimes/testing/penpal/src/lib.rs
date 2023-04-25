@@ -46,7 +46,6 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot, EnsureSigned,
 };
-use pallet_pot::VoteWeight;
 use smallvec::smallvec;
 use sp_api::impl_runtime_apis;
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -519,11 +518,6 @@ parameter_types! {
 	pub const MaxVotedValidators: u32 = 1024;
 	pub const WeightFactor: u64 = 1;
 }
-impl pallet_pot::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type MaxVotedValidators = MaxVotedValidators;
-	type WeightFactor = WeightFactor;
-}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -560,9 +554,6 @@ construct_runtime!(
 
 		// The main stage.
 		Assets: pallet_assets::{Pallet, Call, Storage, Event<T>} = 50,
-
-		// Pot
-		Pot: pallet_pot::{Pallet, Storage, Event<T>} = 60,
 
 		Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 255,
 	}

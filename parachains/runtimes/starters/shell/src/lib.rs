@@ -63,7 +63,6 @@ pub use frame_support::{
 	StorageValue,
 };
 use frame_system::limits::{BlockLength, BlockWeights};
-use pallet_pot::VoteWeight;
 use parachains_common::{AccountId, Signature};
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
@@ -187,12 +186,6 @@ parameter_types! {
 	pub const MaxVotedValidators: u32 = 1024;
 	pub const WeightFactor: u64 = 1;
 }
-impl pallet_pot::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type MaxVotedValidators = MaxVotedValidators;
-	type WeightFactor = WeightFactor;
-}
-
 impl parachain_info::Config for Runtime {}
 
 construct_runtime! {
@@ -209,9 +202,6 @@ construct_runtime! {
 
 		// DMP handler.
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Call, Storage, Event<T>, Origin},
-
-		// Pot
-		Pot: pallet_pot::{Pallet, Storage, Event<T>}
 	}
 }
 
