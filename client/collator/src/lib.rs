@@ -24,7 +24,6 @@ use cumulus_primitives_core::{
 
 // PoT Related
 use infrablockspace_primitives::MaxValidators;
-use pallet_pot::VoteWeight;
 
 use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;

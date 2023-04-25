@@ -72,7 +72,6 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot,
 };
-use pallet_pot::VoteWeight;
 pub use parachains_common as common;
 use parachains_common::{
 	impls::DealWithFees, opaque, AccountId, AuraId, Balance, BlockNumber, Hash, Header, Index,
@@ -489,11 +488,6 @@ parameter_types! {
 	pub const MaxVotedValidators: u32 = 1024;
 	pub const WeightFactor: u64 = 1;
 }
-impl pallet_pot::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type MaxVotedValidators = MaxVotedValidators;
-	type WeightFactor = WeightFactor;
-}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -535,9 +529,6 @@ construct_runtime!(
 		// The main stage.
 		Alliance: pallet_alliance::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		AllianceMotion: pallet_collective::<Instance1>::{Pallet, Call, Storage, Origin<T>, Event<T>, Config<T>} = 51,
-
-		// Pot
-		Pot: pallet_pot::{Pallet, Storage, Event<T>} = 60,
 	}
 );
 
