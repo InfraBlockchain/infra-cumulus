@@ -18,10 +18,6 @@ sp-consensus = { git = "https://github.com/InfraBlockchain/infra-substrate", bra
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
-pallet-pot = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
-
-# Runtime Api
-pot-runtime-api = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
 infrablockspace-node-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master" }
