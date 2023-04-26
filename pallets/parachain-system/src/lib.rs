@@ -48,6 +48,7 @@ use frame_system::{ensure_none, ensure_root};
 use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
+	generic::{VoteAssetId, VoteWeight},
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
 	transaction_validity::{
 		InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
@@ -124,6 +125,17 @@ impl CheckAssociatedRelayNumber for RelayNumberStrictlyIncreases {
 			panic!("Relay chain block number needs to strictly increase between Parachain blocks!")
 		}
 	}
+}
+
+/// Provides an implementation of [`SetVoteInfo`].
+
+pub trait VoteInfoHandler<AccountId> {
+	type VoteAssetId: AssetId;
+	type VoteWeight: Balance;
+
+	fn update_vote_info(who: AccountId, asset_id: Self::VoteAssetId, vote_weight: Self::VoteWeight);
+
+	// fn update_vote_consensus();
 }
 
 /// Provides an implementation of [`CheckAssociatedRelayNumber`].
@@ -570,6 +582,14 @@ pub mod pallet {
 	#[pallet::getter(fn validation_data)]
 	pub(super) type ValidationData<T: Config> = StorageValue<_, PersistedValidationData>;
 
+	/// The [`VoteInfo`] set for this block.
+	/// This value is expected to be set only once per block and it's never stored
+	/// in the trie.
+	#[pallet::storage]
+	#[pallet::getter(fn vote_info)]
+	pub(super) type VoteInfo<T: Config> =
+		StorageMap<_, Twox64Concat, T::AccountId, (VoteAssetId, VoteWeight), ValueQuery>;
+
 	/// Were the validation data set to notify the relay chain?
 	#[pallet::storage]
 	pub(super) type DidSetValidationCode<T: Config> = StorageValue<_, bool, ValueQuery>;
@@ -746,6 +766,16 @@ pub mod pallet {
 			}
 			Err(InvalidTransaction::Call.into())
 		}
+	}
+}
+
+impl<T: Config> VoteInfoHandler for Pallet<T> {
+	fn update_vote_info(
+		who: AccountId,
+		asset_id: Self::VoteAssetId,
+		vote_weight: Self::VoteWeight,
+	) {
+		VoteInfo::<T>::insert(vote_info, (asset_id, vote_weight));
 	}
 }
 
