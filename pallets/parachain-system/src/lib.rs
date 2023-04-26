@@ -764,7 +764,7 @@ impl<T: Config> VoteInfoHandler<T::AccountId> for Pallet<T> {
 		// each vote_info is stored to VoteInfo StorageMap like: {key: (AccountId, VoteAssetId), value: VoteWeight }
 		let key = (who, asset_id);
 		if let Some(stored_weight) = VoteInfo::<T>::get(key.clone()) {
-			VoteInfo::<T>::insert(key, stored_weight + vote_weight);
+			VoteInfo::<T>::insert(key, stored_weight.saturating_add(vote_weight));
 		} else {
 			VoteInfo::<T>::insert(key, vote_weight);
 		}
