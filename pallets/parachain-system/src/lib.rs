@@ -127,17 +127,6 @@ impl CheckAssociatedRelayNumber for RelayNumberStrictlyIncreases {
 	}
 }
 
-/// Provides an implementation of [`SetVoteInfo`].
-
-pub trait VoteInfoHandler<AccountId> {
-	type VoteAssetId: AssetId;
-	type VoteWeight: Balance;
-
-	fn update_vote_info(who: AccountId, asset_id: Self::VoteAssetId, vote_weight: Self::VoteWeight);
-
-	// fn update_vote_consensus();
-}
-
 /// Provides an implementation of [`CheckAssociatedRelayNumber`].
 ///
 /// This will accept any relay chain block number combination. This is mainly useful for
@@ -239,7 +228,7 @@ pub mod pallet {
 					debug_assert!(
 						false,
 						"relevant messaging state is promised to be set until `on_finalize`; \
-							qed",
+                            qed",
 					);
 					return
 				},
@@ -316,6 +305,7 @@ pub mod pallet {
 			UpwardMessages::<T>::kill();
 			HrmpOutboundMessages::<T>::kill();
 			CustomValidationHeadData::<T>::kill();
+			let _ = VoteInfo::<T>::clear(u32::max_value(), None);
 
 			weight += T::DbWeight::get().writes(6);
 
@@ -407,9 +397,9 @@ pub mod pallet {
 			match upgrade_go_ahead_signal {
 				Some(relay_chain::UpgradeGoAhead::GoAhead) => {
 					assert!(
-						<PendingValidationCode<T>>::exists(),
-						"No new validation function found in storage, GoAhead signal is not expected",
-					);
+                        <PendingValidationCode<T>>::exists(),
+                        "No new validation function found in storage, GoAhead signal is not expected",
+                    );
 					let validation_code = <PendingValidationCode<T>>::take();
 
 					Self::put_parachain_code(&validation_code);
@@ -582,14 +572,6 @@ pub mod pallet {
 	#[pallet::getter(fn validation_data)]
 	pub(super) type ValidationData<T: Config> = StorageValue<_, PersistedValidationData>;
 
-	/// The [`VoteInfo`] set for this block.
-	/// This value is expected to be set only once per block and it's never stored
-	/// in the trie.
-	#[pallet::storage]
-	#[pallet::getter(fn vote_info)]
-	pub(super) type VoteInfo<T: Config> =
-		StorageMap<_, Twox64Concat, T::AccountId, (VoteAssetId, VoteWeight), ValueQuery>;
-
 	/// Were the validation data set to notify the relay chain?
 	#[pallet::storage]
 	pub(super) type DidSetValidationCode<T: Config> = StorageValue<_, bool, ValueQuery>;
@@ -697,6 +679,12 @@ pub mod pallet {
 	#[pallet::storage]
 	pub(super) type ReservedXcmpWeightOverride<T: Config> = StorageValue<_, Weight>;
 
+	/// The Vote info of StorageMap type.
+	#[pallet::storage]
+	#[pallet::getter(fn vote_info)]
+	pub type VoteInfo<T: Config> =
+		StorageMap<_, Twox64Concat, (T::AccountId, VoteAssetId), VoteWeight, OptionQuery>;
+
 	/// The weight we reserve at the beginning of the block for processing DMP messages. This
 	/// overrides the amount set in the Config trait.
 	#[pallet::storage]
@@ -769,13 +757,17 @@ pub mod pallet {
 	}
 }
 
-impl<T: Config> VoteInfoHandler for Pallet<T> {
-	fn update_vote_info(
-		who: AccountId,
-		asset_id: Self::VoteAssetId,
-		vote_weight: Self::VoteWeight,
-	) {
-		VoteInfo::<T>::insert(vote_info, (asset_id, vote_weight));
+impl<T: Config> VoteInfoHandler<T::AccountId> for Pallet<T> {
+	type VoteAssetId = VoteAssetId;
+	type VoteWeight = VoteWeight;
+	fn update_vote_info(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
+		// each vote_info is stored to VoteInfo StorageMap like: {key: (AccountId, VoteAssetId), value: VoteWeight }
+		let key = (who, asset_id);
+		if let Some(stored_weight) = VoteInfo::<T>::get(key.clone()) {
+			VoteInfo::<T>::insert(key, stored_weight + vote_weight);
+		} else {
+			VoteInfo::<T>::insert(key, vote_weight);
+		}
 	}
 }
 
@@ -1196,13 +1188,13 @@ impl<T: Config> BlockNumberProvider for RelaychainBlockNumberProvider<T> {
 	#[cfg(feature = "runtime-benchmarks")]
 	fn set_block_number(block: Self::BlockNumber) {
 		let mut validation_data = Pallet::<T>::validation_data().unwrap_or_else(||
-			// PersistedValidationData does not impl default in non-std
-			PersistedValidationData {
-				parent_head: vec![].into(),
-				relay_parent_number: Default::default(),
-				max_pov_size: Default::default(),
-				relay_parent_storage_root: Default::default(),
-			});
+            // PersistedValidationData does not impl default in non-std
+            PersistedValidationData {
+                parent_head: vec![].into(),
+                relay_parent_number: Default::default(),
+                max_pov_size: Default::default(),
+                relay_parent_storage_root: Default::default(),
+            });
 		validation_data.relay_parent_number = block;
 		ValidationData::<T>::put(validation_data)
 	}
@@ -1236,13 +1228,13 @@ impl<T: Config> BlockNumberProvider for RelaychainDataProvider<T> {
 	#[cfg(feature = "runtime-benchmarks")]
 	fn set_block_number(block: Self::BlockNumber) {
 		let mut validation_data = Pallet::<T>::validation_data().unwrap_or_else(||
-			// PersistedValidationData does not impl default in non-std
-			PersistedValidationData {
-				parent_head: vec![].into(),
-				relay_parent_number: Default::default(),
-				max_pov_size: Default::default(),
-				relay_parent_storage_root: Default::default(),
-			});
+            // PersistedValidationData does not impl default in non-std
+            PersistedValidationData {
+                parent_head: vec![].into(),
+                relay_parent_number: Default::default(),
+                max_pov_size: Default::default(),
+                relay_parent_storage_root: Default::default(),
+            });
 		validation_data.relay_parent_number = block;
 		ValidationData::<T>::put(validation_data)
 	}
