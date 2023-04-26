@@ -22,14 +22,10 @@ use cumulus_primitives_core::{
 	PersistedValidationData,
 };
 
-// PoT Related
-use infrablockspace_primitives::MaxValidators;
-
-use frame_support::BoundedVec;
 use sc_client_api::BlockBackend;
 use sp_api::{ApiExt, ProvideRuntimeApi};
 use sp_consensus::BlockStatus;
-use sp_core::{traits::SpawnNamed, ConstU32};
+use sp_core::traits::SpawnNamed;
 use sp_runtime::traits::{Block as BlockT, HashFor, Header as HeaderT, Zero};
 use sp_std::convert::TryInto;
 
@@ -41,7 +37,7 @@ use infrablockspace_node_subsystem::messages::{
 	CollationGenerationMessage, CollatorProtocolMessage,
 };
 use infrablockspace_overseer::Handle as OverseerHandle;
-use infrablockspace_primitives::{AccountId, CollatorPair, Id as ParaId};
+use infrablockspace_primitives::{CollatorPair, Id as ParaId};
 
 use codec::{Decode, Encode};
 use futures::{channel::oneshot, FutureExt};
