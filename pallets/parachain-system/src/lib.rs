@@ -48,6 +48,7 @@ use frame_system::{ensure_none, ensure_root};
 use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
+	generic::{VoteAssetId, VoteWeight},
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
 	transaction_validity::{
 		InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
@@ -227,7 +228,7 @@ pub mod pallet {
 					debug_assert!(
 						false,
 						"relevant messaging state is promised to be set until `on_finalize`; \
-							qed",
+                            qed",
 					);
 					return
 				},
@@ -304,6 +305,7 @@ pub mod pallet {
 			UpwardMessages::<T>::kill();
 			HrmpOutboundMessages::<T>::kill();
 			CustomValidationHeadData::<T>::kill();
+			let _ = VoteInfo::<T>::clear(u32::max_value(), None);
 
 			weight += T::DbWeight::get().writes(6);
 
@@ -395,9 +397,9 @@ pub mod pallet {
 			match upgrade_go_ahead_signal {
 				Some(relay_chain::UpgradeGoAhead::GoAhead) => {
 					assert!(
-						<PendingValidationCode<T>>::exists(),
-						"No new validation function found in storage, GoAhead signal is not expected",
-					);
+                        <PendingValidationCode<T>>::exists(),
+                        "No new validation function found in storage, GoAhead signal is not expected",
+                    );
 					let validation_code = <PendingValidationCode<T>>::take();
 
 					Self::put_parachain_code(&validation_code);
@@ -677,6 +679,12 @@ pub mod pallet {
 	#[pallet::storage]
 	pub(super) type ReservedXcmpWeightOverride<T: Config> = StorageValue<_, Weight>;
 
+	/// The Vote info of StorageMap type.
+	#[pallet::storage]
+	#[pallet::getter(fn vote_info)]
+	pub type VoteInfo<T: Config> =
+		StorageMap<_, Twox64Concat, (T::AccountId, VoteAssetId), VoteWeight, OptionQuery>;
+
 	/// The weight we reserve at the beginning of the block for processing DMP messages. This
 	/// overrides the amount set in the Config trait.
 	#[pallet::storage]
@@ -745,6 +753,20 @@ pub mod pallet {
 				return Ok(Default::default())
 			}
 			Err(InvalidTransaction::Call.into())
+		}
+	}
+}
+
+impl<T: Config> VoteInfoHandler<T::AccountId> for Pallet<T> {
+	type VoteAssetId = VoteAssetId;
+	type VoteWeight = VoteWeight;
+	fn update_vote_info(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
+		// each vote_info is stored to VoteInfo StorageMap like: {key: (AccountId, VoteAssetId), value: VoteWeight }
+		let key = (who, asset_id);
+		if let Some(stored_weight) = VoteInfo::<T>::get(key.clone()) {
+			VoteInfo::<T>::insert(key, stored_weight.saturating_add(vote_weight));
+		} else {
+			VoteInfo::<T>::insert(key, vote_weight);
 		}
 	}
 }
@@ -1166,13 +1188,13 @@ impl<T: Config> BlockNumberProvider for RelaychainBlockNumberProvider<T> {
 	#[cfg(feature = "runtime-benchmarks")]
 	fn set_block_number(block: Self::BlockNumber) {
 		let mut validation_data = Pallet::<T>::validation_data().unwrap_or_else(||
-			// PersistedValidationData does not impl default in non-std
-			PersistedValidationData {
-				parent_head: vec![].into(),
-				relay_parent_number: Default::default(),
-				max_pov_size: Default::default(),
-				relay_parent_storage_root: Default::default(),
-			});
+            // PersistedValidationData does not impl default in non-std
+            PersistedValidationData {
+                parent_head: vec![].into(),
+                relay_parent_number: Default::default(),
+                max_pov_size: Default::default(),
+                relay_parent_storage_root: Default::default(),
+            });
 		validation_data.relay_parent_number = block;
 		ValidationData::<T>::put(validation_data)
 	}
@@ -1206,13 +1228,13 @@ impl<T: Config> BlockNumberProvider for RelaychainDataProvider<T> {
 	#[cfg(feature = "runtime-benchmarks")]
 	fn set_block_number(block: Self::BlockNumber) {
 		let mut validation_data = Pallet::<T>::validation_data().unwrap_or_else(||
-			// PersistedValidationData does not impl default in non-std
-			PersistedValidationData {
-				parent_head: vec![].into(),
-				relay_parent_number: Default::default(),
-				max_pov_size: Default::default(),
-				relay_parent_storage_root: Default::default(),
-			});
+            // PersistedValidationData does not impl default in non-std
+            PersistedValidationData {
+                parent_head: vec![].into(),
+                relay_parent_number: Default::default(),
+                max_pov_size: Default::default(),
+                relay_parent_storage_root: Default::default(),
+            });
 		validation_data.relay_parent_number = block;
 		ValidationData::<T>::put(validation_data)
 	}
