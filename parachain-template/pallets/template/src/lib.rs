@@ -5,6 +5,11 @@
 /// <https://docs.substrate.io/v3/runtime/frame>
 pub use pallet::*;
 
+use frame_support::traits::VoteInfoHandler;
+use sp_runtime::generic::{VoteAssetId, VoteWeight};
+
+pub type AccountnAssetId<AccountId, VoteAssetId> = (AccountId, VoteAssetId);
+
 #[cfg(test)]
 mod mock;
 
@@ -16,6 +21,7 @@ mod benchmarking;
 
 #[frame_support::pallet]
 pub mod pallet {
+	use super::*;
 	use frame_support::{dispatch::DispatchResultWithPostInfo, pallet_prelude::*};
 	use frame_system::pallet_prelude::*;
 
@@ -31,12 +37,11 @@ pub mod pallet {
 	pub struct Pallet<T>(_);
 
 	// The pallet's runtime storage items.
-	// https://docs.substrate.io/v3/runtime/storage
+	// https://docs.substrate.io/main-docs/build/runtime-storage/
 	#[pallet::storage]
-	#[pallet::getter(fn something)]
-	// Learn more about declaring storage items:
-	// https://docs.substrate.io/v3/runtime/storage#declaring-storage-items
-	pub type Something<T> = StorageValue<_, u32>;
+	#[pallet::unbounded]
+	#[pallet::getter(fn vote_info)]
+	pub type PotVotes<T: Config> = StorageMap<_, Twox64Concat, VoteWeight, OptionQuery>;
 
 	// Pallets use events to inform users when important changes are made.
 	// https://docs.substrate.io/v3/runtime/events-and-errors
@@ -102,6 +107,33 @@ pub mod pallet {
 					Ok(().into())
 				},
 			}
+		}
+	}
+}
+
+// impl<T: Config> VoteInfoHandler<T::AccountId> for Pallet<T> {
+// 	type VoteAssetId = VoteAssetId;
+// 	type VoteWeight = VoteWeight;
+// 	fn update_pot_vote(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
+// 		// each vote_info is stored to VoteInfo StorageMap like: {key: (AccountId, VoteAssetId),
+// 		// value: VoteWeight }
+// 		let key = (who, asset_id);
+// 		Self::do_update_pot_vote(key, vote_weight);
+// 	}
+// }
+
+impl<T: Config> Pallet<T> {
+	fn do_update_pot_vote(
+		key: AccountnAssetId<T::AccountId, VoteAssetId>,
+		vote_weight: VoteWeight,
+	) {
+		if let Some(old_weight) = PotVotes::<T>::get(&key) {
+			// Weight for asset id already existed
+			let new_weight = old_weight.saturating_add(vote_weight);
+			PotVotes::<T>::insert(&key, new_weight);
+		} else {
+			// Weight for the asset id not existed. Need to insert new one
+			PotVotes::<T>::insert(&key, vote_weight);
 		}
 	}
 }
