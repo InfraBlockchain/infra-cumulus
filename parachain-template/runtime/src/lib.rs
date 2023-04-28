@@ -49,7 +49,10 @@ use frame_system::{
 };
 use pallet_infra_asset_tx_payment::{FungiblesAdapter, HandleCredit};
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
-pub use sp_runtime::{MultiAddress, Perbill, Permill};
+pub use sp_runtime::{
+	generic::{VoteAssetId, VoteWeight},
+	MultiAddress, Perbill, Permill,
+};
 use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
 
 #[cfg(any(feature = "std", test))]
@@ -301,6 +304,8 @@ impl HandleCredit<AccountId, Assets> for CreditToBlockAuthor {
 	}
 }
 
+pub struct VoteInfo<AssetId, VoteAssetId, VoteWeight>;
+
 impl pallet_infra_asset_tx_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Fungibles = Assets;
@@ -310,7 +315,7 @@ impl pallet_infra_asset_tx_payment::Config for Runtime {
 		CreditToBlockAuthor,
 	>;
 	/// The type that handles the voting info.
-	type VoteInfoHandler = VoteInfoHandler;
+	type VoteInfoHandler = ParachainSystem;
 }
 
 // Configure FRAME pallets to include in runtime.
@@ -503,9 +508,9 @@ impl pallet_collator_selection::Config for Runtime {
 }
 
 /// Configure the pallet template in pallets/template.
-impl pallet_template::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-}
+// impl pallet_template::Config for Runtime {
+// 	type RuntimeEvent = RuntimeEvent;
+// }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -523,6 +528,8 @@ construct_runtime!(
 		// Monetary stuff.
 		Balances: pallet_balances = 10,
 		TransactionPayment: pallet_transaction_payment = 11,
+		Assets: pallet_assets = 12,
+		InfraAssetTxPayment: pallet_infra_asset_tx_payment = 13,
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship = 20,
@@ -538,9 +545,8 @@ construct_runtime!(
 		DmpQueue: cumulus_pallet_dmp_queue = 33,
 
 		// Template
-		TemplatePallet: pallet_template = 40,
-		Assets: pallet_assets = 41,
-		InfraAssetTxPayment: pallet_infra_asset_tx_payment = 42
+		// TemplatePallet: pallet_template = 40,
+
 	}
 );
 
@@ -686,11 +692,11 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
-		fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
-			ParachainSystem::collect_collation_info(header)
-		}
-	}
+	// impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
+	// 	fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
+	// 		ParachainSystem::collect_collation_info(header)
+	// 	}
+	// }
 
 	#[cfg(feature = "try-runtime")]
 	impl frame_try_runtime::TryRuntime<Block> for Runtime {
