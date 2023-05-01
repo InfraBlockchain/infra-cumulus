@@ -1,67 +1,80 @@
 [relaychain]
 default_command = "../infra-relay-chain/target/release/infra-relay-chain"
 default_args = ["-lparachain=debug"]
-chain = "infrablockspace-local"
+chain = "rococo-local"
 
 [[relaychain.nodes]]
 name = "alice"
 validator = true
+rpc_port = 9100
+ws_port = 9101
 
 [[relaychain.nodes]]
 name = "bob"
 validator = true
+rpc_port = 9200
+ws_port = 9201
 
 [[relaychain.nodes]]
 name = "charlie"
 validator = true
+rpc_port = 9300
+ws_port = 9301
 
 [[relaychain.nodes]]
 name = "dave"
 validator = true
+rpc_port = 9400
+ws_port = 9401
 
 [[parachains]]
 id = 1003
-chain = "bridge-hub-infrablockspace-local"
+chain = "local"
 cumulus_based = true
 
 # run alice as parachain collator
 [[parachains.collators]]
 name = "alice"
 validator = true
-command = "./target/release/infrablockspace-parachain"
+command = "./target/release/parachain-template-node"
 args = ["-lparachain=debug"]
+rpc_port = 9500
+ws_port = 9501
+
 
 # run bob as parachain collator
 [[parachains.collators]]
 name = "bob"
 validator = true
-command = "./target/release/infrablockspace-parachain"
+command = "./target/release/parachain-template-node"
 args = ["-lparachain=debug"]
+rpc_port = 9600
+ws_port = 9601
 
 # # run charlie as parachain collator
 # [[parachains.collators]]
 # name = "charlie"
 # validator = true
-# command = "./target/release/infrablockspace-parachain"
+# command = "./target/release/parachain-template-node"
 # args = ["-lparachain=debug"]
 
 # # run dave as parachain collator
 # [[parachains.collators]]
 # name = "dave"
 # validator = true
-# command = "./target/release/infrablockspace-parachain"
+# command = "./target/release/parachain-template-node"
 # args = ["-lparachain=debug"]
 
 # # run eve as parachain collator
 # [[parachains.collators]]
 # name = "eve"
 # validator = true
-# command = "./target/release/infrablockspace-parachain"
+# command = "./target/release/parachain-template-node"
 # args = ["-lparachain=debug"]
 
 # # run ferdie as parachain collator
 # [[parachains.collators]]
 # name = "ferdie"
 # validator = true
-# command = "./target/release/infrablockspace-parachain"
+# command = "./target/release/parachain-template-node"
 # args = ["-lparachain=debug"]

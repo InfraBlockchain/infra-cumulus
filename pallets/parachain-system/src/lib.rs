@@ -760,7 +760,7 @@ pub mod pallet {
 impl<T: Config> VoteInfoHandler<T::AccountId> for Pallet<T> {
 	type VoteAssetId = VoteAssetId;
 	type VoteWeight = VoteWeight;
-	fn update_vote_info(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
+	fn update_pot_vote(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
 		// each vote_info is stored to VoteInfo StorageMap like: {key: (AccountId, VoteAssetId), value: VoteWeight }
 		let key = (who, asset_id);
 		if let Some(stored_weight) = VoteInfo::<T>::get(key.clone()) {

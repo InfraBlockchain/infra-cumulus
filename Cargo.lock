@@ -8476,6 +8476,7 @@ dependencies = [
 name = "parachain-template-node"
 version = "0.1.0"
 dependencies = [
+ "array-bytes 4.2.0",
  "clap 4.2.4",
  "cumulus-client-cli",
  "cumulus-client-consensus-aura",

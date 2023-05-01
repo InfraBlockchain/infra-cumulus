@@ -211,8 +211,14 @@ fn testnet_genesis(
 		},
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
 		// of this.
+		// sudo: SudoConfig { key: Some(root_key) },
 		assets: pallet_assets::GenesisConfig {
 			assets: vec![(1, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
+			accounts: vec![(
+				1,
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				1000000000000,
+			)],
 			..Default::default()
 		},
 		aura: Default::default(),
