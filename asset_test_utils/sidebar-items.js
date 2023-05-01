@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["ExtBuilder",""],["RuntimeHelper",""]],"type":[["AccountIdOf",""],["BalanceOf",""],["SessionKeysOf",""],["ValidatorIdOf",""]]};
+window.SIDEBAR_ITEMS = {"struct":["ExtBuilder","RuntimeHelper"],"type":["AccountIdOf","BalanceOf","SessionKeysOf","ValidatorIdOf"]};

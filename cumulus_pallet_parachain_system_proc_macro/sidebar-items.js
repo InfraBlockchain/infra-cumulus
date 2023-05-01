@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"macro":[["register_validate_block",""]]};
+window.SIDEBAR_ITEMS = {"macro":["register_validate_block"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["BridgeHubRuntimeType","Collects all supported BridgeHub configurations"]],"fn":[["ensure_id","Check if ‘id’ satisfy BridgeHub-like format"]],"mod":[["kusama","Sub-module for Kusama setup"],["polkadot","Sub-module for Polkadot setup"],["rococo","Sub-module for Rococo setup"],["westend","Sub-module for Westend setup (uses Kusama runtime)"],["wococo","Sub-module for Wococo setup (reuses stuff from Rococo)"]]};
+window.SIDEBAR_ITEMS = {"enum":["BridgeHubRuntimeType"],"fn":["ensure_id"],"mod":["kusama","polkadot","rococo","westend","wococo"]};

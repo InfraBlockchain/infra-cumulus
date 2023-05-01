@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Error","The error type for consensus-related operations."]],"type":[["Result","Result type alias."]]};
+window.SIDEBAR_ITEMS = {"enum":["Error"],"type":["Result"]};

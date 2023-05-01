@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["convert","Helper function to convert collections with [`(AssetId, Balance)`] to [`MultiAsset`]"],["convert_balance","Helper function to convert `Balance` with MultiLocation`to`MultiAsset`"]],"trait":[["MultiAssetConverter","Converting any [`(AssetId, Balance)`] to [`MultiAsset`]"]]};
+window.SIDEBAR_ITEMS = {"fn":["convert","convert_balance"],"trait":["MultiAssetConverter"]};

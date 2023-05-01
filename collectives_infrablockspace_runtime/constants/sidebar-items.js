@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["account",""],["currency",""],["fee","Fee-related."]]};
+window.SIDEBAR_ITEMS = {"mod":["account","currency","fee"]};

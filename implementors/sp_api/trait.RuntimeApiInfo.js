@@ -1,5 +1,5 @@
 (function() {var implementors = {
-"assets_common":[["impl&lt;Block:&nbsp;BlockT, AccountId&gt; RuntimeApiInfo for dyn <a class=\"trait\" href=\"assets_common/runtime_api/trait.FungiblesApi.html\" title=\"trait assets_common::runtime_api::FungiblesApi\">FungiblesApi</a>&lt;Block, AccountId&gt;"]],
-"cumulus_primitives_core":[["impl&lt;Block:&nbsp;BlockT&gt; RuntimeApiInfo for dyn <a class=\"trait\" href=\"cumulus_primitives_core/trait.CollectCollationInfo.html\" title=\"trait cumulus_primitives_core::CollectCollationInfo\">CollectCollationInfo</a>&lt;Block&gt;"]],
-"cumulus_test_runtime":[["impl&lt;Block:&nbsp;BlockT&gt; RuntimeApiInfo for dyn <a class=\"trait\" href=\"cumulus_test_runtime/trait.GetLastTimestamp.html\" title=\"trait cumulus_test_runtime::GetLastTimestamp\">GetLastTimestamp</a>&lt;Block&gt;"]]
+"assets_common":[["impl&lt;Block: BlockT, AccountId&gt; RuntimeApiInfo for dyn <a class=\"trait\" href=\"assets_common/runtime_api/trait.FungiblesApi.html\" title=\"trait assets_common::runtime_api::FungiblesApi\">FungiblesApi</a>&lt;Block, AccountId&gt;"]],
+"cumulus_primitives_core":[["impl&lt;Block: BlockT&gt; RuntimeApiInfo for dyn <a class=\"trait\" href=\"cumulus_primitives_core/trait.CollectCollationInfo.html\" title=\"trait cumulus_primitives_core::CollectCollationInfo\">CollectCollationInfo</a>&lt;Block&gt;"]],
+"cumulus_test_runtime":[["impl&lt;Block: BlockT&gt; RuntimeApiInfo for dyn <a class=\"trait\" href=\"cumulus_test_runtime/trait.GetLastTimestamp.html\" title=\"trait cumulus_test_runtime::GetLastTimestamp\">GetLastTimestamp</a>&lt;Block&gt;"]]
 };if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
