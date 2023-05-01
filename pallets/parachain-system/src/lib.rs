@@ -58,6 +58,8 @@ use sp_runtime::{
 use sp_std::{cmp, collections::btree_map::BTreeMap, prelude::*};
 use xcm::latest::XcmHash;
 
+pub type AccountnAssetId<AccountId, VoteAssetId> = (AccountId, VoteAssetId);
+
 mod migration;
 mod relay_state_snapshot;
 #[macro_use]
@@ -305,7 +307,7 @@ pub mod pallet {
 			UpwardMessages::<T>::kill();
 			HrmpOutboundMessages::<T>::kill();
 			CustomValidationHeadData::<T>::kill();
-			let _ = VoteInfo::<T>::clear(u32::max_value(), None);
+			let _ = PotVotes::<T>::clear(u32::max_value(), None);
 
 			weight += T::DbWeight::get().writes(6);
 
@@ -679,11 +681,10 @@ pub mod pallet {
 	#[pallet::storage]
 	pub(super) type ReservedXcmpWeightOverride<T: Config> = StorageValue<_, Weight>;
 
-	/// The Vote info of StorageMap type.
+	/// The Pot Vote StorageMap type.
 	#[pallet::storage]
-	#[pallet::getter(fn vote_info)]
-	pub type VoteInfo<T: Config> =
-		StorageMap<_, Twox64Concat, (T::AccountId, VoteAssetId), VoteWeight, OptionQuery>;
+	pub(super) type PotVotes<T: Config> =
+		StorageMap<_, Twox64Concat, AccountnAssetId<T::AccountId, VoteAssetId>, VoteWeight, OptionQuery>;
 
 	/// The weight we reserve at the beginning of the block for processing DMP messages. This
 	/// overrides the amount set in the Config trait.
@@ -760,13 +761,22 @@ pub mod pallet {
 impl<T: Config> VoteInfoHandler<T::AccountId> for Pallet<T> {
 	type VoteAssetId = VoteAssetId;
 	type VoteWeight = VoteWeight;
-	fn update_vote_info(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
+	fn update_pot_vote(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
 		// each vote_info is stored to VoteInfo StorageMap like: {key: (AccountId, VoteAssetId), value: VoteWeight }
 		let key = (who, asset_id);
-		if let Some(stored_weight) = VoteInfo::<T>::get(key.clone()) {
-			VoteInfo::<T>::insert(key, stored_weight.saturating_add(vote_weight));
+		Self::do_update_pot_vote(key, vote_weight);
+	}
+}
+
+impl<T: Config> Pallet<T> {
+	fn do_update_pot_vote(key: AccountnAssetId<T::AccountId, VoteAssetId>, vote_weight: VoteWeight) {
+		if let Some(old_weight) = PotVotes::<T>::get(&key) {
+			// Weight for asset id already existed
+			let new_weight = old_weight.saturating_add(vote_weight);
+			PotVotes::<T>::insert(&key, new_weight);
 		} else {
-			VoteInfo::<T>::insert(key, vote_weight);
+			// Weight for the asset id not existed. Need to insert new one
+			PotVotes::<T>::insert(&key, vote_weight);
 		}
 	}
 }
