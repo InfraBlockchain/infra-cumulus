@@ -32,7 +32,10 @@ use frame_support::traits::{ExecuteBlock, ExtrinsicCall, Get, IsSubType};
 use sp_core::storage::{ChildInfo, StateVersion};
 use sp_externalities::{set_and_run_with_externalities, Externalities};
 use sp_io::KillStorageResult;
-use sp_runtime::traits::{Block as BlockT, Extrinsic, HashFor, Header as HeaderT};
+use sp_runtime::{
+	generic::{VoteAssetId, VoteWeight, PotVote as Pot},
+	traits::{Block as BlockT, Extrinsic, HashFor, Header as HeaderT}
+};
 use sp_std::prelude::*;
 use sp_trie::MemoryDB;
 
@@ -202,7 +205,17 @@ where
 			} else {
 				head_data
 			};
-
+	
+		let pot_vote_count = crate::PotVoteCount::<PSC>::get() as usize;
+		let mut vote_result: Vec<Pot> = Vec::with_capacity(pot_vote_count);
+		if pot_vote_count != 0 {
+			crate::PotVote::<PSC>::iter_keys().for_each(|(id, acc)| {
+				if let Some(weight) = crate::PotVote::<PSC>::get(&id, &acc) {
+					let pot_vote = Pot::new(id.clone(), acc.clone(), weight.clone());
+					vote_result.push(pot_vote);
+				}
+			});
+		}
 		ValidationResult {
 			head_data,
 			new_validation_code: new_validation_code.map(Into::into),
