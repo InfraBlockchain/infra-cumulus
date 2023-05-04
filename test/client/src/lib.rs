@@ -29,7 +29,7 @@ use sp_blockchain::HeaderBackend;
 use sp_core::storage::Storage;
 use sp_io::TestExternalities;
 use sp_runtime::{generic::Era, BuildStorage, SaturatedConversion};
-
+use sp_keyring::AccountKeyring;
 pub use block_builder::*;
 pub use cumulus_test_runtime as runtime;
 pub use infrablockspace_parachain::primitives::{
@@ -133,6 +133,8 @@ pub fn generate_extrinsic(
 	let period =
 		BlockHashCount::get().checked_next_power_of_two().map(|c| c / 2).unwrap_or(2) as u64;
 	let tip = 0;
+	// Test Scenario
+	// Extrinsic contains vote for `Alice` with asset id `1`
 	let extra: SignedExtra = (
 		frame_system::CheckNonZeroSender::<Runtime>::new(),
 		frame_system::CheckSpecVersion::<Runtime>::new(),
@@ -140,7 +142,13 @@ pub fn generate_extrinsic(
 		frame_system::CheckEra::<Runtime>::from(Era::mortal(period, current_block)),
 		frame_system::CheckNonce::<Runtime>::from(nonce),
 		frame_system::CheckWeight::<Runtime>::new(),
-		pallet_transaction_payment::ChargeTransactionPayment::<Runtime>::from(tip),
+		pallet_infra_asset_tx_payment::ChargeAssetTxPayment::<Runtime>::from(
+			tip,
+			Some(1), // asset id
+			None, // fee payer
+			Some(AccountKeyring::Alice.to_account_id()), // vote candidate
+		)
+		// pallet_transaction_payment::ChargeTransactionPayment::<Runtime>::from(tip),
 	);
 
 	let function = function.into();
