@@ -206,16 +206,15 @@ where
 				head_data
 			};
 	
-		let pot_vote_count = crate::PotVoteCount::<PSC>::get() as usize;
-		let mut vote_result: Vec<Pot> = Vec::with_capacity(pot_vote_count);
-		if pot_vote_count != 0 {
-			crate::PotVote::<PSC>::iter_keys().for_each(|(id, acc)| {
-				if let Some(weight) = crate::PotVote::<PSC>::get(&id, &acc) {
-					let pot_vote = Pot::new(id.clone(), acc.clone(), weight.clone());
-					vote_result.push(pot_vote);
-				}
-			});
+		let vote_result = if let Some(res) = crate::CollectedPotVotes::<PSC>::get() {
+			res.votes().try_into().expect(
+				"Number of pot votes should not be greater than `MAX_VOTE_NUM`"
+			);
+			Some(res)
+		} else {
+			None
 		}
+
 		ValidationResult {
 			head_data,
 			new_validation_code: new_validation_code.map(Into::into),
@@ -223,6 +222,7 @@ where
 			processed_downward_messages,
 			horizontal_messages,
 			hrmp_watermark,
+			vote_result
 		}
 	})
 }

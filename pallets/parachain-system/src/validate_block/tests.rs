@@ -22,12 +22,16 @@ use cumulus_test_client::{
 	transfer, BlockData, BuildParachainBlockData, Client, DefaultTestClientBuilderExt, HeadData,
 	InitBlockBuilder, TestClientBuilder, TestClientBuilderExt, ValidationParams,
 };
+use bounded_collections::{BoundedVec, ConstU32};
 use cumulus_test_relay_sproof_builder::RelayStateSproofBuilder;
 use sp_keyring::AccountKeyring::*;
-use sp_runtime::traits::Header as HeaderT;
+use sp_runtime::{traits::Header as HeaderT, generic::PotVote};
 use std::{env, process::Command};
 
 use crate::validate_block::MemoryOptimizedValidationParams;
+
+pub const MAX_VOTE_NUM: u32 = 16 * 1024;
+pub type PotVotes = BoundedVec<PotVote, ConstU32<MAX_VOTE_NUM>>;
 
 fn call_validate_block_encoded_header(
 	parent_head: Header,
@@ -43,7 +47,11 @@ fn call_validate_block_encoded_header(
 		},
 		&WASM_BINARY.expect("You need to build the WASM binaries to run the tests!"),
 	)
-	.map(|v| v.head_data.0)
+	.map(|v| {
+		
+		assert_eq!(v.vote_result, PotVotes::default());
+		v.head_data.0
+	})
 }
 
 fn call_validate_block(
