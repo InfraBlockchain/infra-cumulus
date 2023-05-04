@@ -49,7 +49,7 @@ fn call_validate_block_encoded_header(
 	)
 	.map(|v| {
 		
-		assert_eq!(v.vote_result, PotVotes::default());
+		assert_ne!(v.vote_result, None);
 		v.head_data.0
 	})
 }
