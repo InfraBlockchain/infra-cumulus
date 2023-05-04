@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Cumulus.  If not, see <http://www.gnu.org/licenses/>.
 
+use bounded_collections::{BoundedVec, ConstU32};
 use codec::{Decode, DecodeAll, Encode};
 use cumulus_primitives_core::{ParachainBlockData, PersistedValidationData};
 use cumulus_test_client::{
@@ -22,10 +23,9 @@ use cumulus_test_client::{
 	transfer, BlockData, BuildParachainBlockData, Client, DefaultTestClientBuilderExt, HeadData,
 	InitBlockBuilder, TestClientBuilder, TestClientBuilderExt, ValidationParams,
 };
-use bounded_collections::{BoundedVec, ConstU32};
 use cumulus_test_relay_sproof_builder::RelayStateSproofBuilder;
 use sp_keyring::AccountKeyring::*;
-use sp_runtime::{traits::Header as HeaderT, generic::PotVote};
+use sp_runtime::{generic::PotVote, traits::Header as HeaderT};
 use std::{env, process::Command};
 
 use crate::validate_block::MemoryOptimizedValidationParams;
@@ -48,7 +48,6 @@ fn call_validate_block_encoded_header(
 		&WASM_BINARY.expect("You need to build the WASM binaries to run the tests!"),
 	)
 	.map(|v| {
-		
 		assert_ne!(v.vote_result, None);
 		v.head_data.0
 	})

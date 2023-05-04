@@ -35,7 +35,7 @@ use sp_api::{decl_runtime_apis, impl_runtime_apis};
 use sp_core::OpaqueMetadata;
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
-	traits::{BlakeTwo256, Block as BlockT, IdentifyAccount, IdentityLookup, Verify, ConvertInto},
+	traits::{BlakeTwo256, Block as BlockT, ConvertInto, IdentifyAccount, IdentityLookup, Verify},
 	transaction_validity::{TransactionSource, TransactionValidity},
 	ApplyExtrinsicResult, MultiSignature,
 };
@@ -51,7 +51,7 @@ pub use frame_support::{
 	parameter_types,
 	traits::{
 		tokens::fungibles::{Balanced, CreditOf},
-		ConstU8, Randomness, ConstU32, ConstU128, AsEnsureOriginWithArg
+		AsEnsureOriginWithArg, ConstU128, ConstU32, ConstU8, Randomness,
 	},
 	weights::{
 		constants::{
@@ -61,8 +61,10 @@ pub use frame_support::{
 	},
 	StorageValue,
 };
-use frame_system::limits::{BlockLength, BlockWeights};
-use frame_system::EnsureRoot;
+use frame_system::{
+	limits::{BlockLength, BlockWeights},
+	EnsureRoot,
+};
 pub use pallet_balances::Call as BalancesCall;
 pub use pallet_sudo::Call as SudoCall;
 pub use pallet_timestamp::Call as TimestampCall;

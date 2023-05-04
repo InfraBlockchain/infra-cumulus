@@ -67,7 +67,7 @@ use sc_service::{
 use sp_arithmetic::traits::SaturatedConversion;
 use sp_blockchain::HeaderBackend;
 use sp_core::{Pair, H256};
-use sp_keyring::{Sr25519Keyring, AccountKeyring};
+use sp_keyring::{AccountKeyring, Sr25519Keyring};
 use sp_runtime::{codec::Encode, generic, traits::BlakeTwo256};
 use sp_state_machine::BasicExternalities;
 use sp_trie::PrefixedMemoryDB;
@@ -841,8 +841,8 @@ pub fn construct_extrinsic(
 		frame_system::CheckWeight::<runtime::Runtime>::new(),
 		pallet_infra_asset_tx_payment::ChargeAssetTxPayment::<runtime::Runtime>::from(
 			tip,
-			Some(1), // asset id
-			None, // fee payer
+			Some(1),                                     // asset id
+			None,                                        // fee payer
 			Some(AccountKeyring::Alice.to_account_id()), // vote candidate
 		),
 	);

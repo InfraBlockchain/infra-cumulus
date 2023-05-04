@@ -48,7 +48,7 @@ use frame_system::{ensure_none, ensure_root};
 use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
-	generic::{VoteAssetId, VoteWeight, VoteAccountId, PotVotes},
+	generic::{PotVotes, VoteAccountId, VoteAssetId, VoteWeight},
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
 	transaction_validity::{
 		InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
@@ -306,7 +306,7 @@ pub mod pallet {
 			HrmpOutboundMessages::<T>::kill();
 			CustomValidationHeadData::<T>::kill();
 			CollectedPotVotes::<T>::kill();
-	
+
 			weight += T::DbWeight::get().writes(7);
 
 			// Here, in `on_initialize` we must report the weight for both `on_initialize` and
@@ -734,7 +734,7 @@ pub mod pallet {
 	#[pallet::validate_unsigned]
 	impl<T: Config> sp_runtime::traits::ValidateUnsigned for Pallet<T> {
 		type Call = Call<T>;
-		
+
 		fn validate_unsigned(_source: TransactionSource, call: &Self::Call) -> TransactionValidity {
 			if let Call::enact_authorized_upgrade { ref code } = call {
 				if let Ok(hash) = Self::validate_authorized_upgrade(code) {
@@ -759,7 +759,7 @@ impl<T: Config> VoteInfoHandler for Pallet<T> {
 	type VoteAccountId = VoteAccountId;
 	type VoteAssetId = VoteAssetId;
 	type VoteWeight = VoteWeight;
-	
+
 	fn update_pot_vote(who: VoteAccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
 		Self::do_update_pot_vote(asset_id, who, vote_weight);
 	}
@@ -767,7 +767,11 @@ impl<T: Config> VoteInfoHandler for Pallet<T> {
 
 impl<T: Config> Pallet<T> {
 	/// Update vote weight for given (asset_id, candidate)
-	fn do_update_pot_vote(vote_asset_id: VoteAssetId, vote_account_id: VoteAccountId, vote_weight: VoteWeight) {
+	fn do_update_pot_vote(
+		vote_asset_id: VoteAssetId,
+		vote_account_id: VoteAccountId,
+		vote_weight: VoteWeight,
+	) {
 		let pot_votes = if let Some(mut old) = CollectedPotVotes::<T>::get() {
 			old.update_vote_weight(vote_asset_id, vote_account_id, vote_weight);
 			old
