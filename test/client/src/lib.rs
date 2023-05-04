@@ -17,25 +17,25 @@
 //! A Cumulus test client.
 
 mod block_builder;
+pub use block_builder::*;
 use codec::{Decode, Encode};
+pub use cumulus_test_runtime as runtime;
+pub use infrablockspace_parachain::primitives::{
+	BlockData, HeadData, ValidationParams, ValidationResult,
+};
 use runtime::{
 	Balance, Block, BlockHashCount, GenesisConfig, Runtime, RuntimeCall, Signature, SignedExtra,
 	SignedPayload, UncheckedExtrinsic, VERSION,
 };
+pub use sc_executor::error::Result as ExecutorResult;
 use sc_executor::{WasmExecutionMethod, WasmExecutor};
 use sc_executor_common::runtime_blob::RuntimeBlob;
 use sc_service::client;
 use sp_blockchain::HeaderBackend;
 use sp_core::storage::Storage;
 use sp_io::TestExternalities;
+use sp_keyring::AccountKeyring;
 use sp_runtime::{generic::Era, BuildStorage, SaturatedConversion};
-
-pub use block_builder::*;
-pub use cumulus_test_runtime as runtime;
-pub use infrablockspace_parachain::primitives::{
-	BlockData, HeadData, ValidationParams, ValidationResult,
-};
-pub use sc_executor::error::Result as ExecutorResult;
 pub use substrate_test_client::*;
 
 pub type ParachainBlockData = cumulus_primitives_core::ParachainBlockData<Block>;
@@ -133,6 +133,8 @@ pub fn generate_extrinsic(
 	let period =
 		BlockHashCount::get().checked_next_power_of_two().map(|c| c / 2).unwrap_or(2) as u64;
 	let tip = 0;
+	// Test Scenario
+	// Extrinsic contains vote for `Alice` with asset id `1`
 	let extra: SignedExtra = (
 		frame_system::CheckNonZeroSender::<Runtime>::new(),
 		frame_system::CheckSpecVersion::<Runtime>::new(),
@@ -140,7 +142,12 @@ pub fn generate_extrinsic(
 		frame_system::CheckEra::<Runtime>::from(Era::mortal(period, current_block)),
 		frame_system::CheckNonce::<Runtime>::from(nonce),
 		frame_system::CheckWeight::<Runtime>::new(),
-		pallet_transaction_payment::ChargeTransactionPayment::<Runtime>::from(tip),
+		pallet_infra_asset_tx_payment::ChargeAssetTxPayment::<Runtime>::from(
+			tip,
+			Some(1),                                     // asset id
+			None,                                        // fee payer
+			Some(AccountKeyring::Alice.to_account_id()), // vote candidate
+		), // pallet_transaction_payment::ChargeTransactionPayment::<Runtime>::from(tip),
 	);
 
 	let function = function.into();

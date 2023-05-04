@@ -131,6 +131,15 @@ fn testnet_genesis(
 		balances: cumulus_test_runtime::BalancesConfig {
 			balances: endowed_accounts.iter().cloned().map(|k| (k, 1 << 60)).collect(),
 		},
+		assets: cumulus_test_runtime::AssetsConfig {
+			assets: vec![(1, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
+			accounts: vec![
+				(1, get_account_id_from_seed::<sr25519::Public>("Alice"), 1 << 30),
+				(1, get_account_id_from_seed::<sr25519::Public>("Bob"), 1 << 30),
+				(1, get_account_id_from_seed::<sr25519::Public>("Charlie"), 1 << 30),
+			],
+			..Default::default()
+		},
 		sudo: cumulus_test_runtime::SudoConfig { key: Some(root_key) },
 		transaction_payment: Default::default(),
 	}

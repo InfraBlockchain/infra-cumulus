@@ -48,7 +48,7 @@ use frame_system::{ensure_none, ensure_root};
 use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
-	generic::{VoteAssetId, VoteWeight},
+	generic::{PotVotes, VoteAccountId, VoteAssetId, VoteWeight},
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
 	transaction_validity::{
 		InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
@@ -57,8 +57,6 @@ use sp_runtime::{
 };
 use sp_std::{cmp, collections::btree_map::BTreeMap, prelude::*};
 use xcm::latest::XcmHash;
-
-pub type AccountnAssetId<AccountId, VoteAssetId> = (AccountId, VoteAssetId);
 
 mod migration;
 mod relay_state_snapshot;
@@ -307,9 +305,9 @@ pub mod pallet {
 			UpwardMessages::<T>::kill();
 			HrmpOutboundMessages::<T>::kill();
 			CustomValidationHeadData::<T>::kill();
-			let _ = PotVotes::<T>::clear(u32::max_value(), None);
+			CollectedPotVotes::<T>::kill();
 
-			weight += T::DbWeight::get().writes(6);
+			weight += T::DbWeight::get().writes(7);
 
 			// Here, in `on_initialize` we must report the weight for both `on_initialize` and
 			// `on_finalize`.
@@ -681,10 +679,9 @@ pub mod pallet {
 	#[pallet::storage]
 	pub(super) type ReservedXcmpWeightOverride<T: Config> = StorageValue<_, Weight>;
 
-	/// The Pot Vote StorageMap type.
+	/// The vote weight of a specific account for a specific asset.
 	#[pallet::storage]
-	pub(super) type PotVotes<T: Config> =
-		StorageMap<_, Twox64Concat, AccountnAssetId<T::AccountId, VoteAssetId>, VoteWeight, OptionQuery>;
+	pub(super) type CollectedPotVotes<T: Config> = StorageValue<_, PotVotes, OptionQuery>;
 
 	/// The weight we reserve at the beginning of the block for processing DMP messages. This
 	/// overrides the amount set in the Config trait.
@@ -758,26 +755,30 @@ pub mod pallet {
 	}
 }
 
-impl<T: Config> VoteInfoHandler<T::AccountId> for Pallet<T> {
+impl<T: Config> VoteInfoHandler for Pallet<T> {
+	type VoteAccountId = VoteAccountId;
 	type VoteAssetId = VoteAssetId;
 	type VoteWeight = VoteWeight;
-	fn update_pot_vote(who: T::AccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
-		// each vote_info is stored to VoteInfo StorageMap like: {key: (AccountId, VoteAssetId), value: VoteWeight }
-		let key = (who, asset_id);
-		Self::do_update_pot_vote(key, vote_weight);
+
+	fn update_pot_vote(who: VoteAccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
+		Self::do_update_pot_vote(asset_id, who, vote_weight);
 	}
 }
 
 impl<T: Config> Pallet<T> {
-	fn do_update_pot_vote(key: AccountnAssetId<T::AccountId, VoteAssetId>, vote_weight: VoteWeight) {
-		if let Some(old_weight) = PotVotes::<T>::get(&key) {
-			// Weight for asset id already existed
-			let new_weight = old_weight.saturating_add(vote_weight);
-			PotVotes::<T>::insert(&key, new_weight);
+	/// Update vote weight for given (asset_id, candidate)
+	fn do_update_pot_vote(
+		vote_asset_id: VoteAssetId,
+		vote_account_id: VoteAccountId,
+		vote_weight: VoteWeight,
+	) {
+		let pot_votes = if let Some(mut old) = CollectedPotVotes::<T>::get() {
+			old.update_vote_weight(vote_asset_id, vote_account_id, vote_weight);
+			old
 		} else {
-			// Weight for the asset id not existed. Need to insert new one
-			PotVotes::<T>::insert(&key, vote_weight);
-		}
+			PotVotes::new(vote_asset_id, vote_account_id, vote_weight)
+		};
+		CollectedPotVotes::<T>::put(pot_votes);
 	}
 }
 
