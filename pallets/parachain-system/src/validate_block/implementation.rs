@@ -207,13 +207,11 @@ where
 			};
 	
 		let vote_result = if let Some(res) = crate::CollectedPotVotes::<PSC>::get() {
-			res.votes().try_into().expect(
-				"Number of pot votes should not be greater than `MAX_VOTE_NUM`"
-			);
-			Some(res)
+			let vote_result = res.votes();
+			Some(vote_result)
 		} else {
 			None
-		}
+		};
 
 		ValidationResult {
 			head_data,
