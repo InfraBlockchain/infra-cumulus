@@ -48,7 +48,7 @@ use frame_system::{ensure_none, ensure_root};
 use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
-	generic::{VoteAssetId, VoteWeight, VoteAccountId},
+	generic::{VoteAssetId, VoteWeight, VoteAccountId, PotVotes},
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
 	transaction_validity::{
 		InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
@@ -305,10 +305,9 @@ pub mod pallet {
 			UpwardMessages::<T>::kill();
 			HrmpOutboundMessages::<T>::kill();
 			CustomValidationHeadData::<T>::kill();
-			PotVoteCount::<T>::kill();
-			let _ = PotVote::<T>::clear(u32::max_value(), None);
+			CollectedPotVotes::<T>::kill();
 	
-			weight += T::DbWeight::get().writes(6);
+			weight += T::DbWeight::get().writes(7);
 
 			// Here, in `on_initialize` we must report the weight for both `on_initialize` and
 			// `on_finalize`.
@@ -682,12 +681,7 @@ pub mod pallet {
 
 	/// The vote weight of a specific account for a specific asset.
 	#[pallet::storage]
-	pub(super) type PotVote<T: Config> =
-		StorageDoubleMap<_, Blake2_128Concat, VoteAssetId, Blake2_128Concat, VoteAccountId, VoteWeight>;
-
-	/// Count for PoT Votes for returning bounded size of data for `ValidationResult`
-	#[pallet::storage]
-	pub(super) type PotVoteCount<T: Config> = StorageValue<_, u32, ValueQuery>;
+	pub(super) type CollectedPotVotes<T: Config> = StorageValue<_, PotVotes, OptionQuery>;
 
 	/// The weight we reserve at the beginning of the block for processing DMP messages. This
 	/// overrides the amount set in the Config trait.
@@ -765,30 +759,22 @@ impl<T: Config> VoteInfoHandler for Pallet<T> {
 	type VoteAccountId = VoteAccountId;
 	type VoteAssetId = VoteAssetId;
 	type VoteWeight = VoteWeight;
+	
 	fn update_pot_vote(who: VoteAccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
 		Self::do_update_pot_vote(asset_id, who, vote_weight);
-		Self::do_increase_pot_vote_count();
 	}
 }
 
 impl<T: Config> Pallet<T> {
 	/// Update vote weight for given (asset_id, candidate)
-	fn do_update_pot_vote(key1: VoteAssetId, key2: VoteAccountId, vote_weight: VoteWeight) {
-		if let Some(old_weight) = PotVote::<T>::get(&key1, &key2) {
-			// Vote weight for asset id already existed
-			let new_weight = old_weight.saturating_add(vote_weight);
-			PotVote::<T>::insert(&key1, &key2, new_weight);
+	fn do_update_pot_vote(vote_asset_id: VoteAssetId, vote_account_id: VoteAccountId, vote_weight: VoteWeight) {
+		let pot_votes = if let Some(mut old) = CollectedPotVotes::<T>::get() {
+			old.update_vote_weight(vote_asset_id, vote_account_id, vote_weight);
+			old
 		} else {
-			// New weight for asset id
-			PotVote::<T>::insert(&key1, &key2, vote_weight);
-		}
-	}
-
-	/// Increase pot vote count by one
-	fn do_increase_pot_vote_count() {
-		let count = PotVoteCount::<T>::get();
-		let new_count = count.saturating_add(count);
-		PotVoteCount::<T>::put(new_count);
+			PotVotes::new(vote_asset_id, vote_account_id, vote_weight)
+		};
+		CollectedPotVotes::<T>::put(pot_votes);
 	}
 }
 
