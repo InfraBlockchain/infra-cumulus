@@ -76,6 +76,7 @@ pub fn development_config() -> ChainSpec {
 		ChainType::Development,
 		move || {
 			testnet_genesis(
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				// initial collators.
 				vec![
 					(
@@ -131,6 +132,7 @@ pub fn local_testnet_config() -> ChainSpec {
 		ChainType::Local,
 		move || {
 			testnet_genesis(
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				// initial collators.
 				vec![
 					(
@@ -178,6 +180,7 @@ pub fn local_testnet_config() -> ChainSpec {
 }
 
 fn testnet_genesis(
+	root_key: AccountId,
 	invulnerables: Vec<(AccountId, AuraId)>,
 	endowed_accounts: Vec<AccountId>,
 	id: ParaId,
@@ -211,14 +214,38 @@ fn testnet_genesis(
 		},
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
 		// of this.
-		// sudo: SudoConfig { key: Some(root_key) },
+		sudo: parachain_template_runtime::SudoConfig { key: Some(root_key) },
 		assets: pallet_assets::GenesisConfig {
-			assets: vec![(1, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
-			accounts: vec![(
-				1,
-				get_account_id_from_seed::<sr25519::Public>("Alice"),
-				1000000000000,
-			)],
+			assets: vec![
+				(1, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1300),
+				(2, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1),
+			],
+			metadata: vec![
+				(
+					1,
+					"iKRW".to_string().as_bytes().to_vec(),
+					"iKRW".to_string().as_bytes().to_vec(),
+					12,
+				),
+				(
+					2,
+					"iUSD".to_string().as_bytes().to_vec(),
+					"iUSD".to_string().as_bytes().to_vec(),
+					12,
+				),
+			],
+			accounts: vec![
+				(
+					1,
+					get_account_id_from_seed::<sr25519::Public>("Alice"),
+					1_000_000_000_000_000_000_000,
+				),
+				(
+					2,
+					get_account_id_from_seed::<sr25519::Public>("Alice"),
+					1_000_000_000_000_000_000,
+				),
+			],
 			..Default::default()
 		},
 		aura: Default::default(),

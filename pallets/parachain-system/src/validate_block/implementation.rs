@@ -22,9 +22,7 @@ use cumulus_primitives_core::{
 };
 use cumulus_primitives_parachain_inherent::ParachainInherentData;
 
-use infrablockspace_parachain::primitives::{
-	HeadData, RelayChainBlockNumber, ValidationParams, ValidationResult,
-};
+use infrablockspace_parachain::primitives::{HeadData, RelayChainBlockNumber, ValidationResult};
 
 use codec::Encode;
 
@@ -32,10 +30,7 @@ use frame_support::traits::{ExecuteBlock, ExtrinsicCall, Get, IsSubType};
 use sp_core::storage::{ChildInfo, StateVersion};
 use sp_externalities::{set_and_run_with_externalities, Externalities};
 use sp_io::KillStorageResult;
-use sp_runtime::{
-	generic::{PotVote as Pot, VoteAssetId, VoteWeight},
-	traits::{Block as BlockT, Extrinsic, HashFor, Header as HeaderT},
-};
+use sp_runtime::traits::{Block as BlockT, Extrinsic, HashFor, Header as HeaderT};
 use sp_std::prelude::*;
 use sp_trie::MemoryDB;
 
