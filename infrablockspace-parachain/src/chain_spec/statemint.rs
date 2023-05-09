@@ -199,6 +199,8 @@ fn statemint_genesis(
 	endowed_accounts: Vec<AccountId>,
 	id: ParaId,
 ) -> statemint_runtime::GenesisConfig {
+	let root_key = get_account_id_from_seed::<sr25519::Public>("Alice");
+
 	statemint_runtime::GenesisConfig {
 		system: statemint_runtime::SystemConfig {
 			code: statemint_runtime::WASM_BINARY
@@ -230,6 +232,7 @@ fn statemint_genesis(
 		// of this.
 		aura: Default::default(),
 		aura_ext: Default::default(),
+		sudo: statemint_runtime::SudoConfig { key: Some(root_key) },
 		parachain_system: Default::default(),
 		polkadot_xcm: statemint_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
@@ -251,6 +254,8 @@ pub fn statemine_development_config() -> StatemineChainSpec {
 		ChainType::Local,
 		move || {
 			statemine_genesis(
+				// root_address.
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				// initial collators.
 				vec![(
 					get_account_id_from_seed::<sr25519::Public>("Alice"),
@@ -288,7 +293,8 @@ pub fn statemine_local_config() -> StatemineChainSpec {
 		ChainType::Local,
 		move || {
 			statemine_genesis(
-				// initial collators.
+				// root_address.
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				vec![
 					(
 						get_account_id_from_seed::<sr25519::Public>("Alice"),
@@ -339,7 +345,8 @@ pub fn statemine_config() -> StatemineChainSpec {
 		ChainType::Live,
 		move || {
 			statemine_genesis(
-				// initial collators.
+				// root_address.
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
 				vec![
 					(
 						hex!("50673d59020488a4ffc9d8c6de3062a65977046e6990915617f85fef6d349730")
@@ -380,6 +387,7 @@ pub fn statemine_config() -> StatemineChainSpec {
 }
 
 fn statemine_genesis(
+	root_key: AccountId,
 	invulnerables: Vec<(AccountId, AuraId)>,
 	endowed_accounts: Vec<AccountId>,
 	id: ParaId,
@@ -415,8 +423,32 @@ fn statemine_genesis(
 				})
 				.collect(),
 		},
+		sudo: statemine_runtime::SudoConfig { key: Some(root_key) },
 		aura: Default::default(),
 		aura_ext: Default::default(),
+		assets: pallet_assets::GenesisConfig {
+			assets: vec![
+				(1, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1300),
+				(2, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1),
+			],
+			metadata: vec![
+				(1, "iKRW".into(), "iKRW".into(), 12),
+				(2, "iUSD".into(), "iUSD".into(), 12),
+			],
+			accounts: vec![
+				(
+					1,
+					get_account_id_from_seed::<sr25519::Public>("Alice"),
+					1_000_000_000_000_000_000_000,
+				),
+				(
+					2,
+					get_account_id_from_seed::<sr25519::Public>("Alice"),
+					1_000_000_000_000_000_000,
+				),
+			],
+			..Default::default()
+		},
 		parachain_system: Default::default(),
 		polkadot_xcm: statemine_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),

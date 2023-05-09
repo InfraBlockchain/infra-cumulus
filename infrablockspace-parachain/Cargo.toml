@@ -37,6 +37,7 @@ parachains-common = { path = "../parachains/common" }
 # Substrate
 frame-benchmarking = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 frame-benchmarking-cli = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-runtime = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
