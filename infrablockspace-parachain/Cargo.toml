@@ -25,6 +25,7 @@ shell-runtime = { path = "../parachains/runtimes/starters/shell" }
 seedling-runtime = { path = "../parachains/runtimes/starters/seedling" }
 statemint-runtime = { path = "../parachains/runtimes/assets/statemint" }
 statemine-runtime = { path = "../parachains/runtimes/assets/statemine" }
+infra-asset-system-runtime = { path = "../parachains/runtimes/assets/infra-asset-system" }
 collectives-infrablockspace-runtime = { path = "../parachains/runtimes/collectives/collectives-infrablockspace" }
 contracts-rococo-runtime = { path = "../parachains/runtimes/contracts/contracts-rococo" }
 bridge-hub-rococo-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-rococo" }

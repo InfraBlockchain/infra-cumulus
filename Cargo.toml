@@ -36,6 +36,7 @@ members = [
 	"parachains/runtimes/starters/shell",
 	"parachains/runtimes/starters/seedling",
 	"parachains/runtimes/assets/common",
+	"parachains/runtimes/assets/infra-asset-system",
 	"parachains/runtimes/assets/statemint",
 	"parachains/runtimes/assets/statemine",
 	"parachains/runtimes/bridge-hubs/bridge-hub-rococo",
