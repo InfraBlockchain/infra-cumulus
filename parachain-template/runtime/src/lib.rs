@@ -300,6 +300,10 @@ impl HandleCredit<AccountId, Assets> for CreditToBlockAuthor {
 	}
 }
 
+parameter_types! {
+	pub const FeeTreasuryId: PalletId = PalletId(*b"infrapid");
+}
+
 impl pallet_infra_asset_tx_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Fungibles = Assets;
@@ -310,6 +314,7 @@ impl pallet_infra_asset_tx_payment::Config for Runtime {
 	>;
 	/// The type that handles the voting info.
 	type VoteInfoHandler = ParachainSystem;
+	type PalletId = FeeTreasuryId;
 }
 
 // Configure FRAME pallets to include in runtime.

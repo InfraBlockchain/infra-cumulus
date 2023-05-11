@@ -28,7 +28,7 @@ use cumulus_client_cli::generate_genesis_block;
 use cumulus_primitives_core::ParaId;
 use frame_benchmarking_cli::{BenchmarkCmd, SUBSTRATE_REFERENCE_HARDWARE};
 use log::{info, warn};
-use parachains_common::{AuraId, StatemintAuraId};
+use parachains_common::{AuraId, StatemintAuraId, InfraAssetSystemAuraId};
 use sc_cli::{
 	ChainSpec, CliConfiguration, DefaultConfigurationValues, ImportParams, KeystoreParams,
 	NetworkParams, Result, RuntimeVersion, SharedParams, SubstrateCli,
@@ -49,6 +49,7 @@ enum Runtime {
 	Seedling,
 	Statemint,
 	Statemine,
+	InfraAssetSystem,
 	Penpal(ParaId),
 	ContractsRococo,
 	CollectivesPolkadot,
@@ -93,6 +94,8 @@ fn runtime(id: &str) -> Runtime {
 		Runtime::Seedling
 	} else if id.starts_with("statemint") {
 		Runtime::Statemint
+	} else if id.starts_with("infra-asset-system") {
+		Runtime::InfraAssetSystem
 	} else if id.starts_with("statemine") {
 		Runtime::Statemine
 	} else if id.starts_with("penpal") {
@@ -157,6 +160,17 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 			&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
 		)?),
 
+		// -- Infra Asset System
+		"infra-asset-system-dev" => Box::new(chain_spec::infra_asset_system::infra_asset_system_development_config()),
+		"infra-asset-system-local" => Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config()),
+		// the chain spec as used for generating the upgrade genesis values
+		"infra-asset-system-genesis" => Box::new(chain_spec::infra_asset_system::infra_asset_system_config()),
+		// the shell-based chain spec as used for syncing
+		// ToDo: change to infra asset system
+		"infra-asset-system" => Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_bytes(
+			&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
+		)?),
+
 		// -- Polkadot Collectives
 		"collectives-polkadot-dev" =>
 			Box::new(chain_spec::collectives::collectives_infrablockspace_development_config()),
@@ -215,6 +229,8 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 					Box::new(chain_spec::statemint::StatemintChainSpec::from_json_file(path)?),
 				Runtime::Statemine =>
 					Box::new(chain_spec::statemint::StatemineChainSpec::from_json_file(path)?),
+				Runtime::InfraAssetSystem =>
+					Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(path)?),
 				Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => Box::new(
 					chain_spec::collectives::CollectivesPolkadotChainSpec::from_json_file(path)?,
 				),
@@ -297,6 +313,7 @@ impl SubstrateCli for Cli {
 		match chain_spec.runtime() {
 			Runtime::Statemint => &statemint_runtime::VERSION,
 			Runtime::Statemine => &statemine_runtime::VERSION,
+			Runtime::InfraAssetSystem => &infra_asset_system_runtime::VERSION,
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend =>
 				&collectives_infrablockspace_runtime::VERSION,
 			Runtime::Shell => &shell_runtime::VERSION,
@@ -387,6 +404,16 @@ macro_rules! construct_async_run {
 			Runtime::Statemine => {
 				runner.async_run(|$config| {
 					let $components = new_partial::<statemine_runtime::RuntimeApi, _>(
+						&$config,
+						crate::service::aura_build_import_queue::<_, AuraId>,
+					)?;
+					let task_manager = $components.task_manager;
+					{ $( $code )* }.map(|v| (v, task_manager))
+				})
+			},
+			Runtime::InfraAssetSystem => {
+				runner.async_run(|$config| {
+					let $components = new_partial::<infra_asset_system_runtime::RuntimeApi, _>(
 						&$config,
 						crate::service::aura_build_import_queue::<_, AuraId>,
 					)?;
@@ -822,6 +849,13 @@ pub fn run() -> Result<()> {
 					Runtime::Statemint => crate::service::start_generic_aura_node::<
 						statemint_runtime::RuntimeApi,
 						StatemintAuraId,
+					>(config, infrablockspace_config, collator_options, id, hwbench)
+					.await
+					.map(|r| r.0)
+					.map_err(Into::into),
+					Runtime::InfraAssetSystem => crate::service::start_generic_aura_node::<
+						infra_asset_system_runtime::RuntimeApi,
+						AuraId,
 					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
