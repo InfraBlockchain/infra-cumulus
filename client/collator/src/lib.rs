@@ -227,6 +227,7 @@ where
 			horizontal_messages,
 			hrmp_watermark: collation_info.hrmp_watermark,
 			head_data: collation_info.head_data,
+			vote_result: collation_info.vote_result,
 			proof_of_validity: MaybeCompressedPoV::Compressed(pov),
 		})
 	}

@@ -144,6 +144,7 @@ impl RelayChainInterface for DummyRelayChainInterface {
 					head_data: HeadData(Vec::new()),
 					processed_downward_messages: 0,
 					hrmp_watermark: 0,
+					vote_result: None,
 				},
 			}))
 		} else {
