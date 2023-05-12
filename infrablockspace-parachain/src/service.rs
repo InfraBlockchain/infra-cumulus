@@ -87,7 +87,7 @@ impl sc_executor::NativeExecutionDispatch for ShellRuntimeExecutor {
 	}
 }
 
-// Native Infra Asset System executor instance. 
+// Native Infra Asset System executor instance.
 pub struct InfraAssetSytemExecutor;
 
 impl sc_executor::NativeExecutionDispatch for InfraAssetSytemExecutor {

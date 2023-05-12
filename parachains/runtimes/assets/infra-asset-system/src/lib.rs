@@ -43,7 +43,7 @@
 //! ### XCM
 //!
 //! Because Infra Asset System is fully under the control of the Relay Chain, it is meant to be a
-//! `TrustedTeleporter`. 
+//! `TrustedTeleporter`.
 
 #![cfg_attr(not(feature = "std"), no_std)]
 #![recursion_limit = "256"]
@@ -61,7 +61,7 @@ use sp_api::impl_runtime_apis;
 use sp_core::{crypto::KeyTypeId, OpaqueMetadata};
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
-	traits::{AccountIdLookup, BlakeTwo256, Block as BlockT, ConvertInto, AccountIdConversion},
+	traits::{AccountIdConversion, AccountIdLookup, BlakeTwo256, Block as BlockT, ConvertInto},
 	transaction_validity::{TransactionSource, TransactionValidity},
 	ApplyExtrinsicResult,
 };
@@ -78,8 +78,8 @@ use frame_support::{
 	dispatch::DispatchClass,
 	parameter_types,
 	traits::{
-		AsEnsureOriginWithArg, ConstU32, ConstU64, ConstU8, EitherOfDiverse, InstanceFilter, 
-		tokens::fungibles::{CreditOf, Balanced}
+		tokens::fungibles::{Balanced, CreditOf},
+		AsEnsureOriginWithArg, ConstU32, ConstU64, ConstU8, EitherOfDiverse, InstanceFilter,
 	},
 	weights::{ConstantMultiplier, Weight},
 	PalletId, RuntimeDebug,
@@ -93,8 +93,8 @@ pub use pallet_sudo::Call as SudoCall;
 pub use parachains_common as common;
 use parachains_common::{
 	impls::{AssetsToBlockAuthor, DealWithFees},
-	opaque, AccountId, AssetIdForTrustBackedAssets, Balance, BlockNumber, Hash, Header, Index,
-	Signature, AuraId, AVERAGE_ON_INITIALIZE_RATIO, HOURS, MAXIMUM_BLOCK_WEIGHT,
+	opaque, AccountId, AssetIdForTrustBackedAssets, AuraId, Balance, BlockNumber, Hash, Header,
+	Index, Signature, AVERAGE_ON_INITIALIZE_RATIO, HOURS, MAXIMUM_BLOCK_WEIGHT,
 	NORMAL_DISPATCH_RATIO, SLOT_DURATION,
 };
 use xcm_config::{
@@ -255,10 +255,10 @@ impl pallet_infra_asset_tx_payment::Config for Runtime {
 	type Fungibles = Assets;
 	type OnChargeAssetTransaction = FungiblesAdapter<
 		pallet_assets::BalanceToAssetBalance<
-			Balances, 
-			Runtime, 
+			Balances,
+			Runtime,
 			ConvertInto,
-			TrustBackedAssetsInstance
+			TrustBackedAssetsInstance,
 		>,
 		CreditToBucket,
 	>;

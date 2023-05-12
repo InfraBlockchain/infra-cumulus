@@ -19,7 +19,8 @@ use crate::{
 	cli::{Cli, RelayChainCli, Subcommand},
 	service::{
 		new_partial, Block, BridgeHubKusamaRuntimeExecutor, BridgeHubPolkadotRuntimeExecutor,
-		BridgeHubRococoRuntimeExecutor, CollectivesPolkadotRuntimeExecutor, InfraAssetSytemExecutor
+		BridgeHubRococoRuntimeExecutor, CollectivesPolkadotRuntimeExecutor,
+		InfraAssetSytemExecutor,
 	},
 };
 use codec::Encode;
@@ -110,21 +111,24 @@ fn runtime(id: &str) -> Runtime {
 fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 	let (id, _, _) = extract_parachain_id(id);
 	Ok(match id {
-
 		// -- Starters
 		"shell" => Box::new(chain_spec::shell::get_shell_chain_spec()),
 		"seedling" => Box::new(chain_spec::seedling::get_seedling_chain_spec()),
 
 		// -- Infra Asset System
-		"infra-asset-system-dev" => Box::new(chain_spec::infra_asset_system::infra_asset_system_development_config()),
-		"infra-asset-system-local" => Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config()),
+		"infra-asset-system-dev" =>
+			Box::new(chain_spec::infra_asset_system::infra_asset_system_development_config()),
+		"infra-asset-system-local" =>
+			Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config()),
 		// the chain spec as used for generating the upgrade genesis values
-		"infra-asset-system-genesis" => Box::new(chain_spec::infra_asset_system::infra_asset_system_config()),
+		"infra-asset-system-genesis" =>
+			Box::new(chain_spec::infra_asset_system::infra_asset_system_config()),
 		// the shell-based chain spec as used for syncing
 		// ToDo: change to infra asset system
-		"infra-asset-system" => Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_bytes(
-			&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
-		)?),
+		"infra-asset-system" =>
+			Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_bytes(
+				&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
+			)?),
 
 		// -- Polkadot Collectives
 		"collectives-polkadot-dev" =>
@@ -170,8 +174,11 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 		path => {
 			let path: PathBuf = path.into();
 			match path.runtime() {
-				Runtime::InfraAssetSystem =>
-					Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(path)?),
+				Runtime::InfraAssetSystem => Box::new(
+					chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(
+						path,
+					)?,
+				),
 				Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => Box::new(
 					chain_spec::collectives::CollectivesPolkadotChainSpec::from_json_file(path)?,
 				),
@@ -183,7 +190,11 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 					Box::new(chain_spec::contracts::ContractsRococoChainSpec::from_json_file(path)?),
 				Runtime::BridgeHub(bridge_hub_runtime_type) =>
 					bridge_hub_runtime_type.chain_spec_from_json_file(path.into())?,
-				Runtime::Default => Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(path)?),
+				Runtime::Default => Box::new(
+					chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(
+						path,
+					)?,
+				),
 			}
 		},
 	})
@@ -311,7 +322,7 @@ macro_rules! construct_benchmark_partials {
 					crate::service::aura_build_import_queue::<_, AuraId>,
 				)?;
 				$code
-			}
+			},
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => {
 				let $partials = new_partial::<collectives_infrablockspace_runtime::RuntimeApi, _>(
 					&$config,

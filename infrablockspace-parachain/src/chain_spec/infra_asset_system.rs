@@ -19,7 +19,7 @@ use crate::chain_spec::{
 };
 use cumulus_primitives_core::ParaId;
 use hex_literal::hex;
-use parachains_common::{AccountId, Balance as InfraAssetSystemBalance, AuraId};
+use parachains_common::{AccountId, AuraId, Balance as InfraAssetSystemBalance};
 use sc_service::ChainType;
 use sp_core::{crypto::UncheckedInto, sr25519};
 
@@ -27,7 +27,8 @@ use sp_core::{crypto::UncheckedInto, sr25519};
 pub type InfraAssetSystemChainSpec =
 	sc_service::GenericChainSpec<infra_asset_system_runtime::GenesisConfig, Extensions>;
 
-const INFRA_ASSET_SYSTEM_ED: InfraAssetSystemBalance = infra_asset_system_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
+const INFRA_ASSET_SYSTEM_ED: InfraAssetSystemBalance =
+	infra_asset_system_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 
 /// Generate the session keys from individual elements.
 ///
@@ -64,7 +65,6 @@ pub fn infra_asset_system_development_config() -> InfraAssetSystemChainSpec {
 				1000.into(),
 			)
 		},
-		
 		Vec::new(),
 		None,
 		None,
@@ -216,32 +216,26 @@ pub fn infra_asset_system_genesis(
 				.into_iter()
 				.map(|(acc, aura)| {
 					(
-						acc.clone(),                  // account id
-						acc,                          // validator id
+						acc.clone(),                           // account id
+						acc,                                   // validator id
 						infra_asset_system_session_keys(aura), // session keys
 					)
 				})
 				.collect(),
 		},
 		assets: pallet_assets::GenesisConfig {
-			assets: vec![
-				(
-					99, // asset_id
-					get_account_id_from_seed::<sr25519::Public>("Alice"), // owner
-					true, // is_sufficient
-					1000 // min_balance
-				),
-			],
-			metadata: vec![
-				(99, "iTEST".into(), "iTEST".into(), 12),
-			],
-			accounts: vec![
-				(
-					99,
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
-				),
-			],
+			assets: vec![(
+				99,                                                   // asset_id
+				get_account_id_from_seed::<sr25519::Public>("Alice"), // owner
+				true,                                                 // is_sufficient
+				1000,                                                 // min_balance
+			)],
+			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
+			accounts: vec![(
+				99,
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
+			)],
 			..Default::default()
 		},
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
