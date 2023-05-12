@@ -19,7 +19,7 @@ use crate::chain_spec::{
 };
 use cumulus_primitives_core::ParaId;
 use hex_literal::hex;
-use parachains_common::{AccountId, Balance as InfraAssetSystemBalance, AuraId, InfraAssetSystemAuraId};
+use parachains_common::{AccountId, AuraId, Balance as InfraAssetSystemBalance};
 use sc_service::ChainType;
 use sp_core::{crypto::UncheckedInto, sr25519};
 
@@ -27,7 +27,8 @@ use sp_core::{crypto::UncheckedInto, sr25519};
 pub type InfraAssetSystemChainSpec =
 	sc_service::GenericChainSpec<infra_asset_system_runtime::GenesisConfig, Extensions>;
 
-const INFRA_ASSET_SYSTEM_ED: InfraAssetSystemBalance = infra_asset_system_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
+const INFRA_ASSET_SYSTEM_ED: InfraAssetSystemBalance =
+	infra_asset_system_runtime::constants::currency::EXISTENTIAL_DEPOSIT;
 
 /// Generate the session keys from individual elements.
 ///
@@ -64,7 +65,6 @@ pub fn infra_asset_system_development_config() -> InfraAssetSystemChainSpec {
 				1000.into(),
 			)
 		},
-		
 		Vec::new(),
 		None,
 		None,
@@ -121,7 +121,7 @@ pub fn infra_asset_system_local_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-		Extensions { relay_chain: "polkadot-local".into(), para_id: 1000 },
+		Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
 	)
 }
 
@@ -181,7 +181,7 @@ pub fn infra_asset_system_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-		Extensions { relay_chain: "polkadot".into(), para_id: 1000 },
+		Extensions { relay_chain: "infrablockspace".into(), para_id: 1000 },
 	)
 }
 
@@ -199,7 +199,11 @@ fn infra_asset_system_genesis(
 				.to_vec(),
 		},
 		balances: infra_asset_system_runtime::BalancesConfig {
-			balances: endowed_accounts.iter().cloned().map(|k| (k, INFRA_ASSET_SYSTEM_ED * 4096)).collect(),
+			balances: endowed_accounts
+				.iter()
+				.cloned()
+				.map(|k| (k, INFRA_ASSET_SYSTEM_ED * 4096))
+				.collect(),
 		},
 		parachain_info: infra_asset_system_runtime::ParachainInfoConfig { parachain_id: id },
 		collator_selection: infra_asset_system_runtime::CollatorSelectionConfig {
@@ -212,8 +216,8 @@ fn infra_asset_system_genesis(
 				.into_iter()
 				.map(|(acc, aura)| {
 					(
-						acc.clone(),                  // account id
-						acc,                          // validator id
+						acc.clone(),                           // account id
+						acc,                                   // validator id
 						infra_asset_system_session_keys(aura), // session keys
 					)
 				})
