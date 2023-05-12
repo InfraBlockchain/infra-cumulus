@@ -19,8 +19,7 @@ use crate::{
 	cli::{Cli, RelayChainCli, Subcommand},
 	service::{
 		new_partial, Block, BridgeHubKusamaRuntimeExecutor, BridgeHubPolkadotRuntimeExecutor,
-		BridgeHubRococoRuntimeExecutor, CollectivesPolkadotRuntimeExecutor,
-		StatemineRuntimeExecutor, StatemintRuntimeExecutor,
+		BridgeHubRococoRuntimeExecutor, CollectivesPolkadotRuntimeExecutor, InfraAssetSytemExecutor
 	},
 };
 use codec::Encode;
@@ -28,7 +27,7 @@ use cumulus_client_cli::generate_genesis_block;
 use cumulus_primitives_core::ParaId;
 use frame_benchmarking_cli::{BenchmarkCmd, SUBSTRATE_REFERENCE_HARDWARE};
 use log::{info, warn};
-use parachains_common::{AuraId, StatemintAuraId, InfraAssetSystemAuraId};
+use parachains_common::AuraId;
 use sc_cli::{
 	ChainSpec, CliConfiguration, DefaultConfigurationValues, ImportParams, KeystoreParams,
 	NetworkParams, Result, RuntimeVersion, SharedParams, SubstrateCli,
@@ -45,12 +44,9 @@ enum Runtime {
 	/// This is the default runtime (actually based on rococo)
 	#[default]
 	Default,
+	InfraAssetSystem,
 	Shell,
 	Seedling,
-	Statemint,
-	Statemine,
-	InfraAssetSystem,
-	Penpal(ParaId),
 	ContractsRococo,
 	CollectivesPolkadot,
 	CollectivesWestend,
@@ -86,20 +82,14 @@ impl RuntimeResolver for PathBuf {
 
 fn runtime(id: &str) -> Runtime {
 	let id = id.replace("_", "-");
-	let (_, id, para_id) = extract_parachain_id(&id);
+	let (_, id, _) = extract_parachain_id(&id);
 
 	if id.starts_with("shell") {
 		Runtime::Shell
 	} else if id.starts_with("seedling") {
 		Runtime::Seedling
-	} else if id.starts_with("statemint") {
-		Runtime::Statemint
 	} else if id.starts_with("infra-asset-system") {
 		Runtime::InfraAssetSystem
-	} else if id.starts_with("statemine") {
-		Runtime::Statemine
-	} else if id.starts_with("penpal") {
-		Runtime::Penpal(para_id.unwrap_or(ParaId::new(0)))
 	} else if id.starts_with("contracts-rococo") {
 		Runtime::ContractsRococo
 	} else if id.starts_with("collectives-polkadot") {
@@ -118,47 +108,12 @@ fn runtime(id: &str) -> Runtime {
 }
 
 fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
-	let (id, _, para_id) = extract_parachain_id(id);
+	let (id, _, _) = extract_parachain_id(id);
 	Ok(match id {
-		// - Defaul-like
-		"staging" =>
-			Box::new(chain_spec::rococo_parachain::staging_rococo_parachain_local_config()),
-		"tick" =>
-			Box::new(chain_spec::rococo_parachain::RococoParachainChainSpec::from_json_bytes(
-				&include_bytes!("../../parachains/chain-specs/tick.json")[..],
-			)?),
-		"trick" =>
-			Box::new(chain_spec::rococo_parachain::RococoParachainChainSpec::from_json_bytes(
-				&include_bytes!("../../parachains/chain-specs/trick.json")[..],
-			)?),
-		"track" =>
-			Box::new(chain_spec::rococo_parachain::RococoParachainChainSpec::from_json_bytes(
-				&include_bytes!("../../parachains/chain-specs/track.json")[..],
-			)?),
 
 		// -- Starters
 		"shell" => Box::new(chain_spec::shell::get_shell_chain_spec()),
 		"seedling" => Box::new(chain_spec::seedling::get_seedling_chain_spec()),
-
-		// -- Statemint
-		"statemint-dev" => Box::new(chain_spec::statemint::statemint_development_config()),
-		"statemint-local" => Box::new(chain_spec::statemint::statemint_local_config()),
-		// the chain spec as used for generating the upgrade genesis values
-		"statemint-genesis" => Box::new(chain_spec::statemint::statemint_config()),
-		// the shell-based chain spec as used for syncing
-		"statemint" => Box::new(chain_spec::statemint::StatemintChainSpec::from_json_bytes(
-			&include_bytes!("../../parachains/chain-specs/statemint.json")[..],
-		)?),
-
-		// -- Statemine
-		"statemine-dev" => Box::new(chain_spec::statemint::statemine_development_config()),
-		"statemine-local" => Box::new(chain_spec::statemint::statemine_local_config()),
-		// the chain spec as used for generating the upgrade genesis values
-		"statemine-genesis" => Box::new(chain_spec::statemint::statemine_config()),
-		// the shell-based chain spec as used for syncing
-		"statemine" => Box::new(chain_spec::statemint::StatemineChainSpec::from_json_bytes(
-			&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
-		)?),
 
 		// -- Infra Asset System
 		"infra-asset-system-dev" => Box::new(chain_spec::infra_asset_system::infra_asset_system_development_config()),
@@ -205,30 +160,16 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 				.expect("invalid value")
 				.load_config()?,
 
-		// -- Penpall
-		"penpal-kusama" => Box::new(chain_spec::penpal::get_penpal_chain_spec(
-			para_id.expect("Must specify parachain id"),
-			"kusama-local",
-		)),
-		"penpal-polkadot" => Box::new(chain_spec::penpal::get_penpal_chain_spec(
-			para_id.expect("Must specify parachain id"),
-			"polkadot-local",
-		)),
-
 		// -- Fallback (generic chainspec)
 		"" => {
-			log::warn!("No ChainSpec.id specified, so using default one, based on rococo-parachain runtime");
-			Box::new(chain_spec::rococo_parachain::rococo_parachain_local_config())
+			log::warn!("No ChainSpec.id specified, so using default one, based on infra-asset-system runtime");
+			Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config())
 		},
 
 		// -- Loading a specific spec from disk
 		path => {
 			let path: PathBuf = path.into();
 			match path.runtime() {
-				Runtime::Statemint =>
-					Box::new(chain_spec::statemint::StatemintChainSpec::from_json_file(path)?),
-				Runtime::Statemine =>
-					Box::new(chain_spec::statemint::StatemineChainSpec::from_json_file(path)?),
 				Runtime::InfraAssetSystem =>
 					Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(path)?),
 				Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => Box::new(
@@ -242,11 +183,7 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 					Box::new(chain_spec::contracts::ContractsRococoChainSpec::from_json_file(path)?),
 				Runtime::BridgeHub(bridge_hub_runtime_type) =>
 					bridge_hub_runtime_type.chain_spec_from_json_file(path.into())?,
-				Runtime::Penpal(_para_id) =>
-					Box::new(chain_spec::penpal::PenpalChainSpec::from_json_file(path)?),
-				Runtime::Default => Box::new(
-					chain_spec::rococo_parachain::RococoParachainChainSpec::from_json_file(path)?,
-				),
+				Runtime::Default => Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(path)?),
 			}
 		},
 	})
@@ -276,7 +213,7 @@ fn extract_parachain_id(id: &str) -> (&str, &str, Option<ParaId>) {
 
 impl SubstrateCli for Cli {
 	fn impl_name() -> String {
-		"Polkadot parachain".into()
+		"IBS parachain".into()
 	}
 
 	fn impl_version() -> String {
@@ -285,7 +222,7 @@ impl SubstrateCli for Cli {
 
 	fn description() -> String {
 		format!(
-			"Polkadot parachain\n\nThe command-line arguments provided first will be \
+			"IBS parachain\n\nThe command-line arguments provided first will be \
 		passed to the parachain node, while the arguments provided after -- will be passed \
 		to the relaychain node.\n\n\
 		{} [parachain-args] -- [relaychain-args]",
@@ -311,8 +248,6 @@ impl SubstrateCli for Cli {
 
 	fn native_runtime_version(chain_spec: &Box<dyn ChainSpec>) -> &'static RuntimeVersion {
 		match chain_spec.runtime() {
-			Runtime::Statemint => &statemint_runtime::VERSION,
-			Runtime::Statemine => &statemine_runtime::VERSION,
 			Runtime::InfraAssetSystem => &infra_asset_system_runtime::VERSION,
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend =>
 				&collectives_infrablockspace_runtime::VERSION,
@@ -321,15 +256,14 @@ impl SubstrateCli for Cli {
 			Runtime::ContractsRococo => &contracts_rococo_runtime::VERSION,
 			Runtime::BridgeHub(bridge_hub_runtime_type) =>
 				bridge_hub_runtime_type.runtime_version(),
-			Runtime::Penpal(_) => &penpal_runtime::VERSION,
-			Runtime::Default => &rococo_parachain_runtime::VERSION,
+			Runtime::Default => &infra_asset_system_runtime::VERSION,
 		}
 	}
 }
 
 impl SubstrateCli for RelayChainCli {
 	fn impl_name() -> String {
-		"Polkadot parachain".into()
+		"IBS parachain".into()
 	}
 
 	fn impl_version() -> String {
@@ -338,7 +272,7 @@ impl SubstrateCli for RelayChainCli {
 
 	fn description() -> String {
 		format!(
-			"Polkadot parachain\n\nThe command-line arguments provided first will be \
+			"IBS parachain\n\nThe command-line arguments provided first will be \
 		passed to the parachain node, while the arguments provided after -- will be passed \
 		to the relay chain node.\n\n\
 		{} [parachain-args] -- [relay_chain-args]",
@@ -371,20 +305,13 @@ impl SubstrateCli for RelayChainCli {
 macro_rules! construct_benchmark_partials {
 	($config:expr, |$partials:ident| $code:expr) => {
 		match $config.chain_spec.runtime() {
-			Runtime::Statemine => {
-				let $partials = new_partial::<statemine_runtime::RuntimeApi, _>(
+			Runtime::InfraAssetSystem => {
+				let $partials = new_partial::<infra_asset_system_runtime::RuntimeApi, _>(
 					&$config,
 					crate::service::aura_build_import_queue::<_, AuraId>,
 				)?;
 				$code
-			},
-			Runtime::Statemint => {
-				let $partials = new_partial::<statemint_runtime::RuntimeApi, _>(
-					&$config,
-					crate::service::aura_build_import_queue::<_, StatemintAuraId>,
-				)?;
-				$code
-			},
+			}
 			Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => {
 				let $partials = new_partial::<collectives_infrablockspace_runtime::RuntimeApi, _>(
 					&$config,
@@ -401,9 +328,9 @@ macro_rules! construct_async_run {
 	(|$components:ident, $cli:ident, $cmd:ident, $config:ident| $( $code:tt )* ) => {{
 		let runner = $cli.create_runner($cmd)?;
 		match runner.config().chain_spec.runtime() {
-			Runtime::Statemine => {
+			Runtime::Default => {
 				runner.async_run(|$config| {
-					let $components = new_partial::<statemine_runtime::RuntimeApi, _>(
+					let $components = new_partial::<infra_asset_system_runtime::RuntimeApi, _>(
 						&$config,
 						crate::service::aura_build_import_queue::<_, AuraId>,
 					)?;
@@ -416,16 +343,6 @@ macro_rules! construct_async_run {
 					let $components = new_partial::<infra_asset_system_runtime::RuntimeApi, _>(
 						&$config,
 						crate::service::aura_build_import_queue::<_, AuraId>,
-					)?;
-					let task_manager = $components.task_manager;
-					{ $( $code )* }.map(|v| (v, task_manager))
-				})
-			},
-			Runtime::Statemint => {
-				runner.async_run(|$config| {
-					let $components = new_partial::<statemint_runtime::RuntimeApi, _>(
-						&$config,
-						crate::service::aura_build_import_queue::<_, StatemintAuraId>,
 					)?;
 					let task_manager = $components.task_manager;
 					{ $( $code )* }.map(|v| (v, task_manager))
@@ -537,19 +454,6 @@ macro_rules! construct_async_run {
 					}
 				}
 			},
-			Runtime::Penpal(_) | Runtime::Default => {
-				runner.async_run(|$config| {
-					let $components = new_partial::<
-						rococo_parachain_runtime::RuntimeApi,
-						_
-					>(
-						&$config,
-						crate::service::rococo_parachain_build_import_queue,
-					)?;
-					let task_manager = $components.task_manager;
-					{ $( $code )* }.map(|v| (v, task_manager))
-				})
-			}
 		}
 	}}
 }
@@ -629,10 +533,8 @@ pub fn run() -> Result<()> {
 					if cfg!(feature = "runtime-benchmarks") {
 						runner.sync_run(|config| {
 							match config.chain_spec.runtime() {
-							Runtime::Statemine =>
-								cmd.run::<Block, StatemineRuntimeExecutor>(config),
-							Runtime::Statemint =>
-								cmd.run::<Block, StatemintRuntimeExecutor>(config),
+							Runtime::InfraAssetSystem =>
+								cmd.run::<Block, InfraAssetSytemExecutor>(config),
 							Runtime::CollectivesPolkadot | Runtime::CollectivesWestend =>
 								cmd.run::<Block, CollectivesPolkadotRuntimeExecutor>(config),
 							Runtime::BridgeHub(bridge_hub_runtime_type) => match bridge_hub_runtime_type {
@@ -846,22 +748,15 @@ pub fn run() -> Result<()> {
 				}
 
 				match config.chain_spec.runtime() {
-					Runtime::Statemint => crate::service::start_generic_aura_node::<
-						statemint_runtime::RuntimeApi,
-						StatemintAuraId,
-					>(config, infrablockspace_config, collator_options, id, hwbench)
-					.await
-					.map(|r| r.0)
-					.map_err(Into::into),
-					Runtime::InfraAssetSystem => crate::service::start_generic_aura_node::<
+					Runtime::Default => crate::service::start_generic_aura_node::<
 						infra_asset_system_runtime::RuntimeApi,
 						AuraId,
 					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into),
-					Runtime::Statemine => crate::service::start_generic_aura_node::<
-						statemine_runtime::RuntimeApi,
+					Runtime::InfraAssetSystem => crate::service::start_generic_aura_node::<
+						infra_asset_system_runtime::RuntimeApi,
 						AuraId,
 					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
@@ -947,17 +842,6 @@ pub fn run() -> Result<()> {
 							.map(|r| r.0),
 					}
 					.map_err(Into::into),
-					Runtime::Penpal(_) | Runtime::Default =>
-						crate::service::start_rococo_parachain_node(
-							config,
-							infrablockspace_config,
-							collator_options,
-							id,
-							hwbench,
-						)
-						.await
-						.map(|r| r.0)
-						.map_err(Into::into),
 				}
 			})
 		},
@@ -1098,120 +982,5 @@ impl CliConfiguration<Self> for RelayChainCli {
 
 	fn node_name(&self) -> Result<String> {
 		self.base.base.node_name()
-	}
-}
-
-#[cfg(test)]
-mod tests {
-	use crate::{
-		chain_spec::{get_account_id_from_seed, get_from_seed},
-		command::{Runtime, RuntimeResolver},
-	};
-	use sc_chain_spec::{ChainSpec, ChainSpecExtension, ChainSpecGroup, ChainType, Extension};
-	use serde::{Deserialize, Serialize};
-	use sp_core::sr25519;
-	use std::path::PathBuf;
-	use tempfile::TempDir;
-
-	#[derive(
-		Debug, Clone, PartialEq, Serialize, Deserialize, ChainSpecGroup, ChainSpecExtension, Default,
-	)]
-	#[serde(deny_unknown_fields)]
-	pub struct Extensions1 {
-		pub attribute1: String,
-		pub attribute2: u32,
-	}
-
-	#[derive(
-		Debug, Clone, PartialEq, Serialize, Deserialize, ChainSpecGroup, ChainSpecExtension, Default,
-	)]
-	#[serde(deny_unknown_fields)]
-	pub struct Extensions2 {
-		pub attribute_x: String,
-		pub attribute_y: String,
-		pub attribute_z: u32,
-	}
-
-	fn store_configuration(dir: &TempDir, spec: Box<dyn ChainSpec>) -> PathBuf {
-		let raw_output = true;
-		let json = sc_service::chain_ops::build_spec(&*spec, raw_output)
-			.expect("Failed to build json string");
-		let mut cfg_file_path = dir.path().to_path_buf();
-		cfg_file_path.push(spec.id());
-		cfg_file_path.set_extension("json");
-		std::fs::write(&cfg_file_path, json).expect("Failed to write to json file");
-		cfg_file_path
-	}
-
-	pub type DummyChainSpec<E> =
-		sc_service::GenericChainSpec<rococo_parachain_runtime::GenesisConfig, E>;
-
-	pub fn create_default_with_extensions<E: Extension>(
-		id: &str,
-		extension: E,
-	) -> DummyChainSpec<E> {
-		DummyChainSpec::from_genesis(
-			"Dummy local testnet",
-			id,
-			ChainType::Local,
-			move || {
-				crate::chain_spec::rococo_parachain::testnet_genesis(
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					vec![
-						get_from_seed::<rococo_parachain_runtime::AuraId>("Alice"),
-						get_from_seed::<rococo_parachain_runtime::AuraId>("Bob"),
-					],
-					vec![get_account_id_from_seed::<sr25519::Public>("Alice")],
-					1000.into(),
-				)
-			},
-			Vec::new(),
-			None,
-			None,
-			None,
-			None,
-			extension,
-		)
-	}
-
-	#[test]
-	fn test_resolve_runtime_for_different_configuration_files() {
-		let temp_dir = tempfile::tempdir().expect("Failed to access tempdir");
-
-		let path = store_configuration(
-			&temp_dir,
-			Box::new(create_default_with_extensions("shell-1", Extensions1::default())),
-		);
-		assert_eq!(Runtime::Shell, path.runtime());
-
-		let path = store_configuration(
-			&temp_dir,
-			Box::new(create_default_with_extensions("shell-2", Extensions2::default())),
-		);
-		assert_eq!(Runtime::Shell, path.runtime());
-
-		let path = store_configuration(
-			&temp_dir,
-			Box::new(create_default_with_extensions("seedling", Extensions2::default())),
-		);
-		assert_eq!(Runtime::Seedling, path.runtime());
-
-		let path = store_configuration(
-			&temp_dir,
-			Box::new(crate::chain_spec::rococo_parachain::rococo_parachain_local_config()),
-		);
-		assert_eq!(Runtime::Default, path.runtime());
-
-		let path = store_configuration(
-			&temp_dir,
-			Box::new(crate::chain_spec::statemint::statemine_local_config()),
-		);
-		assert_eq!(Runtime::Statemine, path.runtime());
-
-		let path = store_configuration(
-			&temp_dir,
-			Box::new(crate::chain_spec::contracts::contracts_rococo_local_config()),
-		);
-		assert_eq!(Runtime::ContractsRococo, path.runtime());
 	}
 }

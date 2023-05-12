@@ -23,11 +23,8 @@ use sp_runtime::traits::{IdentifyAccount, Verify};
 pub mod bridge_hubs;
 pub mod collectives;
 pub mod contracts;
-pub mod penpal;
-pub mod rococo_parachain;
 pub mod seedling;
 pub mod shell;
-pub mod statemint;
 pub mod infra_asset_system;
 
 /// The default XCM version to set in genesis config.

@@ -120,8 +120,8 @@ impl_opaque_keys! {
 
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("statemint"),
-	impl_name: create_runtime_str!("statemint"),
+	spec_name: create_runtime_str!("Infra Asset System"),
+	impl_name: create_runtime_str!("Infra Asset System"),
 	authoring_version: 1,
 	spec_version: 9370,
 	impl_version: 0,
