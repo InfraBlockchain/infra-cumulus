@@ -28,7 +28,7 @@ use cumulus_client_cli::generate_genesis_block;
 use cumulus_primitives_core::ParaId;
 use frame_benchmarking_cli::{BenchmarkCmd, SUBSTRATE_REFERENCE_HARDWARE};
 use log::{info, warn};
-use parachains_common::{AuraId, StatemintAuraId, InfraAssetSystemAuraId};
+use parachains_common::{AuraId, StatemintAuraId};
 use sc_cli::{
 	ChainSpec, CliConfiguration, DefaultConfigurationValues, ImportParams, KeystoreParams,
 	NetworkParams, Result, RuntimeVersion, SharedParams, SubstrateCli,
@@ -161,15 +161,19 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 		)?),
 
 		// -- Infra Asset System
-		"infra-asset-system-dev" => Box::new(chain_spec::infra_asset_system::infra_asset_system_development_config()),
-		"infra-asset-system-local" => Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config()),
+		"infra-asset-system-dev" =>
+			Box::new(chain_spec::infra_asset_system::infra_asset_system_development_config()),
+		"infra-asset-system-local" =>
+			Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config()),
 		// the chain spec as used for generating the upgrade genesis values
-		"infra-asset-system-genesis" => Box::new(chain_spec::infra_asset_system::infra_asset_system_config()),
+		"infra-asset-system-genesis" =>
+			Box::new(chain_spec::infra_asset_system::infra_asset_system_config()),
 		// the shell-based chain spec as used for syncing
 		// ToDo: change to infra asset system
-		"infra-asset-system" => Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_bytes(
-			&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
-		)?),
+		"infra-asset-system" =>
+			Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_bytes(
+				&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
+			)?),
 
 		// -- Polkadot Collectives
 		"collectives-polkadot-dev" =>
@@ -229,8 +233,11 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 					Box::new(chain_spec::statemint::StatemintChainSpec::from_json_file(path)?),
 				Runtime::Statemine =>
 					Box::new(chain_spec::statemint::StatemineChainSpec::from_json_file(path)?),
-				Runtime::InfraAssetSystem =>
-					Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(path)?),
+				Runtime::InfraAssetSystem => Box::new(
+					chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(
+						path,
+					)?,
+				),
 				Runtime::CollectivesPolkadot | Runtime::CollectivesWestend => Box::new(
 					chain_spec::collectives::CollectivesPolkadotChainSpec::from_json_file(path)?,
 				),

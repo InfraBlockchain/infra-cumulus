@@ -1,8 +1,8 @@
 [relaychain]
-default_command = "../infra-relay-chain/target/release/infra-relay-chain"
+default_command = "../infra-relay-chain/target/release/infrablockspace"
 default_args = ["-lparachain=debug"]
 # chain = "rococo-local"
-chain = "infrabs-local"
+chain = "rococo-local"
 
 [[relaychain.nodes]]
 name = "alice"
@@ -36,7 +36,7 @@ ws_port = 7501
 
 [[parachains]]
 id = 1000
-chain = "statemine-local"
+chain = "infra-asset-system-local"
 cumulus_based = true
 
 # run alice as parachain collator
