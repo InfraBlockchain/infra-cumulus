@@ -87,33 +87,18 @@ impl sc_executor::NativeExecutionDispatch for ShellRuntimeExecutor {
 	}
 }
 
-// Native Statemint executor instance.
-pub struct StatemintRuntimeExecutor;
+// Native Infra Asset System executor instance.
+pub struct InfraAssetSytemExecutor;
 
-impl sc_executor::NativeExecutionDispatch for StatemintRuntimeExecutor {
+impl sc_executor::NativeExecutionDispatch for InfraAssetSytemExecutor {
 	type ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
 
 	fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-		statemint_runtime::api::dispatch(method, data)
+		infra_asset_system_runtime::api::dispatch(method, data)
 	}
 
 	fn native_version() -> sc_executor::NativeVersion {
-		statemint_runtime::native_version()
-	}
-}
-
-/// Native Statemine executor instance.
-pub struct StatemineRuntimeExecutor;
-
-impl sc_executor::NativeExecutionDispatch for StatemineRuntimeExecutor {
-	type ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
-
-	fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-		statemine_runtime::api::dispatch(method, data)
-	}
-
-	fn native_version() -> sc_executor::NativeVersion {
-		statemine_runtime::native_version()
+		infra_asset_system_runtime::native_version()
 	}
 }
 
@@ -688,137 +673,6 @@ where
 	start_network.start_network();
 
 	Ok((task_manager, client))
-}
-
-/// Build the import queue for the rococo parachain runtime.
-pub fn rococo_parachain_build_import_queue(
-	client: Arc<ParachainClient<rococo_parachain_runtime::RuntimeApi>>,
-	block_import: ParachainBlockImport<rococo_parachain_runtime::RuntimeApi>,
-	config: &Configuration,
-	telemetry: Option<TelemetryHandle>,
-	task_manager: &TaskManager,
-) -> Result<
-	sc_consensus::DefaultImportQueue<Block, ParachainClient<rococo_parachain_runtime::RuntimeApi>>,
-	sc_service::Error,
-> {
-	let slot_duration = cumulus_client_consensus_aura::slot_duration(&*client)?;
-
-	cumulus_client_consensus_aura::import_queue::<
-		sp_consensus_aura::sr25519::AuthorityPair,
-		_,
-		_,
-		_,
-		_,
-		_,
-	>(cumulus_client_consensus_aura::ImportQueueParams {
-		block_import,
-		client,
-		create_inherent_data_providers: move |_, _| async move {
-			let timestamp = sp_timestamp::InherentDataProvider::from_system_time();
-
-			let slot =
-				sp_consensus_aura::inherents::InherentDataProvider::from_timestamp_and_slot_duration(
-					*timestamp,
-					slot_duration,
-				);
-
-			Ok((slot, timestamp))
-		},
-		registry: config.prometheus_registry(),
-		spawner: &task_manager.spawn_essential_handle(),
-		telemetry,
-	})
-	.map_err(Into::into)
-}
-
-/// Start a rococo parachain node.
-pub async fn start_rococo_parachain_node(
-	parachain_config: Configuration,
-	infrablockspace_config: Configuration,
-	collator_options: CollatorOptions,
-	para_id: ParaId,
-	hwbench: Option<sc_sysinfo::HwBench>,
-) -> sc_service::error::Result<(
-	TaskManager,
-	Arc<ParachainClient<rococo_parachain_runtime::RuntimeApi>>,
-)> {
-	start_node_impl::<rococo_parachain_runtime::RuntimeApi, _, _, _>(
-		parachain_config,
-		infrablockspace_config,
-		collator_options,
-		para_id,
-		|_| Ok(RpcModule::new(())),
-		rococo_parachain_build_import_queue,
-		|client,
-		 block_import,
-		 prometheus_registry,
-		 telemetry,
-		 task_manager,
-		 relay_chain_interface,
-		 transaction_pool,
-		 sync_oracle,
-		 keystore,
-		 force_authoring| {
-			let slot_duration = cumulus_client_consensus_aura::slot_duration(&*client)?;
-
-			let proposer_factory = sc_basic_authorship::ProposerFactory::with_proof_recording(
-				task_manager.spawn_handle(),
-				client.clone(),
-				transaction_pool,
-				prometheus_registry,
-				telemetry.clone(),
-			);
-
-			Ok(AuraConsensus::build::<sp_consensus_aura::sr25519::AuthorityPair, _, _, _, _, _, _>(
-				BuildAuraConsensusParams {
-					proposer_factory,
-					create_inherent_data_providers: move |_, (relay_parent, validation_data)| {
-						let relay_chain_interface = relay_chain_interface.clone();
-
-						async move {
-							let parachain_inherent =
-							cumulus_primitives_parachain_inherent::ParachainInherentData::create_at(
-								relay_parent,
-								&relay_chain_interface,
-								&validation_data,
-								para_id,
-							).await;
-
-							let timestamp = sp_timestamp::InherentDataProvider::from_system_time();
-
-							let slot =
-							sp_consensus_aura::inherents::InherentDataProvider::from_timestamp_and_slot_duration(
-								*timestamp,
-								slot_duration,
-							);
-
-							let parachain_inherent = parachain_inherent.ok_or_else(|| {
-								Box::<dyn std::error::Error + Send + Sync>::from(
-									"Failed to create parachain inherent",
-								)
-							})?;
-
-							Ok((slot, timestamp, parachain_inherent))
-						}
-					},
-					block_import,
-					para_client: client,
-					backoff_authoring_blocks: Option::<()>::None,
-					sync_oracle,
-					keystore,
-					force_authoring,
-					slot_duration,
-					// We got around 500ms for proposing
-					block_proposal_slot_portion: SlotProportion::new(1f32 / 24f32),
-					// And a maximum of 750ms if slots are skipped
-					max_block_proposal_slot_portion: Some(SlotProportion::new(1f32 / 16f32)),
-					telemetry,
-				},
-			))
-		},
-		hwbench,
-	)
-	.await
 }
 
 /// Build the import queue for the shell runtime.

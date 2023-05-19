@@ -47,16 +47,16 @@ args = ["-lparachain=debug"]
 rpc_port = 9500
 ws_port = 9501
 
-[[parachains]]
-id = 2000
-chain = "local"
-cumulus_based = true
+# [[parachains]]
+# id = 2000
+# chain = "local"
+# cumulus_based = true
 
-# run bob as parachain collator
-[[parachains.collators]]
-name = "bob"
-validator = true
-command = "./target/release/parachain-template-node"
-args = ["-lparachain=debug"]
-rpc_port = 9600
-ws_port = 9601
+# # run bob as parachain collator
+# [[parachains.collators]]
+# name = "bob"
+# validator = true
+# command = "./target/release/parachain-template-node"
+# args = ["-lparachain=debug"]
+# rpc_port = 9600
+# ws_port = 9601

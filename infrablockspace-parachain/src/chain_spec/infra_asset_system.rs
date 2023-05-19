@@ -40,7 +40,7 @@ pub fn infra_asset_system_session_keys(keys: AuraId) -> infra_asset_system_runti
 pub fn infra_asset_system_development_config() -> InfraAssetSystemChainSpec {
 	let mut properties = sc_chain_spec::Properties::new();
 	properties.insert("ss58Format".into(), 0.into());
-	properties.insert("tokenSymbol".into(), "DOT".into());
+	properties.insert("tokenSymbol".into(), "".into());
 	properties.insert("tokenDecimals".into(), 10.into());
 
 	InfraAssetSystemChainSpec::from_genesis(
@@ -70,14 +70,14 @@ pub fn infra_asset_system_development_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-		Extensions { relay_chain: "polkadot-dev".into(), para_id: 1000 },
+		Extensions { relay_chain: "polkadot-dev".into(), para_id: 1000 }, // ToDo: polkadot-dev -> infrabs-dev
 	)
 }
 
 pub fn infra_asset_system_local_config() -> InfraAssetSystemChainSpec {
 	let mut properties = sc_chain_spec::Properties::new();
 	properties.insert("ss58Format".into(), 0.into());
-	properties.insert("tokenSymbol".into(), "DOT".into());
+	properties.insert("tokenSymbol".into(), "".into());
 	properties.insert("tokenDecimals".into(), 10.into());
 
 	InfraAssetSystemChainSpec::from_genesis(
@@ -121,7 +121,7 @@ pub fn infra_asset_system_local_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-		Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
+    Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
 	)
 }
 
@@ -185,7 +185,7 @@ pub fn infra_asset_system_config() -> InfraAssetSystemChainSpec {
 	)
 }
 
-fn infra_asset_system_genesis(
+pub fn infra_asset_system_genesis(
 	invulnerables: Vec<(AccountId, AuraId)>,
 	endowed_accounts: Vec<AccountId>,
 	id: ParaId,
@@ -224,26 +224,18 @@ fn infra_asset_system_genesis(
 				.collect(),
 		},
 		assets: pallet_assets::GenesisConfig {
-			assets: vec![
-				(1, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1000),
-				(2, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1000),
-			],
-			metadata: vec![
-				(1, "iKRW".into(), "iKRW".into(), 12),
-				(2, "iUSD".into(), "iUSD".into(), 12),
-			],
-			accounts: vec![
-				(
-					1,
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					1_000_000_000_000_000_000_000,
-				),
-				(
-					2,
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					1_000_000_000_000_000_000_000,
-				),
-			],
+			assets: vec![(
+				99,                                                   // asset_id
+				get_account_id_from_seed::<sr25519::Public>("Alice"), // owner
+				true,                                                 // is_sufficient
+				1000,                                                 // min_balance
+			)],
+			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
+			accounts: vec![(
+				99,
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
+			)],
 			..Default::default()
 		},
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care

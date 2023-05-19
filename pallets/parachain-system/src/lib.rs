@@ -1047,14 +1047,13 @@ impl<T: Config> Pallet<T> {
 	/// This is expected to be used by the
 	/// [`CollectCollationInfo`](cumulus_primitives_core::CollectCollationInfo) runtime api.
 	pub fn collect_collation_info(header: &T::Header) -> CollationInfo {
-
 		let vote_result = if let Some(res) = CollectedPotVotes::<T>::get() {
 			let vote_result = res.votes();
 			Some(vote_result)
 		} else {
 			None
 		};
-		
+
 		CollationInfo {
 			hrmp_watermark: HrmpWatermark::<T>::get(),
 			horizontal_messages: HrmpOutboundMessages::<T>::get(),

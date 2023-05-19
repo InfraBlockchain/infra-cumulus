@@ -1,7 +1,7 @@
 [package]
 name = "infrablockspace-parachain-bin"
 version = "0.9.370"
-authors = ["Parity Technologies <admin@parity.io>"]
+authors = ["blockchain labs"]
 build = "build.rs"
 edition = "2021"
 description = "Runs a infrablockspace parachain node which could be a collator."
@@ -20,18 +20,14 @@ log = "0.4.17"
 serde = { version = "1.0.152", features = ["derive"] }
 
 # Local
-rococo-parachain-runtime = { path = "../parachains/runtimes/testing/rococo-parachain" }
 shell-runtime = { path = "../parachains/runtimes/starters/shell" }
 seedling-runtime = { path = "../parachains/runtimes/starters/seedling" }
-statemint-runtime = { path = "../parachains/runtimes/assets/statemint" }
-statemine-runtime = { path = "../parachains/runtimes/assets/statemine" }
 infra-asset-system-runtime = { path = "../parachains/runtimes/assets/infra-asset-system" }
 collectives-infrablockspace-runtime = { path = "../parachains/runtimes/collectives/collectives-infrablockspace" }
 contracts-rococo-runtime = { path = "../parachains/runtimes/contracts/contracts-rococo" }
 bridge-hub-rococo-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-rococo" }
 bridge-hub-kusama-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-kusama" }
 bridge-hub-infrablockspace-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-infrablockspace" }
-penpal-runtime = { path = "../parachains/runtimes/testing/penpal" }
 jsonrpsee = { version = "0.16.2", features = ["server"] }
 parachains-common = { path = "../parachains/common" }
 
@@ -110,12 +106,8 @@ infrablockspace-cli = { git = "https://github.com/InfraBlockchain/infra-relay-ch
 default = []
 runtime-benchmarks = [
 	"infrablockspace-service/runtime-benchmarks",
-	"statemint-runtime/runtime-benchmarks",
-	"statemine-runtime/runtime-benchmarks",
 ]
 try-runtime = [
-	"statemint-runtime/try-runtime",
-	"statemine-runtime/try-runtime",
 	"shell-runtime/try-runtime",
 	"try-runtime-cli/try-runtime",
 ]
