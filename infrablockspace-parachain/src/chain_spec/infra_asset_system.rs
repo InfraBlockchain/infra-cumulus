@@ -121,7 +121,7 @@ pub fn infra_asset_system_local_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-		Extensions { relay_chain: "polkadot-local".into(), para_id: 1000 }, // ToDo: polkadot-local -> infrabs-local
+    Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
 	)
 }
 
@@ -181,7 +181,7 @@ pub fn infra_asset_system_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-		Extensions { relay_chain: "polkadot".into(), para_id: 1000 },
+		Extensions { relay_chain: "infrablockspace".into(), para_id: 1000 },
 	)
 }
 
