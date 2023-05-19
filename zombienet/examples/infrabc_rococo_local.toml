@@ -1,5 +1,5 @@
 [relaychain]
-default_command = "../infra-relay-chain/target/release/polkadot"
+default_command = "../infra-relay-chain/target/release/infrablockspace"
 default_args = ["-lparachain=debug"]
 chain = "rococo-local"
 
@@ -33,30 +33,30 @@ validator = true
 rpc_port = 7500
 ws_port = 7501
 
-[[parachains]]
-id = 1000
-chain = "infra-asset-system-local"
-cumulus_based = true
-
-# run alice as parachain collator
-[[parachains.collators]]
-name = "alice"
-validator = true
-command = "./target/release/infrablockspace-parachain"
-args = ["-lparachain=debug"]
-rpc_port = 9500
-ws_port = 9501
-
 # [[parachains]]
-# id = 2000
-# chain = "local"
+# id = 1000
+# chain = "infra-asset-system-local"
 # cumulus_based = true
 
-# # run bob as parachain collator
+# # run alice as parachain collator
 # [[parachains.collators]]
-# name = "bob"
+# name = "alice"
 # validator = true
-# command = "./target/release/parachain-template-node"
+# command = "./target/release/infrablockspace-parachain"
 # args = ["-lparachain=debug"]
-# rpc_port = 9600
-# ws_port = 9601
+# rpc_port = 9500
+# ws_port = 9501
+
+[[parachains]]
+id = 2000
+chain = "local"
+cumulus_based = true
+
+# run bob as parachain collator
+[[parachains.collators]]
+name = "bob"
+validator = true
+command = "./target/release/parachain-template-node"
+args = ["-lparachain=debug"]
+rpc_port = 9600
+ws_port = 9601

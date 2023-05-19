@@ -53,7 +53,7 @@ pallet-contracts = { git = "https://github.com/InfraBlockchain/infra-substrate",
 pallet-contracts-primitives = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
-kusama-runtime-constants = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-runtime-constants = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 pallet-xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
@@ -86,7 +86,7 @@ std = [
 	"frame-support/std",
 	"frame-system-rpc-runtime-api/std",
 	"frame-system/std",
-	"kusama-runtime-constants/std",
+	"infrablockspace-runtime-constants/std",
 	"pallet-aura/std",
 	"pallet-authorship/std",
 	"pallet-balances/std",

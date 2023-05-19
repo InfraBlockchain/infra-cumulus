@@ -50,7 +50,7 @@ sp-transaction-pool = { git = "https://github.com/InfraBlockchain/infra-substrat
 sp-version = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 # infrablockspace
-kusama-runtime-constants = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-runtime-constants = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 pallet-xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 pallet-xcm-benchmarks = { git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master", default-features = false, optional = true }
 infrablockspace-core-primitives = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
@@ -93,7 +93,7 @@ std = [
 	"frame-support/std",
 	"frame-system-rpc-runtime-api/std",
 	"frame-system/std",
-	"kusama-runtime-constants/std",
+	"infrablockspace-runtime-constants/std",
 	"pallet-aura/std",
 	"pallet-authorship/std",
 	"pallet-balances/std",

@@ -121,7 +121,7 @@ pub fn infra_asset_system_local_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-    Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
+    	Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
 	)
 }
 
