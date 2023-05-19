@@ -217,33 +217,21 @@ fn testnet_genesis(
 		sudo: parachain_template_runtime::SudoConfig { key: Some(root_key) },
 		assets: pallet_assets::GenesisConfig {
 			assets: vec![
-				(1, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1300),
-				(2, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1),
+				(99, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1),
 			],
 			metadata: vec![
 				(
-					1,
-					"iKRW".to_string().as_bytes().to_vec(),
-					"iKRW".to_string().as_bytes().to_vec(),
-					12,
-				),
-				(
-					2,
-					"iUSD".to_string().as_bytes().to_vec(),
-					"iUSD".to_string().as_bytes().to_vec(),
+					99,
+					"iUNIT".to_string().as_bytes().to_vec(),
+					"iUNIT".to_string().as_bytes().to_vec(),
 					12,
 				),
 			],
 			accounts: vec![
 				(
-					1,
+					99,
 					get_account_id_from_seed::<sr25519::Public>("Alice"),
 					1_000_000_000_000_000_000_000,
-				),
-				(
-					2,
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					1_000_000_000_000_000_000,
 				),
 			],
 			..Default::default()

@@ -15,7 +15,7 @@
 
 pub mod currency {
 	use infrablockspace_core_primitives::Balance;
-	use kusama_runtime_constants as constants;
+	use infrablockspace_runtime_constants as constants;
 
 	/// The existential deposit. Set to 1/10 of its parent Relay Chain.
 	pub const EXISTENTIAL_DEPOSIT: Balance = constants::currency::EXISTENTIAL_DEPOSIT / 10;
