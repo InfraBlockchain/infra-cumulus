@@ -34,11 +34,12 @@ use sp_runtime::traits::ConvertInto;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,
-	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, CurrencyAdapter, EnsureXcmOrigin,
-	FungiblesAdapter, IsConcrete, LocalMint, NativeAsset, ParentAsSuperuser, ParentIsPreset,
-	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
-	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
-	UsingComponents, WeightInfoBounds, WithComputedOrigin,
+	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom,
+	CurrencyAdapter, EnsureXcmOrigin, FungiblesAdapter, IsConcrete, LocalMint, NativeAsset,
+	ParentAsSuperuser, ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative,
+	SiblingParachainConvertsVia, SignedAccountId32AsNative, SignedToAccountId32,
+	SovereignSignedViaLocation, TakeWeightCredit, UsingComponents, WeightInfoBounds,
+	WithComputedOrigin,
 };
 use xcm_executor::{traits::WithOriginFilter, XcmExecutor};
 
@@ -134,6 +135,10 @@ parameter_types! {
 }
 
 match_types! {
+	pub type ParentOrParentsExecutivePlurality: impl Contains<MultiLocation> = {
+		MultiLocation { parents: 1, interior: Here } |
+		MultiLocation { parents: 1, interior: X1(Plurality { id: BodyId::Executive, .. }) }
+	};
 	pub type ParentOrParentsPlurality: impl Contains<MultiLocation> = {
 		MultiLocation { parents: 1, interior: Here } |
 		MultiLocation { parents: 1, interior: X1(Plurality { .. }) }
@@ -241,6 +246,20 @@ impl Contains<RuntimeCall> for SafeCallFilter {
 	}
 }
 
+// pub type Barrier = DenyThenTry<
+// 	DenyReserveTransferToRelayChain,
+// 	(
+// 		TakeWeightCredit,
+// 		AllowTopLevelPaidExecutionFrom<Everything>,
+// 		// Parent and its exec plurality get free execution
+// 		AllowUnpaidExecutionFrom<ParentOrParentsExecutivePlurality>,
+// 		// Expected responses are OK.
+// 		AllowKnownQueryResponses<PolkadotXcm>,
+// 		// Subscriptions for version tracking are OK.
+// 		AllowSubscriptionsFrom<ParentOrSiblings>,
+// 	),
+// >;
+
 pub type Barrier = DenyThenTry<
 	DenyReserveTransferToRelayChain,
 	(
@@ -270,6 +289,24 @@ pub type AssetFeeAsExistentialDepositMultiplierFeeCharger = AssetFeeAsExistentia
 	TrustBackedAssetsInstance,
 >;
 
+// parameter_types! {
+// 	pub XcmAssetFeesReceiver: Option<AccountId> = Authorship::author();
+
+// 	pub const ItestLocation: MultiLocation = X3(Here, PalletInstance(102), GeneralIndex(99)).into_location();
+// 	pub const DotLocation: MultiLocation = MultiLocation::parent();
+
+// 	pub const Dot: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(DotLocation::get()) });
+// 	pub const Itest: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(ItestLocation::get()) });
+// 	pub const Relaychain: MultiLocation = MultiLocation::parent();
+
+// 	pub const DotForRelaychain: (MultiAssetFilter, MultiLocation) = (Dot::get(), Relaychain::get());
+// 	// pub const ItestForRelaychain: (MultiAssetFilter, MultiLocation) = (Itest::get(), Relaychain::get());
+// 	pub const MaxInstructions: u32 = 100;
+// 	pub const MaxAssetsIntoHolding: u32 = 64;
+// }
+
+// pub type TrustedTeleporters = (xcm_builder::Case<DotForRelaychain>);
+
 pub struct XcmConfig;
 impl xcm_executor::Config for XcmConfig {
 	type RuntimeCall = RuntimeCall;
@@ -280,7 +317,8 @@ impl xcm_executor::Config for XcmConfig {
 	// Statemint acting _as_ a reserve location for DOT and assets created under `pallet-assets`.
 	// For DOT, users must use teleport where allowed (e.g. with the Relay Chain).
 	type IsReserve = ();
-	type IsTeleporter = NativeAsset; // <- should be enough to allow teleportation of DOT
+	// type IsTeleporter = TrustedTeleporters;
+	type IsTeleporter = NativeAsset;
 	type UniversalLocation = UniversalLocation;
 	type Barrier = Barrier;
 	type Weigher = WeightInfoBounds<
