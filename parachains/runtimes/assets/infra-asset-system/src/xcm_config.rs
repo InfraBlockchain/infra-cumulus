@@ -35,23 +35,30 @@ use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,
 	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom,
-	CurrencyAdapter, EnsureXcmOrigin, FungiblesAdapter, IsConcrete, LocalMint, NativeAsset,
-	ParentAsSuperuser, ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative,
-	SiblingParachainConvertsVia, SignedAccountId32AsNative, SignedToAccountId32,
-	SovereignSignedViaLocation, TakeWeightCredit, UsingComponents, WeightInfoBounds,
-	WithComputedOrigin,
+	AsPrefixedGeneralIndex, ConvertedConcreteId, CurrencyAdapter, EnsureXcmOrigin,
+	FungiblesAdapter, IsConcrete, LocalMint, NativeAsset, ParentAsSuperuser, ParentIsPreset,
+	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
+	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
+	UsingComponents, WeightInfoBounds, WithComputedOrigin,
 };
 use xcm_executor::{traits::WithOriginFilter, XcmExecutor};
 
 parameter_types! {
-	pub const DotLocation: MultiLocation = MultiLocation::parent();
-	pub const RelayNetwork: Option<NetworkId> = Some(NetworkId::Infrablockspace);
+	// pub const DotLocation: MultiLocation = MultiLocation::parent();
+	pub const DotLocation: MultiLocation = Here.into_location();
+	pub const AssetLocation: MultiLocation = MultiLocation{
+		parents:1,
+		interior:Junctions::X1(Parachain(1000))
+	};
+	pub const RelayNetwork: Option<NetworkId> = Some(NetworkId::Polkadot);
 	pub RelayChainOrigin: RuntimeOrigin = cumulus_pallet_xcm::Origin::Relay.into();
 	pub UniversalLocation: InteriorMultiLocation =
 		X2(GlobalConsensus(RelayNetwork::get().unwrap()), Parachain(ParachainInfo::parachain_id().into()));
 	pub const Local: MultiLocation = MultiLocation::here();
 	pub TrustBackedAssetsPalletLocation: MultiLocation =
 		PalletInstance(<Assets as PalletInfoAccess>::index() as u8).into();
+	pub TrustBackedAssetsPalletLocation2: MultiLocation =
+		MultiLocation::new(1, X2(Parachain(1000), PalletInstance(50)));
 	pub CheckingAccount: AccountId = PolkadotXcm::check_account();
 }
 
@@ -289,23 +296,27 @@ pub type AssetFeeAsExistentialDepositMultiplierFeeCharger = AssetFeeAsExistentia
 	TrustBackedAssetsInstance,
 >;
 
-// parameter_types! {
-// 	pub XcmAssetFeesReceiver: Option<AccountId> = Authorship::author();
+parameter_types! {
+	// pub const ItestInfraSystemLocation: MultiLocation = X2(PalletInstance(50), GeneralIndex(99)).into_location();
+	pub const ItestInfraSystemLocation: MultiLocation = X3(Parachain(1000), PalletInstance(50), GeneralIndex(99)).into_location();
+	pub const ItestInfraSystemFilter: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(ItestInfraSystemLocation::get()) });
 
-// 	pub const ItestLocation: MultiLocation = X3(Here, PalletInstance(102), GeneralIndex(99)).into_location();
-// 	pub const DotLocation: MultiLocation = MultiLocation::parent();
+	pub const TemplateParachain: MultiLocation = Parachain(2000).into_exterior(1);
+	pub const InfraSystem: MultiLocation = Parachain(1000).into_exterior(1);
 
-// 	pub const Dot: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(DotLocation::get()) });
-// 	pub const Itest: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(ItestLocation::get()) });
-// 	pub const Relaychain: MultiLocation = MultiLocation::parent();
+	pub const ItestTemplateParachainLocation: MultiLocation = X3(Parachain(2000), PalletInstance(12), GeneralIndex(99)).into_exterior(1);
+	pub const ItestTemplateParachainFilter: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(ItestTemplateParachainLocation::get()) });
+	pub const ItestForTemplateParachain: (MultiAssetFilter, MultiLocation) = (ItestTemplateParachainFilter::get(), TemplateParachain::get());
+	pub const ItestForInfraSystem: (MultiAssetFilter, MultiLocation) = (ItestInfraSystemFilter::get(), InfraSystem::get());
+}
 
-// 	pub const DotForRelaychain: (MultiAssetFilter, MultiLocation) = (Dot::get(), Relaychain::get());
-// 	// pub const ItestForRelaychain: (MultiAssetFilter, MultiLocation) = (Itest::get(), Relaychain::get());
-// 	pub const MaxInstructions: u32 = 100;
-// 	pub const MaxAssetsIntoHolding: u32 = 64;
-// }
-
-// pub type TrustedTeleporters = (xcm_builder::Case<DotForRelaychain>);
+pub type TrustedTeleporters = (
+	xcm_builder::Case<ItestForTemplateParachain>,
+	xcm_builder::Case<ItestForInfraSystem>,
+	// xcm_builder::Case<ItestForTemplateParachain2>,
+	// xcm_builder::Case<ItestForInfraSystem2>,
+	NativeAsset,
+);
 
 pub struct XcmConfig;
 impl xcm_executor::Config for XcmConfig {
@@ -317,8 +328,8 @@ impl xcm_executor::Config for XcmConfig {
 	// Statemint acting _as_ a reserve location for DOT and assets created under `pallet-assets`.
 	// For DOT, users must use teleport where allowed (e.g. with the Relay Chain).
 	type IsReserve = ();
-	// type IsTeleporter = TrustedTeleporters;
-	type IsTeleporter = NativeAsset;
+	// type IsTeleporter = NativeAsset;
+	type IsTeleporter = TrustedTeleporters;
 	type UniversalLocation = UniversalLocation;
 	type Barrier = Barrier;
 	type Weigher = WeightInfoBounds<

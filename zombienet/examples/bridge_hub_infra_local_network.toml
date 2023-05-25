@@ -1,6 +1,6 @@
 [relaychain]
 default_command = "../infra-relay-chain/target/release/infrablockspace"
-
+default_args = ["-lparachain=debug", "-l=xcm=trace"]
 # chain = "rococo-local"
 chain = "rococo-local"
 
@@ -42,58 +42,34 @@ cumulus_based = true
 [[parachains.collators]]
 name = "alice"
 validator = true
-command = "./target/release/infrablockspace-parachain"
 args = ["-lparachain=debug", "-l=xcm=trace"]
+command = "./target/release/infrablockspace-parachain"
 rpc_port = 9500
 ws_port = 9501
 
+[[parachains]]
+id = 2000
+chain = "local"
+# chain = "infra-asset-system-local"
+cumulus_based = true
 
-# run bob as parachain collator
+# run alice as parachain collator
 [[parachains.collators]]
 name = "bob"
 validator = true
-command = "./target/release/infrablockspace-parachain"
 args = ["-lparachain=debug", "-l=xcm=trace"]
-rpc_port = 9600
-ws_port = 9601
+command = "./target/release/parachain-template-node"
+rpc_port = 10500
+ws_port = 10501
 
-# [[parachains]]
-# id = 1000
-# chain = "statemine-local"
-# add_to_genesis = true
-# cumulus_based = true
+[[hrmp_channels]]
+sender = 1000
+recipient = 2000
+max_capacity = 8
+max_message_size = 1048576
 
-# [parachains.collator]
-# name = "inframine"
-# command = "./target/release/parachain-template-node"
-# rpc_port = 9700
-# ws_port = 9701
-# args = ["-l=xcm=trace"]
-
-# # run charlie as parachain collator
-# [[parachains.collators]]
-# name = "charlie"
-# validator = true
-# command = "./target/release/parachain-template-node"
-# args = ["-lparachain=debug"]
-
-# # run dave as parachain collator
-# [[parachains.collators]]
-# name = "dave"
-# validator = true
-# command = "./target/release/parachain-template-node"
-# args = ["-lparachain=debug"]
-
-# # run eve as parachain collator
-# [[parachains.collators]]
-# name = "eve"
-# validator = true
-# command = "./target/release/parachain-template-node"
-# args = ["-lparachain=debug"]
-
-# # run ferdie as parachain collator
-# [[parachains.collators]]
-# name = "ferdie"
-# validator = true
-# command = "./target/release/parachain-template-node"
-# args = ["-lparachain=debug"]
+[[hrmp_channels]]
+sender = 2000
+recipient = 1000
+max_capacity = 8
+max_message_size = 1048576

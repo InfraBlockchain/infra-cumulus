@@ -23,11 +23,14 @@ log = { version = "0.4.17", default-features = false }
 scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
 smallvec = "1.10.0"
 
-
 # Substrate
 pallet-infra-asset-tx-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-asset-registry = { package = "pallet-asset-registry", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
+xcm-primitives = { package = "xcm-primitives", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
 
+assets-common = { path = "../../parachains/runtimes/assets/common", default-features = false }
+parachains-common = { path = "../../parachains/common", default-features = false }
 frame-benchmarking = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, optional = true, branch = "master" }
 frame-executive = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
@@ -102,7 +105,8 @@ std = [
 	"pallet-collator-selection/std",
 	"pallet-session/std",
 	"pallet-sudo/std",
-	# "pallet-template/std",
+	"pallet-asset-registry/std",
+
 	"pallet-timestamp/std",
 	"pallet-transaction-payment-rpc-runtime-api/std",
 	"pallet-transaction-payment/std",
@@ -124,6 +128,8 @@ std = [
 	"xcm-builder/std",
 	"xcm-executor/std",
 	"xcm/std",
+	"assets-common/std",
+	"parachains-common/std",
 ]
 
 runtime-benchmarks = [
@@ -151,6 +157,7 @@ try-runtime = [
 	"frame-executive/try-runtime",
 	"frame-system/try-runtime",
 	"frame-try-runtime/try-runtime",
+	"pallet-asset-registry/try-runtime",
 	"pallet-aura/try-runtime",
 	"pallet-authorship/try-runtime",
 	"pallet-balances/try-runtime",
@@ -161,4 +168,5 @@ try-runtime = [
 	"pallet-transaction-payment/try-runtime",
 	"pallet-xcm/try-runtime",
 	"parachain-info/try-runtime",
+
 ]
