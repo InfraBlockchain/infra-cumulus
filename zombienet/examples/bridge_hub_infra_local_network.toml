@@ -50,7 +50,6 @@ ws_port = 9501
 [[parachains]]
 id = 2000
 chain = "local"
-# chain = "infra-asset-system-local"
 cumulus_based = true
 
 # run alice as parachain collator
