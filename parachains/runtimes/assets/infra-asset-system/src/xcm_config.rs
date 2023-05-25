@@ -34,8 +34,7 @@ use sp_runtime::traits::ConvertInto;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,
-	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom,
-	AsPrefixedGeneralIndex, ConvertedConcreteId, CurrencyAdapter, EnsureXcmOrigin,
+	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, CurrencyAdapter, EnsureXcmOrigin,
 	FungiblesAdapter, IsConcrete, LocalMint, NativeAsset, ParentAsSuperuser, ParentIsPreset,
 	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
 	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
@@ -297,24 +296,22 @@ pub type AssetFeeAsExistentialDepositMultiplierFeeCharger = AssetFeeAsExistentia
 >;
 
 parameter_types! {
-	// pub const ItestInfraSystemLocation: MultiLocation = X2(PalletInstance(50), GeneralIndex(99)).into_location();
-	pub const ItestInfraSystemLocation: MultiLocation = X3(Parachain(1000), PalletInstance(50), GeneralIndex(99)).into_location();
+	pub const ItestInfraSystemLocation: MultiLocation = X2(PalletInstance(50), GeneralIndex(99)).into_location();
+	// pub const ItestInfraSystemLocation: MultiLocation = X3(Parachain(1000), PalletInstance(50), GeneralIndex(99)).into_location();
 	pub const ItestInfraSystemFilter: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(ItestInfraSystemLocation::get()) });
 
 	pub const TemplateParachain: MultiLocation = Parachain(2000).into_exterior(1);
 	pub const InfraSystem: MultiLocation = Parachain(1000).into_exterior(1);
 
-	pub const ItestTemplateParachainLocation: MultiLocation = X3(Parachain(2000), PalletInstance(12), GeneralIndex(99)).into_exterior(1);
-	pub const ItestTemplateParachainFilter: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(ItestTemplateParachainLocation::get()) });
-	pub const ItestForTemplateParachain: (MultiAssetFilter, MultiLocation) = (ItestTemplateParachainFilter::get(), TemplateParachain::get());
-	pub const ItestForInfraSystem: (MultiAssetFilter, MultiLocation) = (ItestInfraSystemFilter::get(), InfraSystem::get());
+	// pub const ItestTemplateParachainLocation: MultiLocation = X3(Parachain(2000), PalletInstance(12), GeneralIndex(99)).into_exterior(1);
+	// pub const ItestTemplateParachainFilter: MultiAssetFilter = Wild(AllOf { fun: WildFungible, id: Concrete(ItestTemplateParachainLocation::get()) });
+	pub const ItestForTemplateParachain: (MultiAssetFilter, MultiLocation) = (ItestInfraSystemFilter::get(), TemplateParachain::get());
+	// pub const ItestForInfraSystem: (MultiAssetFilter, MultiLocation) = (ItestInfraSystemFilter::get(), InfraSystem::get());
 }
 
 pub type TrustedTeleporters = (
 	xcm_builder::Case<ItestForTemplateParachain>,
-	xcm_builder::Case<ItestForInfraSystem>,
-	// xcm_builder::Case<ItestForTemplateParachain2>,
-	// xcm_builder::Case<ItestForInfraSystem2>,
+	// xcm_builder::Case<ItestForInfraSystem>,
 	NativeAsset,
 );
 
