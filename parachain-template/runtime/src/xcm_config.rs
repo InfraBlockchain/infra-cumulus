@@ -1,36 +1,27 @@
 use super::{
-	AccountId, AllPalletsWithSystem, AssetRegistry, Assets, Authorship, Balance, Balances,
-	ParachainInfo, ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin,
-	WeightToFee, XcmpQueue,
+	AccountId, AllPalletsWithSystem, Assets, Authorship, Balance, Balances, ParachainInfo,
+	ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin, WeightToFee,
+	XcmpQueue,
 };
-use core::marker::PhantomData;
 use frame_support::{
-	log, match_types, parameter_types,
-	traits::{ConstU32, Everything, Nothing, PalletInfoAccess},
+	match_types, parameter_types,
+	traits::{ConstU32, Everything, Nothing},
 	weights::Weight,
 };
 use infrablockspace_parachain::primitives::Sibling;
 use infrablockspace_runtime_common::impls::ToAuthor;
 use pallet_xcm::XcmPassthrough;
-use parachains_common::xcm_config::{
-	AssetFeeAsExistentialDepositMultiplier, DenyReserveTransferToRelayChain, DenyThenTry,
-};
-use sp_runtime::traits::ConvertInto;
+use parachains_common::xcm_config::{DenyReserveTransferToRelayChain, DenyThenTry};
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,
-	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, AsPrefixedGeneralIndex,
-	ConvertedConcreteAssetId, ConvertedConcreteId, CurrencyAdapter, EnsureXcmOrigin,
-	FixedWeightBounds, FungiblesAdapter, IsConcrete, LocalMint, NativeAsset, NoChecking,
-	NonLocalMint, ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative,
-	SiblingParachainConvertsVia, SignedAccountId32AsNative, SignedToAccountId32,
-	SovereignSignedViaLocation, TakeWeightCredit, UsingComponents, WithComputedOrigin,
+	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, CurrencyAdapter, EnsureXcmOrigin,
+	FixedWeightBounds, FungiblesAdapter, IsConcrete, NativeAsset, NonLocalMint, ParentIsPreset,
+	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
+	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
+	UsingComponents, WithComputedOrigin,
 };
-use xcm_executor::{
-	traits::{JustTry, ShouldExecute},
-	XcmExecutor,
-};
-use xcm_primitives::AsAssetMultiLocation;
+use xcm_executor::XcmExecutor;
 
 parameter_types! {
 	// pub const RelayLocation: MultiLocation = MultiLocation::parent();
@@ -38,18 +29,12 @@ parameter_types! {
 		parents:1,
 		interior:Junctions::X1(Parachain(1000))
 	};
-	// pub const AssetLocation: MultiLocation = MultiLocation{
-	// 	parents:1,
-	// 	interior:Junctions::X1(Parachain(1000))
-	// };
 	pub const RelayNetwork: Option<NetworkId> = None;
 	pub RelayChainOrigin: RuntimeOrigin = cumulus_pallet_xcm::Origin::Relay.into();
 	pub UniversalLocation: InteriorMultiLocation = Parachain(ParachainInfo::parachain_id().into()).into();
 	pub CheckingAccount: AccountId = PolkadotXcm::check_account();
 	pub TrustBackedAssetsPalletLocation: MultiLocation =
 	MultiLocation::new(1, X2(Parachain(1000), PalletInstance(50)));
-	// pub TrustBackedAssetsPalletLocation: MultiLocation =
-	// PalletInstance(<Assets as PalletInfoAccess>::index() as u8).into();
 }
 
 /// Type for specifying how a `MultiLocation` can be converted into an `AccountId`. This is used
@@ -174,15 +159,7 @@ parameter_types! {
 }
 
 pub type AssetTransactors = (LocalAssetTransactor, FungiblesTransactor);
-
 pub type TrustedTeleporters = (xcm_builder::Case<ItestForInfraSystem>, NativeAsset);
-
-// pub type AssetFeeAsExistentialDepositMultiplierFeeCharger = AssetFeeAsExistentialDepositMultiplier<
-// 	Runtime,
-// 	WeightToFee,
-// 	pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto, TrustBackedAssetsInstance>,
-// 	TrustBackedAssetsInstance,
-// >;
 
 pub struct XcmConfig;
 impl xcm_executor::Config for XcmConfig {
