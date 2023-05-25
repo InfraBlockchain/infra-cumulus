@@ -185,6 +185,10 @@ impl<
 		// Convert to the same kind of multiasset, with the required fungible balance
 		let required = first.id.clone().into_multiasset(asset_balance.into());
 
+		log::trace!(target: "xcm::buy_weight******************* ",
+			"charge_weight_in_fungibles asset: local_asset_id: {:?}, weight: {:?}, asset_balance: {:?}, required: {:?}",
+			local_asset_id, weight, asset_balance, required);
+
 		// Substract payment
 		let unused = payment.checked_sub(required.clone()).map_err(|_| XcmError::TooExpensive)?;
 

@@ -192,7 +192,11 @@ fn testnet_genesis(
 				.to_vec(),
 		},
 		balances: parachain_template_runtime::BalancesConfig {
-			balances: endowed_accounts.iter().cloned().map(|k| (k, 1 << 60)).collect(),
+			balances: endowed_accounts
+				.iter()
+				.cloned()
+				.map(|k| (k, 1_000_000 * EXISTENTIAL_DEPOSIT))
+				.collect(),
 		},
 		parachain_info: parachain_template_runtime::ParachainInfoConfig { parachain_id: id },
 		collator_selection: parachain_template_runtime::CollatorSelectionConfig {
@@ -216,24 +220,18 @@ fn testnet_genesis(
 		// of this.
 		sudo: parachain_template_runtime::SudoConfig { key: Some(root_key) },
 		assets: pallet_assets::GenesisConfig {
-			assets: vec![
-				(99, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1),
-			],
-			metadata: vec![
-				(
-					99,
-					"iUNIT".to_string().as_bytes().to_vec(),
-					"iUNIT".to_string().as_bytes().to_vec(),
-					12,
-				),
-			],
-			accounts: vec![
-				(
-					99,
-					get_account_id_from_seed::<sr25519::Public>("Alice"),
-					1_000_000_000_000_000_000_000,
-				),
-			],
+			assets: vec![(
+				99,                                                   // asset_id
+				get_account_id_from_seed::<sr25519::Public>("Alice"), // owner
+				true,                                                 // is_sufficient
+				1000,                                                 // min_balance
+			)],
+			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
+			accounts: vec![(
+				99,
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
+			)],
 			..Default::default()
 		},
 		aura: Default::default(),

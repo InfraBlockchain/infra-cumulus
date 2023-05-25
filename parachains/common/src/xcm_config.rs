@@ -2,10 +2,11 @@ use crate::impls::AccountIdOf;
 use core::marker::PhantomData;
 use frame_support::{
 	log,
-	traits::{fungibles::Inspect, tokens::BalanceConversion, ContainsPair},
+	traits::{fungibles::Inspect, tokens::BalanceConversion, ContainsPair, Currency},
 	weights::{Weight, WeightToFee, WeightToFeePolynomial},
 };
 use sp_runtime::traits::Get;
+use sp_std::fmt::Debug;
 use xcm::latest::prelude::*;
 use xcm_executor::traits::ShouldExecute;
 
@@ -97,6 +98,7 @@ where
 	>,
 	AccountIdOf<Runtime>:
 		From<infrablockspace_primitives::AccountId> + Into<infrablockspace_primitives::AccountId>,
+	CurrencyBalance: Debug,
 {
 	fn charge_weight_in_fungibles(
 		asset_id: <pallet_assets::Pallet<Runtime, AssetInstance> as Inspect<
@@ -107,7 +109,14 @@ where
 		<pallet_assets::Pallet<Runtime, AssetInstance> as Inspect<AccountIdOf<Runtime>>>::Balance,
 		XcmError,
 	> {
+		log::trace!(target: "xcm::charge_weight_in_fungibles",
+			"charge_weight_in_fungibles asset: asset_id: {:?}, weight: {:?}",
+			asset_id, weight);
 		let amount = WeightToFee::weight_to_fee(&weight);
+
+		log::trace!(target: "xcm::charge_weight_in_fungibles",
+			"charge_weight_in_fungibles asset: amount: {:?}", amount);
+
 		// If the amount gotten is not at least the ED, then make it be the ED of the asset
 		// This is to avoid burning assets and decreasing the supply
 		let asset_amount = BalanceConverter::to_asset_balance(amount, asset_id)

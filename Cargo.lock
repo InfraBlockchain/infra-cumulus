@@ -7427,6 +7427,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-asset-registry"
+version = "0.0.1"
+source = "git+https://github.com/InfraBlockchain/infra-trappist?branch=dev#78fef231752833bc068439d7168a08c9e54429f3"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "pallet-assets",
+ "pallet-balances",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-runtime",
+ "sp-std",
+ "xcm",
+ "xcm-primitives",
+]
+
+[[package]]
 name = "pallet-asset-tx-payment"
 version = "4.0.0-dev"
 source = "git+https://github.com/InfraBlockchain/infra-substrate?branch=master#86932c8d7663f150e64578aef855ed5a00614659"
@@ -8586,6 +8604,7 @@ dependencies = [
 name = "parachain-template-runtime"
 version = "0.1.0"
 dependencies = [
+ "assets-common",
  "cumulus-pallet-aura-ext",
  "cumulus-pallet-dmp-queue",
  "cumulus-pallet-parachain-system",
@@ -8606,6 +8625,7 @@ dependencies = [
  "infrablockspace-parachain",
  "infrablockspace-runtime-common",
  "log",
+ "pallet-asset-registry",
  "pallet-assets",
  "pallet-aura",
  "pallet-authorship",
@@ -8619,6 +8639,7 @@ dependencies = [
  "pallet-transaction-payment-rpc-runtime-api",
  "pallet-xcm",
  "parachain-info",
+ "parachains-common",
  "parity-scale-codec",
  "scale-info",
  "smallvec",
@@ -8637,6 +8658,7 @@ dependencies = [
  "xcm",
  "xcm-builder",
  "xcm-executor",
+ "xcm-primitives",
 ]
 
 [[package]]
@@ -14589,6 +14611,17 @@ dependencies = [
  "sp-std",
  "sp-weights",
  "xcm",
+]
+
+[[package]]
+name = "xcm-primitives"
+version = "0.0.1"
+source = "git+https://github.com/InfraBlockchain/infra-trappist?branch=dev#78fef231752833bc068439d7168a08c9e54429f3"
+dependencies = [
+ "frame-support",
+ "sp-std",
+ "xcm",
+ "xcm-executor",
 ]
 
 [[package]]
