@@ -109,8 +109,9 @@ pub type SignedExtra = (
 	frame_system::CheckEra<Runtime>,
 	frame_system::CheckNonce<Runtime>,
 	frame_system::CheckWeight<Runtime>,
-	pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
-	// pallet_infra_asset_tx_payment::ChargeAssetTxPayment<Runtime>,
+	// Let's keep the below comment to test the new feature until "PolkadotJS" is newly implemented!
+	// pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
+	pallet_infra_asset_tx_payment::ChargeAssetTxPayment<Runtime>,
 );
 
 /// Unchecked extrinsic type as expected by this runtime.
@@ -269,30 +270,6 @@ parameter_types! {
 }
 
 type AssetId = u32;
-
-// pub type TrustBackedAssetsInstance = pallet_assets::Instance1;
-// type TrustBackedAssetsCall = pallet_assets::Call<Runtime, TrustBackedAssetsInstance>;
-
-// impl pallet_assets::Config<TrustBackedAssetsInstance> for Runtime {
-// 	type RuntimeEvent = RuntimeEvent;
-// 	type Balance = Balance;
-// 	type AssetId = AssetId;
-// 	type AssetIdParameter = codec::Compact<AssetId>;
-// 	type Currency = Balances;
-// 	type CreateOrigin = AsEnsureOriginWithArg<frame_system::EnsureSigned<AccountId>>;
-// 	type ForceOrigin = EnsureRoot<AccountId>;
-// 	type AssetDeposit = ConstU128<2>;
-// 	type AssetAccountDeposit = ConstU128<2>;
-// 	type MetadataDepositBase = ConstU128<0>;
-// 	type MetadataDepositPerByte = ConstU128<0>;
-// 	type ApprovalDeposit = ConstU128<0>;
-// 	type StringLimit = ConstU32<20>;
-// 	type Freezer = ();
-// 	type Extra = ();
-// 	type CallbackHandle = ();
-// 	type WeightInfo = ();
-// 	type RemoveItemsLimit = ConstU32<1000>;
-// }
 
 impl pallet_assets::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
