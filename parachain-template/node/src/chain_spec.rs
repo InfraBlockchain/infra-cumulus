@@ -227,11 +227,6 @@ fn testnet_genesis(
 				1000,                                                 // min_balance
 			)],
 			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
-			// accounts: vec![(
-			// 	99,
-			// 	get_account_id_from_seed::<sr25519::Public>("Alice"),
-			// 	1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
-			// )],
 			..Default::default()
 		},
 		aura: Default::default(),
