@@ -1,7 +1,7 @@
 [relaychain]
 default_command = "../infra-relay-chain/target/release/infrablockspace"
 default_args = ["-lparachain=debug"]
-chain = "rococo-local"
+chain = "infrablockspace-local"
 
 [[relaychain.nodes]]
 name = "alice"
@@ -33,19 +33,19 @@ validator = true
 rpc_port = 7500
 ws_port = 7501
 
-# [[parachains]]
-# id = 1000
-# chain = "infra-asset-system-local"
-# cumulus_based = true
+[[parachains]]
+id = 1000
+chain = "infra-asset-system-local"
+cumulus_based = true
 
-# # run alice as parachain collator
-# [[parachains.collators]]
-# name = "alice"
-# validator = true
-# command = "./target/release/infrablockspace-parachain"
-# args = ["-lparachain=debug"]
-# rpc_port = 9500
-# ws_port = 9501
+# run alice as parachain collator
+[[parachains.collators]]
+name = "alice"
+validator = true
+command = "./target/release/infrablockspace-parachain"
+args = ["-lparachain=debug"]
+rpc_port = 9500
+ws_port = 9501
 
 [[parachains]]
 id = 2000
@@ -60,3 +60,14 @@ command = "./target/release/parachain-template-node"
 args = ["-lparachain=debug"]
 rpc_port = 9600
 ws_port = 9601
+
+[[hrmp_channels]]
+sender = 1000
+recipient = 2000
+max_capacity = 8
+max_message_size = 1048576
+[[hrmp_channels]]
+sender = 2000
+recipient = 1000
+max_capacity = 8
+max_message_size = 1048576
