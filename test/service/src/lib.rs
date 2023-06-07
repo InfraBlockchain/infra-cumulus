@@ -68,7 +68,7 @@ use sp_arithmetic::traits::SaturatedConversion;
 use sp_blockchain::HeaderBackend;
 use sp_core::{Pair, H256};
 use sp_keyring::{AccountKeyring, Sr25519Keyring};
-use sp_runtime::{codec::Encode, generic, traits::BlakeTwo256};
+use sp_runtime::{codec::Encode, generic, generic::SystemTokenId, traits::BlakeTwo256};
 use sp_state_machine::BasicExternalities;
 use sp_trie::PrefixedMemoryDB;
 use std::sync::Arc;
@@ -829,6 +829,8 @@ pub fn construct_extrinsic(
 		.map(|c| c / 2)
 		.unwrap_or(2) as u64;
 	let tip = 0;
+	let system_token_id = Some(SystemTokenId { para_id: 1, pallet_id: 50, asset_id: 99 });
+
 	let extra: runtime::SignedExtra = (
 		frame_system::CheckNonZeroSender::<runtime::Runtime>::new(),
 		frame_system::CheckSpecVersion::<runtime::Runtime>::new(),
@@ -839,10 +841,9 @@ pub fn construct_extrinsic(
 		)),
 		frame_system::CheckNonce::<runtime::Runtime>::from(nonce),
 		frame_system::CheckWeight::<runtime::Runtime>::new(),
-		pallet_infra_asset_tx_payment::ChargeAssetTxPayment::<runtime::Runtime>::from(
+		pallet_fee_payment_manager::FeePaymentMetadata::<runtime::Runtime>::from(
 			tip,
-			Some(1),                                     // asset id
-			None,                                        // fee payer
+			system_token_id,
 			Some(AccountKeyring::Alice.to_account_id()), // vote candidate
 		),
 	);

@@ -35,7 +35,10 @@ use sp_blockchain::HeaderBackend;
 use sp_core::storage::Storage;
 use sp_io::TestExternalities;
 use sp_keyring::AccountKeyring;
-use sp_runtime::{generic::Era, BuildStorage, SaturatedConversion};
+use sp_runtime::{
+	generic::{Era, SystemTokenId},
+	BuildStorage, SaturatedConversion,
+};
 pub use substrate_test_client::*;
 
 pub type ParachainBlockData = cumulus_primitives_core::ParachainBlockData<Block>;
@@ -135,6 +138,9 @@ pub fn generate_extrinsic(
 	let tip = 0;
 	// Test Scenario
 	// Extrinsic contains vote for `Alice` with asset id `1`
+
+	let system_token_id = Some(SystemTokenId { para_id: 1, pallet_id: 50, asset_id: 99 });
+
 	let extra: SignedExtra = (
 		frame_system::CheckNonZeroSender::<Runtime>::new(),
 		frame_system::CheckSpecVersion::<Runtime>::new(),
@@ -142,12 +148,11 @@ pub fn generate_extrinsic(
 		frame_system::CheckEra::<Runtime>::from(Era::mortal(period, current_block)),
 		frame_system::CheckNonce::<Runtime>::from(nonce),
 		frame_system::CheckWeight::<Runtime>::new(),
-		pallet_infra_asset_tx_payment::ChargeAssetTxPayment::<Runtime>::from(
+		pallet_fee_payment_manager::FeePaymentMetadata::<runtime::Runtime>::from(
 			tip,
-			Some(1),                                     // asset id
-			None,                                        // fee payer
+			system_token_id,
 			Some(AccountKeyring::Alice.to_account_id()), // vote candidate
-		), // pallet_transaction_payment::ChargeTransactionPayment::<Runtime>::from(tip),
+		),
 	);
 
 	let function = function.into();

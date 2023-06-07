@@ -40,7 +40,7 @@ use frame_support::{
 	ensure,
 	inherent::{InherentData, InherentIdentifier, ProvideInherent},
 	storage,
-	traits::{pot::VoteInfoHandler, Get},
+	traits::{pot::VotingHandler, Get},
 	weights::Weight,
 	RuntimeDebug,
 };
@@ -48,7 +48,7 @@ use frame_system::{ensure_none, ensure_root};
 use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
-	generic::{PotVotes, VoteAccountId, VoteAssetId, VoteWeight},
+	generic::{PotVotes, SystemTokenId, VoteAccountId, VoteWeight},
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
 	transaction_validity::{
 		InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
@@ -755,12 +755,8 @@ pub mod pallet {
 	}
 }
 
-impl<T: Config> VoteInfoHandler for Pallet<T> {
-	type VoteAccountId = VoteAccountId;
-	type VoteAssetId = VoteAssetId;
-	type VoteWeight = VoteWeight;
-
-	fn update_pot_vote(who: VoteAccountId, asset_id: VoteAssetId, vote_weight: VoteWeight) {
+impl<T: Config> VotingHandler for Pallet<T> {
+	fn update_pot_vote(who: VoteAccountId, asset_id: SystemTokenId, vote_weight: VoteWeight) {
 		Self::do_update_pot_vote(asset_id, who, vote_weight);
 	}
 }
@@ -768,7 +764,7 @@ impl<T: Config> VoteInfoHandler for Pallet<T> {
 impl<T: Config> Pallet<T> {
 	/// Update vote weight for given (asset_id, candidate)
 	fn do_update_pot_vote(
-		vote_asset_id: VoteAssetId,
+		vote_asset_id: SystemTokenId,
 		vote_account_id: VoteAccountId,
 		vote_weight: VoteWeight,
 	) {

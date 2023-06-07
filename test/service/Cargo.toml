@@ -24,7 +24,7 @@ url = "2.3.1"
 frame-system = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 frame-system-rpc-runtime-api = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 pallet-transaction-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
-pallet-infra-asset-tx-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+pallet-fee-payment-manager = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sc-basic-authorship = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sc-chain-spec = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 sc-client-api = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }

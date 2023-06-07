@@ -30,7 +30,7 @@ pub mod wasm_spec_version_incremented {
 mod test_pallet;
 
 use frame_support::traits::OnRuntimeUpgrade;
-use pallet_infra_asset_tx_payment::{FungiblesAdapter, HandleCredit};
+use pallet_fee_payment_manager::{FungiblesAdapter, HandleCredit};
 use sp_api::{decl_runtime_apis, impl_runtime_apis};
 use sp_core::OpaqueMetadata;
 use sp_runtime::{
@@ -307,7 +307,7 @@ parameter_types! {
 	pub const FeeTreasuryId: PalletId = PalletId(*b"infrapid");
 }
 
-impl pallet_infra_asset_tx_payment::Config for Runtime {
+impl pallet_fee_payment_manager::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Fungibles = Assets;
 	/// The actual transaction charging logic that charges the fees.
@@ -316,7 +316,7 @@ impl pallet_infra_asset_tx_payment::Config for Runtime {
 		CreditToBlockAuthor,
 	>;
 	/// The type that handles the voting info.
-	type VoteInfoHandler = ParachainSystem;
+	type VotingHandler = ParachainSystem;
 	type PalletId = FeeTreasuryId;
 }
 
@@ -357,7 +357,7 @@ construct_runtime! {
 		Assets: pallet_assets,
 		Sudo: pallet_sudo,
 		TransactionPayment: pallet_transaction_payment,
-		InfraAssetTxPayment: pallet_infra_asset_tx_payment,
+		InfraAssetTxPayment: pallet_fee_payment_manager,
 		TestPallet: test_pallet,
 	}
 }
@@ -396,7 +396,7 @@ pub type SignedExtra = (
 	frame_system::CheckEra<Runtime>,
 	frame_system::CheckNonce<Runtime>,
 	frame_system::CheckWeight<Runtime>,
-	pallet_infra_asset_tx_payment::ChargeAssetTxPayment<Runtime>,
+	pallet_fee_payment_manager::FeePaymentMetadata<Runtime>,
 );
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic =

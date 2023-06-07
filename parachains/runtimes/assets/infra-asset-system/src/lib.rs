@@ -88,7 +88,7 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot, EnsureSigned,
 };
-use pallet_infra_asset_tx_payment::{FungiblesAdapter, HandleCredit};
+use pallet_fee_payment_manager::{FungiblesAdapter, HandleCredit};
 pub use pallet_sudo::Call as SudoCall;
 pub use parachains_common as common;
 use parachains_common::{
@@ -249,7 +249,7 @@ impl HandleCredit<AccountId, Assets> for CreditToBucket {
 	}
 }
 
-impl pallet_infra_asset_tx_payment::Config for Runtime {
+impl pallet_fee_payment_manager::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Fungibles = Assets;
 	type OnChargeAssetTransaction = FungiblesAdapter<
@@ -261,7 +261,7 @@ impl pallet_infra_asset_tx_payment::Config for Runtime {
 		>,
 		CreditToBucket,
 	>;
-	type VoteInfoHandler = ParachainSystem;
+	type VotingHandler = ParachainSystem;
 	type PalletId = FeeTreasuryId;
 }
 
@@ -643,7 +643,7 @@ construct_runtime!(
 		// Monetary stuff.
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,
 		TransactionPayment: pallet_transaction_payment::{Pallet, Storage, Event<T>} = 11,
-		InfraAssetTxPayment: pallet_infra_asset_tx_payment::{Pallet, Event<T>} = 12,
+		InfraAssetTxPayment: pallet_fee_payment_manager::{Pallet, Event<T>} = 12,
 
 		// Collator support. the order of these 5 are important and shall not change.
 		Authorship: pallet_authorship::{Pallet, Storage} = 20,
@@ -688,7 +688,7 @@ pub type SignedExtra = (
 	frame_system::CheckWeight<Runtime>,
 	// Let's keep the below comment to test the new feature until "PolkadotJS" is newly implemented!
 	// pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
-	pallet_infra_asset_tx_payment::ChargeAssetTxPayment<Runtime>,
+	pallet_fee_payment_manager::FeePaymentMetadata<Runtime>,
 );
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic =

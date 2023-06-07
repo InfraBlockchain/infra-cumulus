@@ -5,7 +5,9 @@ authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
 scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
 
 # Substrate
@@ -19,7 +21,7 @@ pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", de
 pallet-sudo = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-timestamp = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-transaction-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
-pallet-infra-asset-tx-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-fee-payment-manager = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-api = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-block-builder = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
@@ -41,7 +43,7 @@ cumulus-primitives-timestamp = { path = "../../primitives/timestamp", default-fe
 substrate-wasm-builder = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
 	"codec/std",
 	"scale-info/std",
@@ -55,7 +57,7 @@ std = [
 	"pallet-sudo/std",
 	"pallet-timestamp/std",
 	"pallet-transaction-payment/std",
-	"pallet-infra-asset-tx-payment/std",
+	"pallet-fee-payment-manager/std",
 	"sp-api/std",
 	"sp-block-builder/std",
 	"sp-core/std",

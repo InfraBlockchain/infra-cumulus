@@ -20,7 +20,7 @@ array-bytes = "4.1"
 parachain-template-runtime = { path = "../runtime" }
 
 # Substrate
-pallet-infra-asset-tx-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-fee-payment-manager = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 
 frame-benchmarking = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
