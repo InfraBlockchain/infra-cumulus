@@ -15,11 +15,11 @@ use parachains_common::xcm_config::{DenyReserveTransferToRelayChain, DenyThenTry
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowKnownQueryResponses,
-	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, CurrencyAdapter, EnsureXcmOrigin,
-	FixedWeightBounds, FungiblesAdapter, IsConcrete, NativeAsset, NonLocalMint, ParentIsPreset,
-	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
-	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
-	UsingComponents, WithComputedOrigin,
+	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom,
+	CurrencyAdapter, EnsureXcmOrigin, FixedWeightBounds, FungiblesAdapter, IsConcrete, NativeAsset,
+	NonLocalMint, ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative,
+	SiblingParachainConvertsVia, SignedAccountId32AsNative, SignedToAccountId32,
+	SovereignSignedViaLocation, TakeWeightCredit, UsingComponents, WithComputedOrigin,
 };
 use xcm_executor::XcmExecutor;
 
@@ -127,27 +127,38 @@ match_types! {
 	};
 }
 
-pub type Barrier = DenyThenTry<
-	DenyReserveTransferToRelayChain,
-	(
-		TakeWeightCredit,
-		// Expected responses are OK.
-		AllowKnownQueryResponses<PolkadotXcm>,
-		// Allow XCMs with some computed origins to pass through.
-		WithComputedOrigin<
-			(
-				// If the message is one that immediately attemps to pay for execution, then allow it.
-				AllowTopLevelPaidExecutionFrom<Everything>,
-				// Parent and its plurality (i.e. governance bodies) gets free execution.
-				AllowExplicitUnpaidExecutionFrom<ParentOrParentsPlurality>,
-				// // Subscriptions for version tracking are OK.
-				AllowSubscriptionsFrom<ParentOrSiblings>,
-			),
-			UniversalLocation,
-			ConstU32<8>,
-		>,
-	),
->;
+// pub type Barrier = DenyThenTry<
+// 	DenyReserveTransferToRelayChain,
+// 	(
+// 		TakeWeightCredit,
+// 		// Expected responses are OK.
+// 		AllowKnownQueryResponses<PolkadotXcm>,
+// 		// Allow XCMs with some computed origins to pass through.
+// 		WithComputedOrigin<
+// 			(
+// 				// If the message is one that immediately attemps to pay for execution, then allow it.
+// 				AllowTopLevelPaidExecutionFrom<Everything>,
+// 				// Parent and its plurality (i.e. governance bodies) gets free execution.
+// 				AllowExplicitUnpaidExecutionFrom<ParentOrParentsPlurality>,
+// 				// // Subscriptions for version tracking are OK.
+// 				AllowSubscriptionsFrom<ParentOrSiblings>,
+// 			),
+// 			UniversalLocation,
+// 			ConstU32<8>,
+// 		>,
+// 	),
+// >;
+
+pub type Barrier = (
+	// Weight that is paid for may be consumed.
+	TakeWeightCredit,
+	AllowUnpaidExecutionFrom<ParentOrSiblings>,
+	AllowTopLevelPaidExecutionFrom<Everything>,
+	// Messages coming from system parachains need not pay for execution.
+	AllowExplicitUnpaidExecutionFrom<Everything>,
+	// Subscriptions for version tracking are OK.
+	AllowSubscriptionsFrom<Everything>,
+);
 
 parameter_types! {
 	pub const InfraSystem: MultiLocation = Parachain(1000).into_exterior(1);

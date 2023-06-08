@@ -1,6 +1,6 @@
 [relaychain]
 default_command = "../infra-relay-chain/target/release/infrablockspace"
-default_args = ["-lparachain=debug"]
+default_args = ["-lparachain=debug", "-l=xcm=trace"]
 chain = "infrablockspace-local"
 
 [[relaychain.nodes]]
@@ -43,7 +43,7 @@ cumulus_based = true
 name = "alice"
 validator = true
 command = "./target/release/infrablockspace-parachain"
-args = ["-lparachain=debug"]
+args = ["-lparachain=debug", "-l=xcm=trace"]
 rpc_port = 9500
 ws_port = 9501
 
@@ -57,7 +57,7 @@ cumulus_based = true
 name = "bob"
 validator = true
 command = "./target/release/parachain-template-node"
-args = ["-lparachain=debug"]
+args = ["-lparachain=debug", "-l=xcm=trace"]
 rpc_port = 9600
 ws_port = 9601
 

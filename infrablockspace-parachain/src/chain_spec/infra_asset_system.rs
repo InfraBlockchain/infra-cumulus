@@ -121,7 +121,7 @@ pub fn infra_asset_system_local_config() -> InfraAssetSystemChainSpec {
 		None,
 		None,
 		Some(properties),
-    	Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
+		Extensions { relay_chain: "infrablockspace-local".into(), para_id: 1000 },
 	)
 }
 
@@ -223,21 +223,7 @@ pub fn infra_asset_system_genesis(
 				})
 				.collect(),
 		},
-		assets: pallet_assets::GenesisConfig {
-			assets: vec![(
-				99,                                                   // asset_id
-				get_account_id_from_seed::<sr25519::Public>("Alice"), // owner
-				true,                                                 // is_sufficient
-				1000,                                                 // min_balance
-			)],
-			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
-			accounts: vec![(
-				99,
-				get_account_id_from_seed::<sr25519::Public>("Alice"),
-				1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
-			)],
-			..Default::default()
-		},
+		assets: pallet_assets::GenesisConfig { ..Default::default() },
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
 		// of this.
 		aura: Default::default(),
