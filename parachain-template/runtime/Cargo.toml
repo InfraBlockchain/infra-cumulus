@@ -24,10 +24,10 @@ scale-info = { version = "2.3.1", default-features = false, features = ["derive"
 smallvec = "1.10.0"
 
 # Substrate
-pallet-fee-payment-manager = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-system-token-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
-pallet-asset-registry = { package = "pallet-asset-registry", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
-xcm-primitives = { package = "xcm-primitives", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
+# pallet-asset-registry = { package = "pallet-asset-registry", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
+# xcm-primitives = { package = "xcm-primitives", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
 
 assets-common = { path = "../../parachains/runtimes/assets/common", default-features = false }
 parachains-common = { path = "../../parachains/common", default-features = false }
@@ -98,14 +98,14 @@ std = [
 	"frame-system-rpc-runtime-api/std",
 	"frame-system/std",
 	"pallet-assets/std",
-	"pallet-fee-payment-manager/std",
+	"pallet-system-token-payment/std",
 	"pallet-aura/std",
 	"pallet-authorship/std",
 	"pallet-balances/std",
 	"pallet-collator-selection/std",
 	"pallet-session/std",
 	"pallet-sudo/std",
-	"pallet-asset-registry/std",
+	# "pallet-asset-registry/std",
 
 	"pallet-timestamp/std",
 	"pallet-transaction-payment-rpc-runtime-api/std",
@@ -157,7 +157,7 @@ try-runtime = [
 	"frame-executive/try-runtime",
 	"frame-system/try-runtime",
 	"frame-try-runtime/try-runtime",
-	"pallet-asset-registry/try-runtime",
+	# "pallet-asset-registry/try-runtime",
 	"pallet-aura/try-runtime",
 	"pallet-authorship/try-runtime",
 	"pallet-balances/try-runtime",

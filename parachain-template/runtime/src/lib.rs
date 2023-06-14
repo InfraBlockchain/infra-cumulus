@@ -43,10 +43,10 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot,
 };
-use pallet_fee_payment_manager::{FungiblesAdapter, HandleCredit};
+use pallet_system_token_payment::{HandleCredit, TransactionFeeCharger};
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 pub use sp_runtime::{
-	generic::{VoteAssetId, VoteWeight},
+	types::{VoteAssetId, VoteWeight},
 	MultiAddress, Perbill, Permill,
 };
 use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
@@ -111,7 +111,7 @@ pub type SignedExtra = (
 	frame_system::CheckWeight<Runtime>,
 	// Let's keep the below comment to test the new feature until "PolkadotJS" is newly implemented!
 	// pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
-	pallet_fee_payment_manager::FeePaymentMetadata<Runtime>,
+	pallet_system_token_payment::FeePaymentMetadata<Runtime>,
 );
 
 /// Unchecked extrinsic type as expected by this runtime.
@@ -307,11 +307,11 @@ parameter_types! {
 	pub const FeeTreasuryId: PalletId = PalletId(*b"infrapid");
 }
 
-impl pallet_fee_payment_manager::Config for Runtime {
+impl pallet_system_token_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
-	type Fungibles = Assets;
+	type Assets = Assets;
 	/// The actual transaction charging logic that charges the fees.
-	type OnChargeAssetTransaction = FungiblesAdapter<
+	type OnChargeSystemToken = TransactionFeeCharger<
 		pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto>,
 		CreditToBlockAuthor,
 	>;
@@ -514,12 +514,12 @@ impl pallet_collator_selection::Config for Runtime {
 	type WeightInfo = ();
 }
 
-impl pallet_asset_registry::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type ReserveAssetModifierOrigin = EnsureRoot<AccountId>;
-	type Assets = Assets;
-	type WeightInfo = ();
-}
+// impl pallet_asset_registry::Config for Runtime {
+// 	type RuntimeEvent = RuntimeEvent;
+// 	type ReserveAssetModifierOrigin = EnsureRoot<AccountId>;
+// 	type Assets = Assets;
+// 	type WeightInfo = ();
+// }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -539,8 +539,8 @@ construct_runtime!(
 		Balances: pallet_balances = 10,
 		TransactionPayment: pallet_transaction_payment = 11,
 		Assets: pallet_assets = 12,
-		InfraAssetTxPayment: pallet_fee_payment_manager = 13,
-		AssetRegistry: pallet_asset_registry::{Pallet, Call, Storage, Event<T>} = 14,
+		InfraAssetTxPayment: pallet_system_token_payment = 13,
+		// AssetRegistry: pallet_asset_registry::{Pallet, Call, Storage, Event<T>} = 14,
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship = 20,

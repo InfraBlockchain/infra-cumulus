@@ -48,12 +48,12 @@ use frame_system::{ensure_none, ensure_root};
 use infrablockspace_parachain::primitives::RelayChainBlockNumber;
 use scale_info::TypeInfo;
 use sp_runtime::{
-	generic::{PotVotes, SystemTokenId, VoteAccountId, VoteWeight},
 	traits::{Block as BlockT, BlockNumberProvider, Hash},
 	transaction_validity::{
 		InvalidTransaction, TransactionLongevity, TransactionSource, TransactionValidity,
 		ValidTransaction,
 	},
+	types::{PotVotes, SystemTokenId, VoteAccountId, VoteWeight},
 };
 use sp_std::{cmp, collections::btree_map::BTreeMap, prelude::*};
 use xcm::latest::XcmHash;

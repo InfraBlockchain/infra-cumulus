@@ -68,7 +68,8 @@ use sp_arithmetic::traits::SaturatedConversion;
 use sp_blockchain::HeaderBackend;
 use sp_core::{Pair, H256};
 use sp_keyring::{AccountKeyring, Sr25519Keyring};
-use sp_runtime::{codec::Encode, generic, generic::SystemTokenId, traits::BlakeTwo256};
+use sp_runtime::{codec::Encode, generic, traits::BlakeTwo256, types::SystemTokenId};
+
 use sp_state_machine::BasicExternalities;
 use sp_trie::PrefixedMemoryDB;
 use std::sync::Arc;
@@ -841,7 +842,7 @@ pub fn construct_extrinsic(
 		)),
 		frame_system::CheckNonce::<runtime::Runtime>::from(nonce),
 		frame_system::CheckWeight::<runtime::Runtime>::new(),
-		pallet_fee_payment_manager::FeePaymentMetadata::<runtime::Runtime>::from(
+		pallet_system_token_payment::FeePaymentMetadata::<runtime::Runtime>::from(
 			tip,
 			system_token_id,
 			Some(AccountKeyring::Alice.to_account_id()), // vote candidate

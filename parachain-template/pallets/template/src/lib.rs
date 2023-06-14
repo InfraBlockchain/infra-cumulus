@@ -6,7 +6,7 @@
 pub use pallet::*;
 
 use frame_support::traits::VoteInfoHandler;
-use sp_runtime::generic::{VoteAssetId, VoteWeight};
+use sp_runtime::types::{VoteAssetId, VoteWeight};
 
 pub type AccountnAssetId<AccountId, VoteAssetId> = (AccountId, VoteAssetId);
 

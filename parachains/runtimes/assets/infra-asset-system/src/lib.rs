@@ -88,8 +88,8 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot, EnsureSigned,
 };
-use pallet_fee_payment_manager::{FungiblesAdapter, HandleCredit};
 pub use pallet_sudo::Call as SudoCall;
+use pallet_system_token_payment::{HandleCredit, TransactionFeeCharger};
 pub use parachains_common as common;
 use parachains_common::{
 	impls::DealWithFees, opaque, AccountId, AssetIdForTrustBackedAssets, AuraId, Balance,
@@ -249,16 +249,11 @@ impl HandleCredit<AccountId, Assets> for CreditToBucket {
 	}
 }
 
-impl pallet_fee_payment_manager::Config for Runtime {
+impl pallet_system_token_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
-	type Fungibles = Assets;
-	type OnChargeAssetTransaction = FungiblesAdapter<
-		pallet_assets::BalanceToAssetBalance<
-			Balances,
-			Runtime,
-			ConvertInto,
-			TrustBackedAssetsInstance,
-		>,
+	type Assets = Assets;
+	type OnChargeSystemToken = TransactionFeeCharger<
+		pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto>,
 		CreditToBucket,
 	>;
 	type VotingHandler = ParachainSystem;
@@ -285,9 +280,10 @@ pub type AssetsForceOrigin =
 // Called "Trust Backed" assets because these are generally registered by some account, and users of
 // the asset assume it has some claimed backing. The pallet is called `Assets` in
 // `construct_runtime` to avoid breaking changes on storage reads.
-pub type TrustBackedAssetsInstance = pallet_assets::Instance1;
-type TrustBackedAssetsCall = pallet_assets::Call<Runtime, TrustBackedAssetsInstance>;
-impl pallet_assets::Config<TrustBackedAssetsInstance> for Runtime {
+// pub type TrustBackedAssetsInstance = pallet_assets::Instance1;
+// type TrustBackedAssetsCall = pallet_assets::Call<Runtime, TrustBackedAssetsInstance>;
+// impl pallet_assets::Config<TrustBackedAssetsInstance> for Runtime {
+impl pallet_assets::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Balance = Balance;
 	type AssetId = AssetIdForTrustBackedAssets;
@@ -409,15 +405,15 @@ impl InstanceFilter<RuntimeCall> for ProxyType {
 			},
 			ProxyType::AssetOwner => matches!(
 				c,
-				RuntimeCall::Assets(TrustBackedAssetsCall::create { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::start_destroy { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::destroy_accounts { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::destroy_approvals { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::finish_destroy { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::transfer_ownership { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::set_team { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::set_metadata { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::clear_metadata { .. }) |
+				RuntimeCall::Assets(pallet_assets::Call::create { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::start_destroy { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::destroy_accounts { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::destroy_approvals { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::finish_destroy { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::transfer_ownership { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::set_team { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::set_metadata { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::clear_metadata { .. }) |
 					RuntimeCall::Uniques(pallet_uniques::Call::create { .. }) |
 					RuntimeCall::Uniques(pallet_uniques::Call::destroy { .. }) |
 					RuntimeCall::Uniques(pallet_uniques::Call::transfer_ownership { .. }) |
@@ -434,12 +430,12 @@ impl InstanceFilter<RuntimeCall> for ProxyType {
 			),
 			ProxyType::AssetManager => matches!(
 				c,
-				RuntimeCall::Assets(TrustBackedAssetsCall::mint { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::burn { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::freeze { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::thaw { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::freeze_asset { .. }) |
-					RuntimeCall::Assets(TrustBackedAssetsCall::thaw_asset { .. }) |
+				RuntimeCall::Assets(pallet_assets::Call::mint { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::burn { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::freeze { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::thaw { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::freeze_asset { .. }) |
+					RuntimeCall::Assets(pallet_assets::Call::thaw_asset { .. }) |
 					RuntimeCall::Uniques(pallet_uniques::Call::mint { .. }) |
 					RuntimeCall::Uniques(pallet_uniques::Call::burn { .. }) |
 					RuntimeCall::Uniques(pallet_uniques::Call::freeze { .. }) |
@@ -643,7 +639,7 @@ construct_runtime!(
 		// Monetary stuff.
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,
 		TransactionPayment: pallet_transaction_payment::{Pallet, Storage, Event<T>} = 11,
-		InfraAssetTxPayment: pallet_fee_payment_manager::{Pallet, Event<T>} = 12,
+		InfraAssetTxPayment: pallet_system_token_payment::{Pallet, Event<T>} = 12,
 
 		// Collator support. the order of these 5 are important and shall not change.
 		Authorship: pallet_authorship::{Pallet, Storage} = 20,
@@ -664,7 +660,9 @@ construct_runtime!(
 		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 42,
 
 		// The main stage.
-		Assets: pallet_assets::<Instance1>::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
+		// Assets: pallet_assets::<Instance1>::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
+		Assets: pallet_assets::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
+		// AssetsForeign: pallet_assets::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		Uniques: pallet_uniques::{Pallet, Call, Storage, Event<T>} = 51,
 	}
 );
@@ -688,7 +686,7 @@ pub type SignedExtra = (
 	frame_system::CheckWeight<Runtime>,
 	// Let's keep the below comment to test the new feature until "PolkadotJS" is newly implemented!
 	// pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
-	pallet_fee_payment_manager::FeePaymentMetadata<Runtime>,
+	pallet_system_token_payment::FeePaymentMetadata<Runtime>,
 );
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic =

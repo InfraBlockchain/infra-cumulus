@@ -30,7 +30,7 @@ pub mod wasm_spec_version_incremented {
 mod test_pallet;
 
 use frame_support::traits::OnRuntimeUpgrade;
-use pallet_fee_payment_manager::{FungiblesAdapter, HandleCredit};
+use pallet_system_token_payment::{HandleCredit, TransactionFeeCharger};
 use sp_api::{decl_runtime_apis, impl_runtime_apis};
 use sp_core::OpaqueMetadata;
 use sp_runtime::{
@@ -307,11 +307,11 @@ parameter_types! {
 	pub const FeeTreasuryId: PalletId = PalletId(*b"infrapid");
 }
 
-impl pallet_fee_payment_manager::Config for Runtime {
+impl pallet_system_token_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
-	type Fungibles = Assets;
+	type Assets = Assets;
 	/// The actual transaction charging logic that charges the fees.
-	type OnChargeAssetTransaction = FungiblesAdapter<
+	type OnChargeSystemToken = TransactionFeeCharger<
 		pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto>,
 		CreditToBlockAuthor,
 	>;
@@ -357,7 +357,7 @@ construct_runtime! {
 		Assets: pallet_assets,
 		Sudo: pallet_sudo,
 		TransactionPayment: pallet_transaction_payment,
-		InfraAssetTxPayment: pallet_fee_payment_manager,
+		InfraAssetTxPayment: pallet_system_token_payment,
 		TestPallet: test_pallet,
 	}
 }
@@ -396,7 +396,7 @@ pub type SignedExtra = (
 	frame_system::CheckEra<Runtime>,
 	frame_system::CheckNonce<Runtime>,
 	frame_system::CheckWeight<Runtime>,
-	pallet_fee_payment_manager::FeePaymentMetadata<Runtime>,
+	pallet_system_token_payment::FeePaymentMetadata<Runtime>,
 );
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic =

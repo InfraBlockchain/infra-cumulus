@@ -15,8 +15,8 @@
 
 use super::{
 	AccountId, AllPalletsWithSystem, Assets, Authorship, Balance, Balances, ParachainInfo,
-	ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin,
-	TrustBackedAssetsInstance, WeightToFee, XcmpQueue,
+	ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin, WeightToFee,
+	XcmpQueue,
 };
 use frame_support::{
 	match_types, parameter_types,
@@ -24,21 +24,16 @@ use frame_support::{
 };
 use infrablockspace_parachain::primitives::Sibling;
 use pallet_xcm::XcmPassthrough;
-use parachains_common::{
-	impls::ToStakingPot,
-	xcm_config::{
-		AssetFeeAsExistentialDepositMultiplier,
-	},
-};
+use parachains_common::{impls::ToStakingPot, xcm_config::AssetFeeAsExistentialDepositMultiplier};
 use sp_runtime::traits::ConvertInto;
 use xcm::latest::prelude::*;
 use xcm_builder::{
-	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, 
-	AllowSubscriptionsFrom, AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom,
-	CurrencyAdapter, EnsureXcmOrigin, FungiblesAdapter, IsConcrete, LocalMint, NativeAsset,
-	ParentAsSuperuser, ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative,
-	SiblingParachainConvertsVia, SignedAccountId32AsNative, SignedToAccountId32,
-	SovereignSignedViaLocation, TakeWeightCredit, UsingComponents, WeightInfoBounds,
+	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowSubscriptionsFrom,
+	AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom, CurrencyAdapter, EnsureXcmOrigin,
+	FungiblesAdapter, IsConcrete, LocalMint, NativeAsset, ParentAsSuperuser, ParentIsPreset,
+	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
+	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
+	UsingComponents, WeightInfoBounds,
 };
 use xcm_executor::{traits::WithOriginFilter, XcmExecutor};
 
@@ -56,8 +51,6 @@ parameter_types! {
 	pub const Local: MultiLocation = MultiLocation::here();
 	pub TrustBackedAssetsPalletLocation: MultiLocation =
 		PalletInstance(<Assets as PalletInfoAccess>::index() as u8).into();
-	pub TrustBackedAssetsPalletLocation2: MultiLocation =
-		MultiLocation::new(1, X2(Parachain(1000), PalletInstance(50)));
 	pub CheckingAccount: AccountId = PolkadotXcm::check_account();
 }
 
@@ -193,6 +186,9 @@ impl Contains<RuntimeCall> for SafeCallFilter {
 			RuntimeCall::DmpQueue(..) |
 			RuntimeCall::Utility(pallet_utility::Call::as_derivative { .. }) |
 			RuntimeCall::Assets(
+				pallet_assets::Call::set_sufficient { .. } |
+				pallet_assets::Call::force_create_with_metadata { .. } |
+				pallet_assets::Call::force_set_metadata { .. } |
 				pallet_assets::Call::create { .. } |
 				pallet_assets::Call::force_create { .. } |
 				pallet_assets::Call::start_destroy { .. } |
@@ -281,8 +277,8 @@ pub type Barrier = (
 pub type AssetFeeAsExistentialDepositMultiplierFeeCharger = AssetFeeAsExistentialDepositMultiplier<
 	Runtime,
 	WeightToFee,
-	pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto, TrustBackedAssetsInstance>,
-	TrustBackedAssetsInstance,
+	pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto, ()>,
+	(),
 >;
 
 parameter_types! {
@@ -316,7 +312,7 @@ impl xcm_executor::Config for XcmConfig {
 	// For DOT, users must use teleport where allowed (e.g. with the Relay Chain).
 	type IsReserve = ();
 	// type IsTeleporter = NativeAsset;
-	type IsTeleporter = TrustedTeleporters;
+	type IsTeleporter = ();
 	type UniversalLocation = UniversalLocation;
 	type Barrier = Barrier;
 	type Weigher = WeightInfoBounds<

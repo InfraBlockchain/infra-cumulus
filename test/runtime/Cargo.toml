@@ -21,7 +21,7 @@ pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", de
 pallet-sudo = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-timestamp = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-transaction-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
-pallet-fee-payment-manager = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
+pallet-system-token-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-api = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-block-builder = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 sp-core = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
@@ -57,7 +57,7 @@ std = [
 	"pallet-sudo/std",
 	"pallet-timestamp/std",
 	"pallet-transaction-payment/std",
-	"pallet-fee-payment-manager/std",
+	"pallet-system-token-payment/std",
 	"sp-api/std",
 	"sp-block-builder/std",
 	"sp-core/std",

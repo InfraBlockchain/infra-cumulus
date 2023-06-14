@@ -20,7 +20,7 @@
 
 use codec::{Decode, Encode};
 use infrablockspace_parachain::primitives::HeadData;
-use sp_runtime::{generic::PotVotesResult, traits::Block as BlockT, RuntimeDebug};
+use sp_runtime::{traits::Block as BlockT, types::PotVotesResult, RuntimeDebug};
 use sp_std::prelude::*;
 
 pub use infrablockspace_core_primitives::InboundDownwardMessage;

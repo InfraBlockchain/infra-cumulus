@@ -35,10 +35,7 @@ use sp_blockchain::HeaderBackend;
 use sp_core::storage::Storage;
 use sp_io::TestExternalities;
 use sp_keyring::AccountKeyring;
-use sp_runtime::{
-	generic::{Era, SystemTokenId},
-	BuildStorage, SaturatedConversion,
-};
+use sp_runtime::{generic::Era, types::SystemTokenId, BuildStorage, SaturatedConversion};
 pub use substrate_test_client::*;
 
 pub type ParachainBlockData = cumulus_primitives_core::ParachainBlockData<Block>;
@@ -148,7 +145,7 @@ pub fn generate_extrinsic(
 		frame_system::CheckEra::<Runtime>::from(Era::mortal(period, current_block)),
 		frame_system::CheckNonce::<Runtime>::from(nonce),
 		frame_system::CheckWeight::<Runtime>::new(),
-		pallet_fee_payment_manager::FeePaymentMetadata::<runtime::Runtime>::from(
+		pallet_system_token_payment::FeePaymentMetadata::<runtime::Runtime>::from(
 			tip,
 			system_token_id,
 			Some(AccountKeyring::Alice.to_account_id()), // vote candidate

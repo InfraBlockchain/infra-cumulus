@@ -26,7 +26,7 @@ sp-io = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "
 sp-timestamp = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 frame-system = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 pallet-transaction-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
-pallet-fee-payment-manager = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
+pallet-system-token-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 pallet-balances = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
 
 # infrablockspace

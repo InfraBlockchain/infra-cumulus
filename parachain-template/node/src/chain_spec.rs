@@ -219,7 +219,16 @@ fn testnet_genesis(
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
 		// of this.
 		sudo: parachain_template_runtime::SudoConfig { key: Some(root_key) },
-		assets: pallet_assets::GenesisConfig { ..Default::default() },
+		assets: pallet_assets::GenesisConfig {
+			assets: vec![(
+				99,                                                 // asset_id
+				get_account_id_from_seed::<sr25519::Public>("Bob"), // owner
+				true,                                               // is_sufficient
+				1000,                                               // min_balance
+			)],
+			metadata: vec![(99, "iBOOTSTRAP".into(), "iBOOTSTRAP".into(), 12)],
+			..Default::default()
+		},
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
