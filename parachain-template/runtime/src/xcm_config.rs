@@ -1,7 +1,7 @@
 use super::{
-	AccountId, AllPalletsWithSystem, Assets, Authorship, Balance, Balances, ParachainInfo,
-	ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin, WeightToFee,
-	XcmpQueue,
+	AccountId, AllPalletsWithSystem, AssetId, AssetRegistry, Assets, Authorship, Balance, Balances,
+	ParachainInfo, ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin,
+	WeightToFee, XcmpQueue,
 };
 use frame_support::{
 	match_types, parameter_types,
@@ -14,13 +14,13 @@ use pallet_xcm::XcmPassthrough;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowSubscriptionsFrom,
-	AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom, CurrencyAdapter, EnsureXcmOrigin,
-	FixedWeightBounds, FungiblesAdapter, IsConcrete, NativeAsset, NonLocalMint, ParentIsPreset,
-	RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
+	AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom, ConvertedConcreteId, CurrencyAdapter,
+	EnsureXcmOrigin, FixedWeightBounds, FungiblesAdapter, IsConcrete, NativeAsset, NonLocalMint,
+	ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
 	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
 	UsingComponents,
 };
-use xcm_executor::XcmExecutor;
+use xcm_executor::{traits::JustTry, XcmExecutor};
 
 parameter_types! {
 	// pub const RelayLocation: MultiLocation = MultiLocation::parent();
@@ -62,15 +62,22 @@ pub type LocalAssetTransactor = CurrencyAdapter<
 	(),
 >;
 
-pub type TrustBackedAssetsConvertedConcreteId =
-	assets_common::TrustBackedAssetsConvertedConcreteId<TrustBackedAssetsPalletLocation, Balance>;
+// pub type TrustBackedAssetsConvertedConcreteId =
+// 	assets_common::TrustBackedAssetsConvertedConcreteId<TrustBackedAssetsPalletLocation, Balance>;
+
+pub type InfraConvertedConcreteId<AssetConverter> = ConvertedConcreteId<
+	AssetId,
+	Balance,
+	assets_common::AsAssetMultiLocation<AssetId, AssetConverter>,
+	JustTry,
+>;
 
 /// Means for transacting assets besides the native currency on this chain.
 pub type FungiblesTransactor = FungiblesAdapter<
 	// Use this fungibles implementation:
 	Assets,
 	// Use this currency when it is a fungible asset matching the given location or name:
-	TrustBackedAssetsConvertedConcreteId,
+	InfraConvertedConcreteId<AssetRegistry>,
 	// Convert an XCM MultiLocation into a local account id:
 	LocationToAccountId,
 	// Our chain's account ID type (we can't get away without mentioning it explicitly):
@@ -146,7 +153,8 @@ parameter_types! {
 	pub const ItestForInfraSystem: (MultiAssetFilter, MultiLocation) = (ItestInfraSystemFilter::get(), InfraSystem::get());
 }
 
-pub type AssetTransactors = (LocalAssetTransactor, FungiblesTransactor);
+pub type AssetTransactors = FungiblesTransactor;
+// pub type AssetTransactors = (LocalAssetTransactor, FungiblesTransactor);
 pub type TrustedTeleporters = (xcm_builder::Case<ItestForInfraSystem>, NativeAsset);
 
 pub struct XcmConfig;

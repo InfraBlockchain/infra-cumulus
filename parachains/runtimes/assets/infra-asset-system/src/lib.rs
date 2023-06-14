@@ -614,6 +614,13 @@ impl pallet_uniques::Config for Runtime {
 	type Locker = ();
 }
 
+impl pallet_asset_registry::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type ReserveAssetModifierOrigin = EnsureRoot<AccountId>;
+	type Assets = Assets;
+	type WeightInfo = ();
+}
+
 parameter_types! {
 	pub const MaxVotedValidators: u32 = 1024;
 	pub const WeightFactor: u64 = 1;
@@ -664,6 +671,7 @@ construct_runtime!(
 		Assets: pallet_assets::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		// AssetsForeign: pallet_assets::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		Uniques: pallet_uniques::{Pallet, Call, Storage, Event<T>} = 51,
+		AssetRegistry: pallet_asset_registry = 52,
 	}
 );
 

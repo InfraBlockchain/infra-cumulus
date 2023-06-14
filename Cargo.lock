@@ -4304,6 +4304,7 @@ dependencies = [
  "infrablockspace-runtime-common",
  "infrablockspace-runtime-constants",
  "log",
+ "pallet-asset-registry",
  "pallet-assets",
  "pallet-aura",
  "pallet-authorship",
@@ -4341,6 +4342,7 @@ dependencies = [
  "xcm",
  "xcm-builder",
  "xcm-executor",
+ "xcm-primitives",
 ]
 
 [[package]]
