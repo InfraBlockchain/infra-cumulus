@@ -105,8 +105,6 @@ std = [
 	"pallet-collator-selection/std",
 	"pallet-session/std",
 	"pallet-sudo/std",
-	# "pallet-asset-registry/std",
-
 	"pallet-timestamp/std",
 	"pallet-transaction-payment-rpc-runtime-api/std",
 	"pallet-transaction-payment/std",
@@ -130,9 +128,11 @@ std = [
 	"xcm/std",
 	"assets-common/std",
 	"parachains-common/std",
+	"pallet-asset-registry/std",
 ]
 
 runtime-benchmarks = [
+	"pallet-asset-registry/runtime-benchmarks",
 	"hex-literal",
 	"frame-benchmarking/runtime-benchmarks",
 	"frame-support/runtime-benchmarks",
@@ -157,7 +157,6 @@ try-runtime = [
 	"frame-executive/try-runtime",
 	"frame-system/try-runtime",
 	"frame-try-runtime/try-runtime",
-	# "pallet-asset-registry/try-runtime",
 	"pallet-aura/try-runtime",
 	"pallet-authorship/try-runtime",
 	"pallet-balances/try-runtime",

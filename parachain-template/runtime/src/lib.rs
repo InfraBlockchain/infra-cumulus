@@ -100,6 +100,9 @@ pub type SignedBlock = generic::SignedBlock<Block>;
 /// BlockId type as expected by this runtime.
 pub type BlockId = generic::BlockId<Block>;
 
+/// AssetId type as expected by this runtime.
+pub type AssetId = u32;
+
 /// The SignedExtension to the basic transaction logic.
 pub type SignedExtra = (
 	frame_system::CheckNonZeroSender<Runtime>,
@@ -268,8 +271,6 @@ parameter_types! {
 		.build_or_panic();
 	pub const SS58Prefix: u16 = 42;
 }
-
-type AssetId = u32;
 
 impl pallet_assets::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
@@ -539,8 +540,8 @@ construct_runtime!(
 		Balances: pallet_balances = 10,
 		TransactionPayment: pallet_transaction_payment = 11,
 		Assets: pallet_assets = 12,
-		InfraAssetTxPayment: pallet_system_token_payment = 13,
-		// AssetRegistry: pallet_asset_registry::{Pallet, Call, Storage, Event<T>} = 14,
+		InfraAssetTxPayment: pallet_fee_payment_manager = 13,
+
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship = 20,
@@ -554,6 +555,8 @@ construct_runtime!(
 		PolkadotXcm: pallet_xcm = 31,
 		CumulusXcm: cumulus_pallet_xcm = 32,
 		DmpQueue: cumulus_pallet_dmp_queue = 33,
+
+		AssetRegistry: pallet_asset_registry = 34,
 	}
 );
 
