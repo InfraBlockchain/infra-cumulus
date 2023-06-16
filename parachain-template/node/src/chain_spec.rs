@@ -226,7 +226,12 @@ fn testnet_genesis(
 				true,                                               // is_sufficient
 				1000,                                               // min_balance
 			)],
-			metadata: vec![(99, "iBOOTSTRAP".into(), "iBOOTSTRAP".into(), 12)],
+			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
+			accounts: vec![(
+				99,
+				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				1_000_000_000_000, // endow only 1 iTest for test
+			)],
 			..Default::default()
 		},
 		aura: Default::default(),

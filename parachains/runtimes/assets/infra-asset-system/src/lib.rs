@@ -667,9 +667,7 @@ construct_runtime!(
 		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 42,
 
 		// The main stage.
-		// Assets: pallet_assets::<Instance1>::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		Assets: pallet_assets::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
-		// AssetsForeign: pallet_assets::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		Uniques: pallet_uniques::{Pallet, Call, Storage, Event<T>} = 51,
 		AssetRegistry: pallet_asset_registry = 52,
 	}

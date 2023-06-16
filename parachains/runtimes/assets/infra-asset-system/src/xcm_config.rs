@@ -101,7 +101,7 @@ pub type FungiblesTransactor = FungiblesAdapter<
 	CheckingAccount,
 >;
 /// Means for transacting assets on this chain.
-pub type AssetTransactors = (CurrencyTransactor, FungiblesTransactor);
+pub type AssetTransactors = FungiblesTransactor;
 
 /// This is the type we use to convert an (incoming) XCM origin into a local `Origin` instance,
 /// ready for dispatching a transaction with Xcm's `Transact`. There is an `OriginKind` which can
@@ -248,20 +248,6 @@ impl Contains<RuntimeCall> for SafeCallFilter {
 		}
 	}
 }
-
-// pub type Barrier = DenyThenTry<
-// 	DenyReserveTransferToRelayChain,
-// 	(
-// 		TakeWeightCredit,
-// 		AllowTopLevelPaidExecutionFrom<Everything>,
-// 		// Parent and its exec plurality get free execution
-// 		AllowUnpaidExecutionFrom<ParentOrParentsExecutivePlurality>,
-// 		// Expected responses are OK.
-// 		AllowKnownQueryResponses<PolkadotXcm>,
-// 		// Subscriptions for version tracking are OK.
-// 		AllowSubscriptionsFrom<ParentOrSiblings>,
-// 	),
-// >;
 
 pub type Barrier = (
 	// Weight that is paid for may be consumed.

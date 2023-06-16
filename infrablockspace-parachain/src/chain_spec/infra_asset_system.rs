@@ -230,7 +230,7 @@ pub fn infra_asset_system_genesis(
 				true,                                                 // is_sufficient
 				1000,                                                 // min_balance
 			)],
-			metadata: vec![(99, "iBOOTSTRAP".into(), "iBOOTSTRAP".into(), 12)],
+			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
 			accounts: vec![(
 				99,
 				get_account_id_from_seed::<sr25519::Public>("Alice"),

@@ -515,12 +515,12 @@ impl pallet_collator_selection::Config for Runtime {
 	type WeightInfo = ();
 }
 
-// impl pallet_asset_registry::Config for Runtime {
-// 	type RuntimeEvent = RuntimeEvent;
-// 	type ReserveAssetModifierOrigin = EnsureRoot<AccountId>;
-// 	type Assets = Assets;
-// 	type WeightInfo = ();
-// }
+impl pallet_asset_registry::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type ReserveAssetModifierOrigin = EnsureRoot<AccountId>;
+	type Assets = Assets;
+	type WeightInfo = ();
+}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -540,7 +540,7 @@ construct_runtime!(
 		Balances: pallet_balances = 10,
 		TransactionPayment: pallet_transaction_payment = 11,
 		Assets: pallet_assets = 12,
-		InfraAssetTxPayment: pallet_fee_payment_manager = 13,
+		InfraAssetTxPayment: pallet_system_token_payment = 13,
 
 
 		// Collator support. The order of these 4 are important and shall not change.
