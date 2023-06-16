@@ -25,13 +25,10 @@ use cumulus_test_client::{
 };
 use cumulus_test_relay_sproof_builder::RelayStateSproofBuilder;
 use sp_keyring::AccountKeyring::*;
-use sp_runtime::{generic::PotVote, traits::Header as HeaderT};
+use sp_runtime::{traits::Header as HeaderT, types::PotVote};
 use std::{env, process::Command};
 
 use crate::validate_block::MemoryOptimizedValidationParams;
-
-pub const MAX_VOTE_NUM: u32 = 16 * 1024;
-pub type PotVotes = BoundedVec<PotVote, ConstU32<MAX_VOTE_NUM>>;
 
 fn call_validate_block_encoded_header(
 	parent_head: Header,

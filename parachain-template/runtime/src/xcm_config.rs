@@ -1,5 +1,5 @@
 use super::{
-	AccountId, AllPalletsWithSystem, AssetId, AssetRegistry, Assets, Authorship, Balance, Balances,
+	AccountId, AllPalletsWithSystem, AssetRegistry, Assets, Authorship, Balance, Balances,
 	ParachainInfo, ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin,
 	WeightToFee, XcmpQueue,
 };
@@ -11,19 +11,21 @@ use frame_support::{
 use infrablockspace_parachain::primitives::Sibling;
 use infrablockspace_runtime_common::impls::ToAuthor;
 use pallet_xcm::XcmPassthrough;
+use parachains_common::{xcm_config::AssetFeeAsExistentialDepositMultiplier, AssetId};
+use sp_runtime::traits::ConvertInto;
 use xcm::latest::prelude::*;
 use xcm_builder::{
 	AccountId32Aliases, AllowExplicitUnpaidExecutionFrom, AllowSubscriptionsFrom,
 	AllowTopLevelPaidExecutionFrom, AllowUnpaidExecutionFrom, ConvertedConcreteId, CurrencyAdapter,
 	EnsureXcmOrigin, FixedWeightBounds, FungiblesAdapter, IsConcrete, NativeAsset, NonLocalMint,
-	ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
-	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
-	UsingComponents,
+	ParentAsSuperuser, ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative,
+	SiblingParachainConvertsVia, SignedAccountId32AsNative, SignedToAccountId32,
+	SovereignSignedViaLocation, TakeWeightCredit, UsingComponents,
 };
 use xcm_executor::{traits::JustTry, XcmExecutor};
+use xcm_primitives::TrappistDropAssets;
 
 parameter_types! {
-	// pub const RelayLocation: MultiLocation = MultiLocation::parent();
 	pub const NativeLocation: MultiLocation = MultiLocation{
 		parents:1,
 		interior:Junctions::X1(Parachain(1000))
@@ -62,13 +64,10 @@ pub type LocalAssetTransactor = CurrencyAdapter<
 	(),
 >;
 
-// pub type TrustBackedAssetsConvertedConcreteId =
-// 	assets_common::TrustBackedAssetsConvertedConcreteId<TrustBackedAssetsPalletLocation, Balance>;
-
 pub type InfraConvertedConcreteId<AssetConverter> = ConvertedConcreteId<
 	AssetId,
 	Balance,
-	assets_common::AsAssetMultiLocation<AssetId, AssetConverter>,
+	xcm_primitives::AsAssetMultiLocation<AssetId, AssetConverter>,
 	JustTry,
 >;
 
@@ -97,12 +96,15 @@ pub type XcmOriginToTransactDispatchOrigin = (
 	// using `LocationToAccountId` and then turn that into the usual `Signed` origin. Useful for
 	// foreign chains who want to have a local sovereign account on this chain which they control.
 	SovereignSignedViaLocation<LocationToAccountId, RuntimeOrigin>,
-	// Native converter for Relay-chain (Parent) location; will converts to a `Relay` origin when
-	// recognized.
+	// Native converter for Relay-chain (Parent) location; will convert to a `Relay` origin when
+	// recognised.
 	RelayChainAsNative<RelayChainOrigin, RuntimeOrigin>,
 	// Native converter for sibling Parachains; will convert to a `SiblingPara` origin when
-	// recognized.
+	// recognised.
 	SiblingParachainAsNative<cumulus_pallet_xcm::Origin, RuntimeOrigin>,
+	// Superuser converter for the Relay-chain (Parent) location. This will allow it to issue a
+	// transaction from the Root origin.
+	ParentAsSuperuser<RuntimeOrigin>,
 	// Native signed account converter; this just converts an `AccountId32` origin into a normal
 	// `RuntimeOrigin::Signed` origin of the same 32-byte value.
 	SignedAccountId32AsNative<RelayNetwork, RuntimeOrigin>,
@@ -144,6 +146,13 @@ pub type Barrier = (
 	AllowSubscriptionsFrom<Everything>,
 );
 
+pub type AssetFeeAsExistentialDepositMultiplierFeeCharger = AssetFeeAsExistentialDepositMultiplier<
+	Runtime,
+	WeightToFee,
+	pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto, ()>,
+	(),
+>;
+
 parameter_types! {
 	pub const InfraSystem: MultiLocation = Parachain(1000).into_exterior(1);
 
@@ -154,7 +163,6 @@ parameter_types! {
 }
 
 pub type AssetTransactors = FungiblesTransactor;
-// pub type AssetTransactors = (LocalAssetTransactor, FungiblesTransactor);
 pub type TrustedTeleporters = (xcm_builder::Case<ItestForInfraSystem>, NativeAsset);
 
 pub struct XcmConfig;
@@ -165,34 +173,29 @@ impl xcm_executor::Config for XcmConfig {
 	type AssetTransactor = AssetTransactors;
 	type OriginConverter = XcmOriginToTransactDispatchOrigin;
 	type IsReserve = NativeAsset;
-	type IsTeleporter = TrustedTeleporters;
+	type IsTeleporter = ();
 	type UniversalLocation = UniversalLocation;
 	type Barrier = Barrier;
 	type Weigher = FixedWeightBounds<UnitWeightCost, RuntimeCall, MaxInstructions>;
 	type Trader = (
 		UsingComponents<WeightToFee, NativeLocation, AccountId, Balances, ToAuthor<Runtime>>,
-		UsingComponents<
-			WeightToFee,
-			ItestInfraSystemLocation,
+		cumulus_primitives_utility::TakeFirstAssetTrader<
 			AccountId,
-			Balances,
-			ToAuthor<Runtime>,
+			AssetFeeAsExistentialDepositMultiplierFeeCharger,
+			InfraConvertedConcreteId<AssetRegistry>,
+			Assets,
+			cumulus_primitives_utility::XcmFeesTo32ByteAccount<
+				FungiblesTransactor,
+				AccountId,
+				XcmAssetFeesReceiver,
+			>,
 		>,
-		// cumulus_primitives_utility::TakeFirstAssetTrader<
-		// 	AccountId,
-		// 	TrustBackedAssetsConvertedConcreteId,
-		// 	Assets,
-		// 	Assets,
-		// 	cumulus_primitives_utility::XcmFeesTo32ByteAccount<
-		// 		FungiblesTransactor,
-		// 		AccountId,
-		// 		XcmAssetFeesReceiver,
-		// 	>,
 		// >,
 	);
 
 	type ResponseHandler = PolkadotXcm;
-	type AssetTrap = PolkadotXcm;
+	type AssetTrap =
+		TrappistDropAssets<AssetId, AssetRegistry, Assets, Balances, PolkadotXcm, AccountId>;
 	type AssetClaims = PolkadotXcm;
 	type SubscriptionService = PolkadotXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;

@@ -26,8 +26,11 @@ smallvec = "1.10.0"
 # Substrate
 pallet-system-token-payment = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
 pallet-assets = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
-# pallet-asset-registry = { package = "pallet-asset-registry", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
-# xcm-primitives = { package = "xcm-primitives", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
+pallet-asset-registry = { package = "pallet-asset-registry", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
+xcm-primitives = { package = "xcm-primitives", git = "https://github.com/InfraBlockchain/infra-trappist", branch = "dev", default-features = false }
+# pallet-asset-registry = { path = "../../pallets/asset-registry", default-features = false }
+# xcm-primitives = { path = "../../primitives/xcm", default-features = false }
+
 
 assets-common = { path = "../../parachains/runtimes/assets/common", default-features = false }
 parachains-common = { path = "../../parachains/common", default-features = false }
@@ -128,7 +131,6 @@ std = [
 	"xcm/std",
 	"assets-common/std",
 	"parachains-common/std",
-	"pallet-asset-registry/std",
 ]
 
 runtime-benchmarks = [
