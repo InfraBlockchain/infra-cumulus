@@ -267,7 +267,7 @@ fn contracts_rococo_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		polkadot_xcm: contracts_rococo_runtime::PolkadotXcmConfig {
+		infrablockspace_xcm: contracts_rococo_runtime::InfrablockspaceXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 		sudo: contracts_rococo_runtime::SudoConfig {

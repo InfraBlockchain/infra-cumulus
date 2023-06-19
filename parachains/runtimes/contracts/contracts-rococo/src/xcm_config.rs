@@ -14,7 +14,7 @@
 // limitations under the License.
 
 use super::{
-	AccountId, AllPalletsWithSystem, Balances, ParachainInfo, ParachainSystem, PolkadotXcm,
+	AccountId, AllPalletsWithSystem, Balances, InfrablockspaceXcm, ParachainInfo, ParachainSystem,
 	Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin, WeightToFee, XcmpQueue,
 };
 use frame_support::{
@@ -123,7 +123,7 @@ pub type Barrier = DenyThenTry<
 	(
 		TakeWeightCredit,
 		// Expected responses are OK.
-		AllowKnownQueryResponses<PolkadotXcm>,
+		AllowKnownQueryResponses<InfrablockspaceXcm>,
 		// Allow XCMs with some computed origins to pass through.
 		WithComputedOrigin<
 			(
@@ -152,10 +152,10 @@ impl xcm_executor::Config for XcmConfig {
 	type Barrier = Barrier;
 	type Weigher = FixedWeightBounds<UnitWeightCost, RuntimeCall, MaxInstructions>;
 	type Trader = UsingComponents<WeightToFee, RelayLocation, AccountId, Balances, ()>;
-	type ResponseHandler = PolkadotXcm;
-	type AssetTrap = PolkadotXcm;
-	type AssetClaims = PolkadotXcm;
-	type SubscriptionService = PolkadotXcm;
+	type ResponseHandler = InfrablockspaceXcm;
+	type AssetTrap = InfrablockspaceXcm;
+	type AssetClaims = InfrablockspaceXcm;
+	type SubscriptionService = InfrablockspaceXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
 	type MaxAssetsIntoHolding = ConstU32<8>;
 	type AssetLocker = ();
@@ -175,7 +175,7 @@ pub type LocalOriginToLocation = SignedToAccountId32<RuntimeOrigin, AccountId, R
 /// queues.
 pub type XcmRouter = (
 	// Two routers - use UMP to communicate with the relay chain:
-	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, PolkadotXcm, ()>,
+	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, InfrablockspaceXcm, ()>,
 	// ..and XCMP to communicate with the sibling chains.
 	XcmpQueue,
 );
@@ -223,7 +223,7 @@ impl cumulus_pallet_xcmp_queue::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type XcmExecutor = XcmExecutor<XcmConfig>;
 	type ChannelInfo = ParachainSystem;
-	type VersionWrapper = PolkadotXcm;
+	type VersionWrapper = InfrablockspaceXcm;
 	type ExecuteOverweightOrigin = EnsureRoot<AccountId>;
 	type ControllerOrigin = EitherOfDiverse<
 		EnsureRoot<AccountId>,

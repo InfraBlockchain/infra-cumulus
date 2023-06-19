@@ -244,7 +244,7 @@ pub fn infra_asset_system_genesis(
 		aura_ext: Default::default(),
 		sudo: infra_asset_system_runtime::SudoConfig { key: Some(root_key) },
 		parachain_system: Default::default(),
-		polkadot_xcm: infra_asset_system_runtime::PolkadotXcmConfig {
+		infrablockspace_xcm: infra_asset_system_runtime::InfrablockspaceXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 	}

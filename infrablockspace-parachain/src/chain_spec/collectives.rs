@@ -171,7 +171,7 @@ fn collectives_infrablockspace_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		polkadot_xcm: collectives_infrablockspace_runtime::PolkadotXcmConfig {
+		infrablockspace_xcm: collectives_infrablockspace_runtime::InfrablockspaceXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 		alliance: Default::default(),

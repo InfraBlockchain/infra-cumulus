@@ -47,12 +47,12 @@ use sp_std::marker::PhantomData;
 /// Weight functions for `pallet_xcm`.
 pub struct WeightInfo<T>(PhantomData<T>);
 impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
-	/// Storage: PolkadotXcm SupportedVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm VersionDiscoveryQueue (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SafeXcmVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SupportedVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionDiscoveryQueue (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SafeXcmVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem HostConfiguration (r:1 w:0)
 	/// Proof Skipped: ParachainSystem HostConfiguration (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem PendingUpwardMessages (r:1 w:1)
@@ -98,8 +98,8 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 		Weight::from_parts(18_446_744_073_709_551_000, 0)
 			.saturating_add(Weight::from_parts(0, 0))
 	}
-	/// Storage: PolkadotXcm SupportedVersion (r:0 w:1)
-	/// Proof Skipped: PolkadotXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SupportedVersion (r:0 w:1)
+	/// Proof Skipped: InfrablockspaceXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
 	fn force_xcm_version() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `0`
@@ -109,8 +109,8 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(Weight::from_parts(0, 0))
 			.saturating_add(T::DbWeight::get().writes(1))
 	}
-	/// Storage: PolkadotXcm SafeXcmVersion (r:0 w:1)
-	/// Proof Skipped: PolkadotXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SafeXcmVersion (r:0 w:1)
+	/// Proof Skipped: InfrablockspaceXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
 	fn force_default_xcm_version() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `0`
@@ -120,22 +120,22 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(Weight::from_parts(0, 0))
 			.saturating_add(T::DbWeight::get().writes(1))
 	}
-	/// Storage: PolkadotXcm VersionNotifiers (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm VersionNotifiers (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm QueryCounter (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm QueryCounter (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SupportedVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm VersionDiscoveryQueue (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SafeXcmVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifiers (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifiers (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm QueryCounter (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm QueryCounter (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SupportedVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionDiscoveryQueue (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SafeXcmVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem HostConfiguration (r:1 w:0)
 	/// Proof Skipped: ParachainSystem HostConfiguration (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem PendingUpwardMessages (r:1 w:1)
 	/// Proof Skipped: ParachainSystem PendingUpwardMessages (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm Queries (r:0 w:1)
-	/// Proof Skipped: PolkadotXcm Queries (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm Queries (r:0 w:1)
+	/// Proof Skipped: InfrablockspaceXcm Queries (max_values: None, max_size: None, mode: Measured)
 	fn force_subscribe_version_notify() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `38`
@@ -146,20 +146,20 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(T::DbWeight::get().reads(7))
 			.saturating_add(T::DbWeight::get().writes(5))
 	}
-	/// Storage: PolkadotXcm VersionNotifiers (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm VersionNotifiers (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SupportedVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm VersionDiscoveryQueue (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SafeXcmVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifiers (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifiers (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SupportedVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionDiscoveryQueue (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SafeXcmVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem HostConfiguration (r:1 w:0)
 	/// Proof Skipped: ParachainSystem HostConfiguration (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem PendingUpwardMessages (r:1 w:1)
 	/// Proof Skipped: ParachainSystem PendingUpwardMessages (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm Queries (r:0 w:1)
-	/// Proof Skipped: PolkadotXcm Queries (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm Queries (r:0 w:1)
+	/// Proof Skipped: InfrablockspaceXcm Queries (max_values: None, max_size: None, mode: Measured)
 	fn force_unsubscribe_version_notify() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `220`
@@ -170,8 +170,8 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(T::DbWeight::get().reads(6))
 			.saturating_add(T::DbWeight::get().writes(4))
 	}
-	/// Storage: PolkadotXcm SupportedVersion (r:4 w:2)
-	/// Proof Skipped: PolkadotXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SupportedVersion (r:4 w:2)
+	/// Proof Skipped: InfrablockspaceXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
 	fn migrate_supported_version() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `95`
@@ -182,8 +182,8 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(T::DbWeight::get().reads(4))
 			.saturating_add(T::DbWeight::get().writes(2))
 	}
-	/// Storage: PolkadotXcm VersionNotifiers (r:4 w:2)
-	/// Proof Skipped: PolkadotXcm VersionNotifiers (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifiers (r:4 w:2)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifiers (max_values: None, max_size: None, mode: Measured)
 	fn migrate_version_notifiers() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `99`
@@ -194,8 +194,8 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(T::DbWeight::get().reads(4))
 			.saturating_add(T::DbWeight::get().writes(2))
 	}
-	/// Storage: PolkadotXcm VersionNotifyTargets (r:5 w:0)
-	/// Proof Skipped: PolkadotXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifyTargets (r:5 w:0)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
 	fn already_notified_target() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `106`
@@ -205,14 +205,14 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(Weight::from_parts(0, 12481))
 			.saturating_add(T::DbWeight::get().reads(5))
 	}
-	/// Storage: PolkadotXcm VersionNotifyTargets (r:2 w:1)
-	/// Proof Skipped: PolkadotXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SupportedVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm VersionDiscoveryQueue (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SafeXcmVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifyTargets (r:2 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SupportedVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionDiscoveryQueue (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SafeXcmVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem HostConfiguration (r:1 w:0)
 	/// Proof Skipped: ParachainSystem HostConfiguration (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem PendingUpwardMessages (r:1 w:1)
@@ -227,8 +227,8 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(T::DbWeight::get().reads(7))
 			.saturating_add(T::DbWeight::get().writes(3))
 	}
-	/// Storage: PolkadotXcm VersionNotifyTargets (r:3 w:0)
-	/// Proof Skipped: PolkadotXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifyTargets (r:3 w:0)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
 	fn notify_target_migration_fail() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `136`
@@ -238,8 +238,8 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(Weight::from_parts(0, 7561))
 			.saturating_add(T::DbWeight::get().reads(3))
 	}
-	/// Storage: PolkadotXcm VersionNotifyTargets (r:4 w:2)
-	/// Proof Skipped: PolkadotXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifyTargets (r:4 w:2)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
 	fn migrate_version_notify_targets() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `106`
@@ -250,14 +250,14 @@ impl<T: frame_system::Config> pallet_xcm::WeightInfo for WeightInfo<T> {
 			.saturating_add(T::DbWeight::get().reads(4))
 			.saturating_add(T::DbWeight::get().writes(2))
 	}
-	/// Storage: PolkadotXcm VersionNotifyTargets (r:4 w:2)
-	/// Proof Skipped: PolkadotXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SupportedVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm VersionDiscoveryQueue (r:1 w:1)
-	/// Proof Skipped: PolkadotXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
-	/// Storage: PolkadotXcm SafeXcmVersion (r:1 w:0)
-	/// Proof Skipped: PolkadotXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionNotifyTargets (r:4 w:2)
+	/// Proof Skipped: InfrablockspaceXcm VersionNotifyTargets (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SupportedVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SupportedVersion (max_values: None, max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm VersionDiscoveryQueue (r:1 w:1)
+	/// Proof Skipped: InfrablockspaceXcm VersionDiscoveryQueue (max_values: Some(1), max_size: None, mode: Measured)
+	/// Storage: InfrablockspaceXcm SafeXcmVersion (r:1 w:0)
+	/// Proof Skipped: InfrablockspaceXcm SafeXcmVersion (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem HostConfiguration (r:1 w:0)
 	/// Proof Skipped: ParachainSystem HostConfiguration (max_values: Some(1), max_size: None, mode: Measured)
 	/// Storage: ParachainSystem PendingUpwardMessages (r:1 w:1)

@@ -57,8 +57,8 @@ impl WeighMultiAssets for MultiAssets {
 	}
 }
 
-pub struct BridgeHubPolkadotXcmWeight<Call>(core::marker::PhantomData<Call>);
-impl<Call> XcmWeightInfo<Call> for BridgeHubPolkadotXcmWeight<Call> {
+pub struct BridgeHubInfrablockspaceXcmWeight<Call>(core::marker::PhantomData<Call>);
+impl<Call> XcmWeightInfo<Call> for BridgeHubInfrablockspaceXcmWeight<Call> {
 	fn withdraw_asset(assets: &MultiAssets) -> Weight {
 		assets.weigh_multi_assets(XcmFungibleWeight::<Runtime>::withdraw_asset())
 	}

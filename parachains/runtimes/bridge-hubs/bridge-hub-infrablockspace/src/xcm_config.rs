@@ -15,7 +15,7 @@
 // along with Cumulus.  If not, see <http://www.gnu.org/licenses/>.
 
 use super::{
-	AccountId, AllPalletsWithSystem, Balances, ParachainInfo, ParachainSystem, PolkadotXcm,
+	AccountId, AllPalletsWithSystem, Balances, InfrablockspaceXcm, ParachainInfo, ParachainSystem,
 	Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin, WeightToFee, XcmpQueue,
 };
 use frame_support::{
@@ -158,7 +158,7 @@ pub type Barrier = DenyThenTry<
 		// Allow local users to buy weight credit.
 		TakeWeightCredit,
 		// Expected responses are OK.
-		AllowKnownQueryResponses<PolkadotXcm>,
+		AllowKnownQueryResponses<InfrablockspaceXcm>,
 		WithComputedOrigin<
 			(
 				// Allow anything to pay for execution.
@@ -188,16 +188,16 @@ impl xcm_executor::Config for XcmConfig {
 	type UniversalLocation = UniversalLocation;
 	type Barrier = Barrier;
 	type Weigher = WeightInfoBounds<
-		crate::weights::xcm::BridgeHubPolkadotXcmWeight<RuntimeCall>,
+		crate::weights::xcm::BridgeHubInfrablockspaceXcmWeight<RuntimeCall>,
 		RuntimeCall,
 		MaxInstructions,
 	>;
 	type Trader =
 		UsingComponents<WeightToFee, DotRelayLocation, AccountId, Balances, ToAuthor<Runtime>>;
-	type ResponseHandler = PolkadotXcm;
-	type AssetTrap = PolkadotXcm;
-	type AssetClaims = PolkadotXcm;
-	type SubscriptionService = PolkadotXcm;
+	type ResponseHandler = InfrablockspaceXcm;
+	type AssetTrap = InfrablockspaceXcm;
+	type AssetClaims = InfrablockspaceXcm;
+	type SubscriptionService = InfrablockspaceXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
 	type MaxAssetsIntoHolding = MaxAssetsIntoHolding;
 	type AssetLocker = ();
@@ -217,7 +217,7 @@ pub type LocalOriginToLocation = SignedToAccountId32<RuntimeOrigin, AccountId, R
 /// queues.
 pub type XcmRouter = (
 	// Two routers - use UMP to communicate with the relay chain:
-	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, PolkadotXcm, ()>,
+	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, InfrablockspaceXcm, ()>,
 	// ..and XCMP to communicate with the sibling chains.
 	XcmpQueue,
 );
@@ -240,7 +240,7 @@ impl pallet_xcm::Config for Runtime {
 	type XcmTeleportFilter = Everything;
 	type XcmReserveTransferFilter = Nothing; // This parachain is not meant as a reserve location.
 	type Weigher = WeightInfoBounds<
-		crate::weights::xcm::BridgeHubPolkadotXcmWeight<RuntimeCall>,
+		crate::weights::xcm::BridgeHubInfrablockspaceXcmWeight<RuntimeCall>,
 		RuntimeCall,
 		MaxInstructions,
 	>;
