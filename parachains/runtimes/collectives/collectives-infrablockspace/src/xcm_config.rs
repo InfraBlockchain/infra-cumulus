@@ -14,7 +14,7 @@
 // limitations under the License.
 
 use super::{
-	AccountId, AllPalletsWithSystem, Balances, ParachainInfo, ParachainSystem, PolkadotXcm,
+	AccountId, AllPalletsWithSystem, Balances, InfrablockspaceXcm, ParachainInfo, ParachainSystem,
 	Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin, WeightToFee, XcmpQueue,
 };
 use frame_support::{
@@ -46,7 +46,7 @@ parameter_types! {
 	pub UniversalLocation: InteriorMultiLocation =
 		X2(GlobalConsensus(RelayNetwork::get().unwrap()), Parachain(ParachainInfo::parachain_id().into()));
 	pub const Local: MultiLocation = Here.into_location();
-	pub CheckingAccount: AccountId = PolkadotXcm::check_account();
+	pub CheckingAccount: AccountId = InfrablockspaceXcm::check_account();
 }
 
 /// Type for specifying how a `MultiLocation` can be converted into an `AccountId`. This is used
@@ -179,7 +179,7 @@ impl Contains<RuntimeCall> for SafeCallFilter {
 				pallet_collective::Call::disapprove_proposal { .. } |
 				pallet_collective::Call::close { .. },
 			) |
-			RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_xcm_version { .. }) => true,
+			RuntimeCall::InfrablockspaceXcm(pallet_xcm::Call::force_xcm_version { .. }) => true,
 			_ => false,
 		}
 	}
@@ -191,7 +191,7 @@ pub type Barrier = DenyThenTry<
 		// Allow local users to buy weight credit.
 		TakeWeightCredit,
 		// Expected responses are OK.
-		AllowKnownQueryResponses<PolkadotXcm>,
+		AllowKnownQueryResponses<InfrablockspaceXcm>,
 		// Allow XCMs with some computed origins to pass through.
 		WithComputedOrigin<
 			(
@@ -224,10 +224,10 @@ impl xcm_executor::Config for XcmConfig {
 	type Weigher = FixedWeightBounds<UnitWeightCost, RuntimeCall, MaxInstructions>;
 	type Trader =
 		UsingComponents<WeightToFee, DotLocation, AccountId, Balances, ToStakingPot<Runtime>>;
-	type ResponseHandler = PolkadotXcm;
-	type AssetTrap = PolkadotXcm;
-	type AssetClaims = PolkadotXcm;
-	type SubscriptionService = PolkadotXcm;
+	type ResponseHandler = InfrablockspaceXcm;
+	type AssetTrap = InfrablockspaceXcm;
+	type AssetClaims = InfrablockspaceXcm;
+	type SubscriptionService = InfrablockspaceXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
 	type MaxAssetsIntoHolding = MaxAssetsIntoHolding;
 	type AssetLocker = ();
@@ -247,7 +247,7 @@ pub type LocalOriginToLocation = SignedToAccountId32<RuntimeOrigin, AccountId, R
 /// queues.
 pub type XcmRouter = (
 	// Two routers - use UMP to communicate with the relay chain:
-	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, PolkadotXcm, ()>,
+	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, InfrablockspaceXcm, ()>,
 	// ..and XCMP to communicate with the sibling chains.
 	XcmpQueue,
 );

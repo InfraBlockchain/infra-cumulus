@@ -375,7 +375,7 @@ pub mod rococo {
 			aura: Default::default(),
 			aura_ext: Default::default(),
 			parachain_system: Default::default(),
-			polkadot_xcm: bridge_hub_rococo_runtime::PolkadotXcmConfig {
+			infrablockspace_xcm: bridge_hub_rococo_runtime::InfrablockspaceXcmConfig {
 				safe_xcm_version: Some(SAFE_XCM_VERSION),
 			},
 		}
@@ -532,7 +532,7 @@ pub mod kusama {
 			aura: Default::default(),
 			aura_ext: Default::default(),
 			parachain_system: Default::default(),
-			polkadot_xcm: bridge_hub_kusama_runtime::PolkadotXcmConfig {
+			infrablockspace_xcm: bridge_hub_kusama_runtime::InfrablockspaceXcmConfig {
 				safe_xcm_version: Some(SAFE_XCM_VERSION),
 			},
 		}
@@ -666,7 +666,7 @@ pub mod polkadot {
 			aura: Default::default(),
 			aura_ext: Default::default(),
 			parachain_system: Default::default(),
-			polkadot_xcm: bridge_hub_infrablockspace_runtime::PolkadotXcmConfig {
+			infrablockspace_xcm: bridge_hub_infrablockspace_runtime::InfrablockspaceXcmConfig {
 				safe_xcm_version: Some(SAFE_XCM_VERSION),
 			},
 		}

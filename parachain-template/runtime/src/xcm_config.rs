@@ -1,7 +1,7 @@
 use super::{
 	AccountId, AllPalletsWithSystem, AssetRegistry, Assets, Authorship, Balance, Balances,
-	ParachainInfo, ParachainSystem, PolkadotXcm, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin,
-	WeightToFee, XcmpQueue,
+	InfrablockspaceXcm, ParachainInfo, ParachainSystem, Runtime, RuntimeCall, RuntimeEvent,
+	RuntimeOrigin, WeightToFee, XcmpQueue,
 };
 use frame_support::{
 	match_types, parameter_types,
@@ -33,7 +33,7 @@ parameter_types! {
 	pub const RelayNetwork: Option<NetworkId> = None;
 	pub RelayChainOrigin: RuntimeOrigin = cumulus_pallet_xcm::Origin::Relay.into();
 	pub UniversalLocation: InteriorMultiLocation = Parachain(ParachainInfo::parachain_id().into()).into();
-	pub CheckingAccount: AccountId = PolkadotXcm::check_account();
+	pub CheckingAccount: AccountId = InfrablockspaceXcm::check_account();
 	pub TrustBackedAssetsPalletLocation: MultiLocation =
 	MultiLocation::new(1, X2(Parachain(1000), PalletInstance(50)));
 }
@@ -193,11 +193,11 @@ impl xcm_executor::Config for XcmConfig {
 		// >,
 	);
 
-	type ResponseHandler = PolkadotXcm;
+	type ResponseHandler = InfrablockspaceXcm;
 	type AssetTrap =
-		TrappistDropAssets<AssetId, AssetRegistry, Assets, Balances, PolkadotXcm, AccountId>;
-	type AssetClaims = PolkadotXcm;
-	type SubscriptionService = PolkadotXcm;
+		TrappistDropAssets<AssetId, AssetRegistry, Assets, Balances, InfrablockspaceXcm, AccountId>;
+	type AssetClaims = InfrablockspaceXcm;
+	type SubscriptionService = InfrablockspaceXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
 	type MaxAssetsIntoHolding = MaxAssetsIntoHolding;
 	type AssetLocker = ();
