@@ -842,7 +842,7 @@ pub fn construct_extrinsic(
 		)),
 		frame_system::CheckNonce::<runtime::Runtime>::from(nonce),
 		frame_system::CheckWeight::<runtime::Runtime>::new(),
-		pallet_system_token_payment::FeePaymentMetadata::<runtime::Runtime>::from(
+		pallet_system_token_payment::ChargeSystemToken::<runtime::Runtime>::from(
 			tip,
 			system_token_id,
 			Some(AccountKeyring::Alice.to_account_id()), // vote candidate

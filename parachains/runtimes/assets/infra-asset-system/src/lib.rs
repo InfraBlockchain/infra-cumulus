@@ -690,9 +690,7 @@ pub type SignedExtra = (
 	frame_system::CheckEra<Runtime>,
 	frame_system::CheckNonce<Runtime>,
 	frame_system::CheckWeight<Runtime>,
-	// Let's keep the below comment to test the new feature until "PolkadotJS" is newly implemented!
-	// pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
-	pallet_system_token_payment::FeePaymentMetadata<Runtime>,
+	pallet_system_token_payment::ChargeSystemToken<Runtime>,
 );
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic =

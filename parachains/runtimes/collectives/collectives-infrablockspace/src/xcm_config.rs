@@ -175,7 +175,6 @@ impl Contains<RuntimeCall> for SafeCallFilter {
 			) |
 			RuntimeCall::AllianceMotion(
 				pallet_collective::Call::vote { .. } |
-				pallet_collective::Call::close_old_weight { .. } |
 				pallet_collective::Call::disapprove_proposal { .. } |
 				pallet_collective::Call::close { .. },
 			) |

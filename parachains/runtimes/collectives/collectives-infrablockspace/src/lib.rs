@@ -430,6 +430,7 @@ pub const ALLIANCE_MOTION_DURATION: BlockNumber = 5 * DAYS;
 
 parameter_types! {
 	pub const AllianceMotionDuration: BlockNumber = ALLIANCE_MOTION_DURATION;
+	pub const IsValidatorCollective: bool = true;
 }
 pub const ALLIANCE_MAX_PROPOSALS: u32 = 100;
 pub const ALLIANCE_MAX_MEMBERS: u32 = 100;
@@ -443,7 +444,6 @@ impl pallet_collective::Config<AllianceCollective> for Runtime {
 	type MaxProposals = ConstU32<ALLIANCE_MAX_PROPOSALS>;
 	type MaxMembers = ConstU32<ALLIANCE_MAX_MEMBERS>;
 	type DefaultVote = pallet_collective::MoreThanMajorityThenPrimeDefaultVote;
-	type SetMembersOrigin = EnsureRoot<AccountId>;
 	type WeightInfo = weights::pallet_collective::WeightInfo<Runtime>;
 }
 
