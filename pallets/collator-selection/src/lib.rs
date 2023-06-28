@@ -72,8 +72,11 @@ mod tests;
 mod benchmarking;
 pub mod weights;
 
+use sp_runtime::types::{SystemTokenId, VoteWeight};
+
 #[frame_support::pallet]
 pub mod pallet {
+	use super::*;
 	pub use crate::weights::WeightInfo;
 	use core::ops::Div;
 	use frame_support::{
@@ -92,7 +95,10 @@ pub mod pallet {
 	};
 	use frame_system::{pallet_prelude::*, Config as SystemConfig};
 	use pallet_session::SessionManager;
-	use sp_runtime::traits::Convert;
+	use sp_runtime::{
+		traits::Convert,
+		types::{SystemTokenId, VoteWeight},
+	};
 	use sp_staking::SessionIndex;
 
 	type BalanceOf<T> =
@@ -151,6 +157,8 @@ pub mod pallet {
 
 		/// The weight information of this pallet.
 		type WeightInfo: WeightInfo;
+
+		type SystemTokenAggregator: SystemTokenAggregator;
 	}
 
 	/// Basic information about a collation candidate.
@@ -522,8 +530,18 @@ pub mod pallet {
 		fn start_session(_: SessionIndex) {
 			// we don't care.
 		}
-		fn end_session(_: SessionIndex) {
-			// we don't care.
+		fn end_session(index: SessionIndex) {
+			log::info!("end session at #{:?}", index);
+			let system_token_id = SystemTokenId { para_id: 1000, pallet_id: 50, asset_id: 99 };
+			T::SystemTokenAggregator::aggregate_system_token(system_token_id, 10000);
 		}
 	}
+}
+
+pub trait SystemTokenAggregator {
+	fn aggregate_system_token(system_token_id: SystemTokenId, amount: VoteWeight);
+}
+
+impl SystemTokenAggregator for () {
+	fn aggregate_system_token(_system_token_id: SystemTokenId, _amount: VoteWeight) {}
 }

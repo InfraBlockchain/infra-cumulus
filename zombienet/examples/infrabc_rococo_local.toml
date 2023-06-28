@@ -61,6 +61,20 @@ args = ["-lparachain=debug", "-l=xcm=trace"]
 rpc_port = 9600
 ws_port = 9601
 
+[[parachains]]
+id = 3000
+chain = "local"
+cumulus_based = true
+
+# run bob as parachain collator
+[[parachains.collators]]
+name = "alice"
+validator = true
+command = "../infra-did-substrate/target/release/infradid"
+args = ["-lparachain=debug", "-l=xcm=trace"]
+rpc_port = 9700
+ws_port = 9701
+
 [[hrmp_channels]]
 sender = 1000
 recipient = 2000

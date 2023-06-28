@@ -22,6 +22,7 @@ members = [
 	"pallets/solo-to-para",
 	"pallets/xcm",
 	"pallets/xcmp-queue",
+	"pallets/system-token-aggregator",
 	"parachain-template/node",
 	"parachain-template/runtime",
 	"primitives/core",

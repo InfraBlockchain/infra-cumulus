@@ -227,6 +227,7 @@ mod tests {
 		type ValidatorRegistration = IsRegistered;
 		type KickThreshold = ();
 		type WeightInfo = ();
+		type SystemTokenAggregator = ();
 	}
 
 	impl pallet_authorship::Config for Test {

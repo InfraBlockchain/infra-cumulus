@@ -313,6 +313,7 @@ impl pallet_collator_selection::Config for Runtime {
 	type ValidatorIdOf = pallet_collator_selection::IdentityCollator;
 	type ValidatorRegistration = Session;
 	type WeightInfo = pallet_collator_selection::weights::SubstrateWeight<Runtime>;
+	type SystemTokenAggregator = ();
 }
 
 impl pallet_sudo::Config for Runtime {

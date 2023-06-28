@@ -114,7 +114,7 @@ pub type SignedExtra = (
 	frame_system::CheckWeight<Runtime>,
 	// Let's keep the below comment to test the new feature until "PolkadotJS" is newly implemented!
 	// pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
-	pallet_system_token_payment::FeePaymentMetadata<Runtime>,
+	pallet_system_token_payment::ChargeSystemToken<Runtime>,
 );
 
 /// Unchecked extrinsic type as expected by this runtime.
@@ -513,6 +513,7 @@ impl pallet_collator_selection::Config for Runtime {
 	type ValidatorIdOf = pallet_collator_selection::IdentityCollator;
 	type ValidatorRegistration = Session;
 	type WeightInfo = ();
+	type SystemTokenAggregator = SystemTokenAggregator;
 }
 
 impl pallet_asset_registry::Config for Runtime {
@@ -520,6 +521,11 @@ impl pallet_asset_registry::Config for Runtime {
 	type ReserveAssetModifierOrigin = EnsureRoot<AccountId>;
 	type Assets = Assets;
 	type WeightInfo = ();
+}
+
+impl pallet_system_token_aggregator::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type Assets = Assets;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -557,6 +563,7 @@ construct_runtime!(
 		DmpQueue: cumulus_pallet_dmp_queue = 33,
 
 		AssetRegistry: pallet_asset_registry = 34,
+		SystemTokenAggregator: pallet_system_token_aggregator = 35,
 	}
 );
 

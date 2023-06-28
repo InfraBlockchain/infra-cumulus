@@ -145,7 +145,7 @@ pub fn generate_extrinsic(
 		frame_system::CheckEra::<Runtime>::from(Era::mortal(period, current_block)),
 		frame_system::CheckNonce::<Runtime>::from(nonce),
 		frame_system::CheckWeight::<Runtime>::new(),
-		pallet_system_token_payment::FeePaymentMetadata::<runtime::Runtime>::from(
+		pallet_system_token_payment::ChargeSystemToken::<runtime::Runtime>::from(
 			tip,
 			system_token_id,
 			Some(AccountKeyring::Alice.to_account_id()), // vote candidate
