@@ -513,7 +513,7 @@ impl pallet_collator_selection::Config for Runtime {
 	type WeightInfo = ();
 }
 
-impl pallet_asset_registry::Config for Runtime {
+impl pallet_asset_link::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type ReserveAssetModifierOrigin = EnsureRoot<AccountId>;
 	type Assets = Assets;
@@ -554,7 +554,7 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm = 32,
 		DmpQueue: cumulus_pallet_dmp_queue = 33,
 
-		AssetRegistry: pallet_asset_registry = 34,
+		AssetLink: pallet_asset_link = 34,
 	}
 );
 

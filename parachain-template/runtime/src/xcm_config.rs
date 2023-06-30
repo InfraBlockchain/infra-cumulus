@@ -1,5 +1,5 @@
 use super::{
-	AccountId, AllPalletsWithSystem, AssetRegistry, Assets, Authorship, Balance, Balances,
+	AccountId, AllPalletsWithSystem, AssetLink, Assets, Authorship, Balance, Balances,
 	InfrablockspaceXcm, ParachainInfo, ParachainSystem, Runtime, RuntimeCall, RuntimeEvent,
 	RuntimeOrigin, WeightToFee, XcmpQueue,
 };
@@ -76,14 +76,14 @@ pub type FungiblesTransactor = FungiblesAdapter<
 	// Use this fungibles implementation:
 	Assets,
 	// Use this currency when it is a fungible asset matching the given location or name:
-	InfraConvertedConcreteId<AssetRegistry>,
+	InfraConvertedConcreteId<AssetLink>,
 	// Convert an XCM MultiLocation into a local account id:
 	LocationToAccountId,
 	// Our chain's account ID type (we can't get away without mentioning it explicitly):
 	AccountId,
 	// We only want to allow teleports of known assets. We use non-zero issuance as an indication
 	// that this asset is known.
-	NonLocalMint<parachains_common::impls::NonZeroIssuance<AccountId, Assets>>,
+	NonLocalMint<parachains_common::impls::AnyIssuance<AccountId, Assets>>,
 	// The account to use for tracking teleports.
 	CheckingAccount,
 >;
@@ -182,7 +182,7 @@ impl xcm_executor::Config for XcmConfig {
 		cumulus_primitives_utility::TakeFirstAssetTrader<
 			AccountId,
 			AssetFeeAsExistentialDepositMultiplierFeeCharger,
-			InfraConvertedConcreteId<AssetRegistry>,
+			InfraConvertedConcreteId<AssetLink>,
 			Assets,
 			cumulus_primitives_utility::XcmFeesTo32ByteAccount<
 				FungiblesTransactor,
@@ -195,7 +195,7 @@ impl xcm_executor::Config for XcmConfig {
 
 	type ResponseHandler = InfrablockspaceXcm;
 	type AssetTrap =
-		TrappistDropAssets<AssetId, AssetRegistry, Assets, Balances, InfrablockspaceXcm, AccountId>;
+		TrappistDropAssets<AssetId, AssetLink, Assets, Balances, InfrablockspaceXcm, AccountId>;
 	type AssetClaims = InfrablockspaceXcm;
 	type SubscriptionService = InfrablockspaceXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
