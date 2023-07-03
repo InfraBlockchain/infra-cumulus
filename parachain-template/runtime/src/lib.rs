@@ -524,6 +524,7 @@ impl pallet_asset_link::Config for Runtime {
 impl system_token_aggregator::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Assets = Assets;
+	type AssetMultiLocationGetter = AssetLink;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
