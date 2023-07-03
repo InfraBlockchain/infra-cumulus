@@ -105,6 +105,7 @@ pub use sp_runtime::BuildStorage;
 
 // Polkadot imports
 use infrablockspace_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
+use infrablockspace_runtime_parachains::system_token_aggregator;
 use pallet_xcm::{EnsureXcm, IsMajorityOfBody};
 use xcm::latest::BodyId;
 use xcm_executor::XcmExecutor;
@@ -626,6 +627,11 @@ parameter_types! {
 	pub const WeightFactor: u64 = 1;
 }
 
+impl system_token_aggregator::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type Assets = Assets;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -670,6 +676,7 @@ construct_runtime!(
 		Assets: pallet_assets::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		Uniques: pallet_uniques::{Pallet, Call, Storage, Event<T>} = 51,
 		AssetLink: pallet_asset_link = 52,
+		SystemTokenAggregator: system_token_aggregator = 53,
 	}
 );
 

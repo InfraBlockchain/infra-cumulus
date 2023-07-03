@@ -63,6 +63,7 @@ sp-version = { git = "https://github.com/InfraBlockchain/infra-substrate", defau
 pallet-xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 infrablockspace-parachain = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 infrablockspace-runtime-common = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+infrablockspace-runtime-parachains = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 xcm-builder = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 xcm-executor = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
@@ -113,6 +114,7 @@ std = [
 	"parachain-info/std",
 	"infrablockspace-parachain/std",
 	"infrablockspace-runtime-common/std",
+	"infrablockspace-runtime-parachains/std",
 	"sp-api/std",
 	"sp-block-builder/std",
 	"sp-consensus-aura/std",
