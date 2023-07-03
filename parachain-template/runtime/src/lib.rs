@@ -56,6 +56,7 @@ pub use sp_runtime::BuildStorage;
 
 // Polkadot imports
 use infrablockspace_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
+use infrablockspace_runtime_parachains::system_token_aggregator;
 
 use weights::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight};
 
@@ -520,6 +521,11 @@ impl pallet_asset_link::Config for Runtime {
 	type WeightInfo = ();
 }
 
+impl system_token_aggregator::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type Assets = Assets;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -555,6 +561,7 @@ construct_runtime!(
 		DmpQueue: cumulus_pallet_dmp_queue = 33,
 
 		AssetLink: pallet_asset_link = 34,
+		SystemTokenAggregator: system_token_aggregator = 35,
 	}
 );
 
