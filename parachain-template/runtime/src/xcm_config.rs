@@ -190,7 +190,6 @@ impl xcm_executor::Config for XcmConfig {
 				XcmAssetFeesReceiver,
 			>,
 		>,
-		// >,
 	);
 
 	type ResponseHandler = InfrablockspaceXcm;

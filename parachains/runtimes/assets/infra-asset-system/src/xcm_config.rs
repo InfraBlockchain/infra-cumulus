@@ -282,11 +282,7 @@ parameter_types! {
 	// pub const ItestForInfraSystem: (MultiAssetFilter, MultiLocation) = (ItestInfraSystemFilter::get(), InfraSystem::get());
 }
 
-pub type TrustedTeleporters = (
-	xcm_builder::Case<ItestForTemplateParachain>,
-	// xcm_builder::Case<ItestForInfraSystem>,
-	NativeAsset,
-);
+pub type TrustedTeleporters = (xcm_builder::Case<ItestForTemplateParachain>, NativeAsset);
 
 pub struct XcmConfig;
 impl xcm_executor::Config for XcmConfig {
@@ -298,7 +294,6 @@ impl xcm_executor::Config for XcmConfig {
 	// Statemint acting _as_ a reserve location for DOT and assets created under `pallet-assets`.
 	// For DOT, users must use teleport where allowed (e.g. with the Relay Chain).
 	type IsReserve = ();
-	// type IsTeleporter = NativeAsset;
 	type IsTeleporter = ();
 	type UniversalLocation = UniversalLocation;
 	type Barrier = Barrier;
