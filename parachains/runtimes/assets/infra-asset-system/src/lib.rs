@@ -89,7 +89,7 @@ use frame_system::{
 	EnsureRoot, EnsureSigned,
 };
 pub use pallet_sudo::Call as SudoCall;
-use pallet_system_token_payment::{HandleCredit, TransactionFeeCharger};
+use pallet_system_token_payment::{CreditToBucket, TransactionFeeCharger};
 pub use parachains_common as common;
 use parachains_common::{
 	impls::DealWithFees, opaque, AccountId, AssetIdForTrustBackedAssets, AuraId, Balance,
@@ -239,23 +239,12 @@ parameter_types! {
 	pub const FeeTreasuryId: PalletId = PalletId(*b"infrapid");
 }
 
-/// A `HandleCredit` implementation that naively transfers the fees to the block author.
-/// Will drop and burn the assets in case the transfer fails.
-/// ToDo: Consider move to `parachains-common`
-pub struct CreditToBucket;
-impl HandleCredit<AccountId, Assets> for CreditToBucket {
-	fn handle_credit(credit: CreditOf<AccountId, Assets>) {
-		let dest: AccountId = FeeTreasuryId::get().into_account_truncating();
-		let _ = <Assets as Balanced<AccountId>>::resolve(&dest, credit);
-	}
-}
-
 impl pallet_system_token_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type Assets = Assets;
 	type OnChargeSystemToken = TransactionFeeCharger<
 		pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto>,
-		CreditToBucket,
+		CreditToBucket<Runtime>,
 	>;
 	type VotingHandler = ParachainSystem;
 	type PalletId = FeeTreasuryId;

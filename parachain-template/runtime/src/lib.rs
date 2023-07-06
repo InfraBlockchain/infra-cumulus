@@ -43,7 +43,7 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot,
 };
-use pallet_system_token_payment::{HandleCredit, TransactionFeeCharger};
+use pallet_system_token_payment::{CreditToBucket, TransactionFeeCharger};
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 pub use sp_runtime::{
 	types::{VoteAssetId, VoteWeight},
@@ -293,17 +293,6 @@ impl pallet_assets::Config for Runtime {
 	type RemoveItemsLimit = ConstU32<1000>;
 }
 
-pub struct CreditToBlockAuthor;
-impl HandleCredit<AccountId, Assets> for CreditToBlockAuthor {
-	fn handle_credit(credit: CreditOf<AccountId, Assets>) {
-		if let Some(author) = pallet_authorship::Pallet::<Runtime>::author() {
-			// What to do in case paying the author fails (e.g. because `fee < min_balance`)
-			// default: drop the result which will trigger the `OnDrop` of the imbalance.
-			let _ = <Assets as Balanced<AccountId>>::resolve(&author, credit);
-		}
-	}
-}
-
 parameter_types! {
 	pub const FeeTreasuryId: PalletId = PalletId(*b"infrapid");
 }
@@ -314,7 +303,7 @@ impl pallet_system_token_payment::Config for Runtime {
 	/// The actual transaction charging logic that charges the fees.
 	type OnChargeSystemToken = TransactionFeeCharger<
 		pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto>,
-		CreditToBlockAuthor,
+		CreditToBucket<Runtime>,
 	>;
 	/// The type that handles the voting info.
 	type VotingHandler = ParachainSystem;
