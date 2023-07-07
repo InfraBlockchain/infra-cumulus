@@ -20,14 +20,7 @@ log = "0.4.17"
 serde = { version = "1.0.152", features = ["derive"] }
 
 # Local
-shell-runtime = { path = "../parachains/runtimes/starters/shell" }
-seedling-runtime = { path = "../parachains/runtimes/starters/seedling" }
 infra-asset-system-runtime = { path = "../parachains/runtimes/assets/infra-asset-system" }
-collectives-infrablockspace-runtime = { path = "../parachains/runtimes/collectives/collectives-infrablockspace" }
-contracts-rococo-runtime = { path = "../parachains/runtimes/contracts/contracts-rococo" }
-bridge-hub-rococo-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-rococo" }
-bridge-hub-kusama-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-kusama" }
-bridge-hub-infrablockspace-runtime = { path = "../parachains/runtimes/bridge-hubs/bridge-hub-infrablockspace" }
 jsonrpsee = { version = "0.16.2", features = ["server"] }
 parachains-common = { path = "../parachains/common" }
 
@@ -108,6 +101,5 @@ runtime-benchmarks = [
 	"infrablockspace-service/runtime-benchmarks",
 ]
 try-runtime = [
-	"shell-runtime/try-runtime",
 	"try-runtime-cli/try-runtime",
 ]
