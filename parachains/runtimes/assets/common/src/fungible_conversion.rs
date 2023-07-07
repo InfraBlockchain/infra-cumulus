@@ -19,9 +19,10 @@
 //! Runtime API definition for assets.
 
 use crate::runtime_api::FungiblesAccessError;
+use frame_support::traits::Contains;
 use sp_std::{borrow::Borrow, vec::Vec};
 use xcm::latest::{MultiAsset, MultiLocation};
-use xcm_builder::ConvertedConcreteId;
+use xcm_builder::{ConvertedConcreteId, MatchedConvertedConcreteId};
 use xcm_executor::traits::{Convert, MatchesFungibles};
 
 /// Converting any [`(AssetId, Balance)`] to [`MultiAsset`]
@@ -45,6 +46,29 @@ impl<
 		ConvertBalance: Convert<u128, Balance>,
 	> MultiAssetConverter<AssetId, Balance, ConvertAssetId, ConvertBalance>
 	for ConvertedConcreteId<AssetId, Balance, ConvertAssetId, ConvertBalance>
+{
+	fn convert_ref(
+		value: impl Borrow<(AssetId, Balance)>,
+	) -> Result<MultiAsset, FungiblesAccessError> {
+		let (asset_id, balance) = value.borrow();
+		match ConvertAssetId::reverse_ref(asset_id) {
+			Ok(asset_id_as_multilocation) => match ConvertBalance::reverse_ref(balance) {
+				Ok(amount) => Ok((asset_id_as_multilocation, amount).into()),
+				Err(_) => Err(FungiblesAccessError::AmountToBalanceConversionFailed),
+			},
+			Err(_) => Err(FungiblesAccessError::AssetIdConversionFailed),
+		}
+	}
+}
+
+impl<
+		AssetId: Clone,
+		Balance: Clone,
+		MatchAssetId: Contains<MultiLocation>,
+		ConvertAssetId: Convert<MultiLocation, AssetId>,
+		ConvertBalance: Convert<u128, Balance>,
+	> MultiAssetConverter<AssetId, Balance, ConvertAssetId, ConvertBalance>
+	for MatchedConvertedConcreteId<AssetId, Balance, MatchAssetId, ConvertAssetId, ConvertBalance>
 {
 	fn convert_ref(
 		value: impl Borrow<(AssetId, Balance)>,

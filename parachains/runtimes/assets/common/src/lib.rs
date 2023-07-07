@@ -16,25 +16,68 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub mod fungible_conversion;
+pub mod matching;
 pub mod runtime_api;
+use crate::matching::{Equals, LocalMultiLocationPattern, ParentLocation, StartsWith};
 
-use xcm_builder::{AsPrefixedGeneralIndex, ConvertedConcreteId};
-
+use frame_support::traits::EverythingBut;
 use parachains_common::AssetIdForTrustBackedAssets;
+use xcm::prelude::MultiLocation;
+use xcm_builder::{AsPrefixedGeneralIndex, MatchedConvertedConcreteId};
 use xcm_executor::traits::JustTry;
 
 /// `MultiLocation` vs `AssetIdForTrustBackedAssets` converter for `TrustBackedAssets`
 pub type AssetIdForTrustBackedAssetsConvert<TrustBackedAssetsPalletLocation> =
 	AsPrefixedGeneralIndex<TrustBackedAssetsPalletLocation, AssetIdForTrustBackedAssets, JustTry>;
 
-/// [`ConvertedConcreteId`] converter dedicated for `TrustBackedAssets`
+/// [`MatchedConvertedConcreteId`] converter dedicated for `TrustBackedAssets`
 pub type TrustBackedAssetsConvertedConcreteId<TrustBackedAssetsPalletLocation, Balance> =
-	ConvertedConcreteId<
+	MatchedConvertedConcreteId<
 		AssetIdForTrustBackedAssets,
 		Balance,
+		StartsWith<TrustBackedAssetsPalletLocation>,
 		AssetIdForTrustBackedAssetsConvert<TrustBackedAssetsPalletLocation>,
 		JustTry,
 	>;
+
+/// AssetId used for identifying assets by MultiLocation.
+pub type MultiLocationForAssetId = MultiLocation;
+
+/// [`MatchedConvertedConcreteId`] converter dedicated for storing `AssetId` as `MultiLocation`.
+pub type MultiLocationConvertedConcreteId<MultiLocationFilter, AssetConverter, Balance> =
+	MatchedConvertedConcreteId<
+		AssetIdForTrustBackedAssets,
+		Balance,
+		MultiLocationFilter,
+		xcm_primitives::AsAssetMultiLocation<AssetIdForTrustBackedAssets, AssetConverter>,
+		JustTry,
+	>;
+
+/// [`MatchedConvertedConcreteId`] converter dedicated for storing `ForeignAssets` with `AssetId` as `MultiLocation`.
+///
+/// Excludes by default:
+/// - parent as relay chain
+/// - all local MultiLocations
+///
+/// `AdditionalMultiLocationExclusionFilter` can customize additional excluded MultiLocations
+pub type ForeignAssetsConvertedConcreteId<
+	AdditionalMultiLocationExclusionFilter,
+	AssetConverter,
+	Balance,
+> = MultiLocationConvertedConcreteId<
+	EverythingBut<(
+		// Excludes relay/parent chain currency
+		Equals<ParentLocation>,
+		// Here we rely on fact that something like this works:
+		// assert!(MultiLocation::new(1, X1(Parachain(100))).starts_with(&MultiLocation::parent()));
+		// assert!(X1(Parachain(100)).starts_with(&Here));
+		StartsWith<LocalMultiLocationPattern>,
+		// Here we can exclude more stuff or leave it as `()`
+		AdditionalMultiLocationExclusionFilter,
+	)>,
+	AssetConverter,
+	Balance,
+>;
 
 #[cfg(test)]
 mod tests {

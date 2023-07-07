@@ -9,6 +9,7 @@ description = "Assets common utilities"
 codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
 	"derive",
 ] }
+log = { version = "0.4.17", default-features = false }
 
 # Substrate
 frame-support = { git = "https://github.com/InfraBlockchain/infra-substrate", default-features = false, branch = "master" }
@@ -19,9 +20,11 @@ sp-std = { git = "https://github.com/InfraBlockchain/infra-substrate", default-f
 xcm = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 xcm-builder = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
 xcm-executor = { git = "https://github.com/InfraBlockchain/infra-relay-chain", default-features = false, branch = "master" }
+xcm-primitives = { package = "xcm-primitives", git = "https://github.com/InfraBlockchain/infra-relay-chain", branch = "master", default-features = false }
 
 # Cumulus
 parachains-common = { path = "../../../common", default-features = false }
+cumulus-primitives-core = { path = "../../../../primitives/core", default-features = false }
 
 [build-dependencies]
 substrate-wasm-builder = { git = "https://github.com/InfraBlockchain/infra-substrate", branch = "master" }
@@ -32,6 +35,7 @@ std = [
 	"codec/std",
 	"frame-support/std",
 	"parachains-common/std",
+	"cumulus-primitives-core/std",
 	"sp-api/std",
 	"sp-std/std",
 	"xcm/std",

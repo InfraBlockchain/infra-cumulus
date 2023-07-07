@@ -29,10 +29,7 @@ use frame_support::{
 	construct_runtime,
 	dispatch::DispatchClass,
 	parameter_types,
-	traits::{
-		tokens::fungibles::{Balanced, CreditOf},
-		AsEnsureOriginWithArg, ConstU128, ConstU32, ConstU64, ConstU8, Everything,
-	},
+	traits::{AsEnsureOriginWithArg, ConstU128, ConstU32, ConstU64, ConstU8, Everything},
 	weights::{
 		constants::WEIGHT_REF_TIME_PER_SECOND, ConstantMultiplier, Weight, WeightToFeeCoefficient,
 		WeightToFeeCoefficients, WeightToFeePolynomial,
