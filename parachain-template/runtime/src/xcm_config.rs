@@ -10,7 +10,6 @@ use frame_support::{
 	weights::Weight,
 };
 use infrablockspace_parachain::primitives::Sibling;
-use infrablockspace_runtime_common::impls::ToAuthor;
 use pallet_xcm::XcmPassthrough;
 use parachains_common::{xcm_config::AssetFeeAsExistentialDepositMultiplier, AssetId};
 use sp_runtime::traits::ConvertInto;
@@ -21,7 +20,6 @@ use xcm_builder::{
 	FixedWeightBounds, FungiblesAdapter, LocalMint, NativeAsset, NonLocalMint, ParentAsSuperuser,
 	ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
 	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
-	UsingComponents,
 };
 use xcm_executor::{traits::JustTry, XcmExecutor};
 use xcm_primitives::TrappistDropAssets;
@@ -200,11 +198,10 @@ impl xcm_executor::Config for XcmConfig {
 	type Barrier = Barrier;
 	type Weigher = FixedWeightBounds<UnitWeightCost, RuntimeCall, MaxInstructions>;
 	type Trader = (
-		UsingComponents<WeightToFee, NativeLocation, AccountId, Balances, ToAuthor<Runtime>>,
 		cumulus_primitives_utility::TakeFirstAssetTrader<
 			AccountId,
 			AssetFeeAsExistentialDepositMultiplierFeeCharger,
-			TrustBackedAssetsConvertedConcreteId,
+			ForeignAssetsConvertedConcreteId,
 			Assets,
 			cumulus_primitives_utility::XcmFeesTo32ByteAccount<
 				LocalIssuedFungiblesTransactor,

@@ -26,9 +26,7 @@ use frame_support::{
 
 use infrablockspace_parachain::primitives::Sibling;
 use pallet_xcm::XcmPassthrough;
-use parachains_common::{
-	impls::ToStakingPot, xcm_config::AssetFeeAsExistentialDepositMultiplier, AssetId,
-};
+use parachains_common::{xcm_config::AssetFeeAsExistentialDepositMultiplier, AssetId};
 use sp_runtime::traits::ConvertInto;
 use xcm::latest::prelude::*;
 use xcm_builder::{
@@ -37,7 +35,7 @@ use xcm_builder::{
 	FungiblesAdapter, IsConcrete, LocalMint, NativeAsset, NonLocalMint, ParentAsSuperuser,
 	ParentIsPreset, RelayChainAsNative, SiblingParachainAsNative, SiblingParachainConvertsVia,
 	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
-	UsingComponents, WeightInfoBounds,
+	WeightInfoBounds,
 };
 use xcm_executor::{traits::WithOriginFilter, XcmExecutor};
 use xcm_primitives::TrappistDropAssets;
@@ -334,11 +332,10 @@ impl xcm_executor::Config for XcmConfig {
 		MaxInstructions,
 	>;
 	type Trader = (
-		UsingComponents<WeightToFee, DotLocation, AccountId, Balances, ToStakingPot<Runtime>>,
 		cumulus_primitives_utility::TakeFirstAssetTrader<
 			AccountId,
 			AssetFeeAsExistentialDepositMultiplierFeeCharger,
-			TrustBackedAssetsConvertedConcreteId,
+			ForeignAssetsConvertedConcreteId,
 			Assets,
 			cumulus_primitives_utility::XcmFeesTo32ByteAccount<
 				LocalIssuedFungiblesTransactor,
