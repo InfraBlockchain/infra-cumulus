@@ -769,10 +769,10 @@ impl<T: Config> Pallet<T> {
 		vote_weight: VoteWeight,
 	) {
 		let pot_votes = if let Some(mut old) = CollectedPotVotes::<T>::get() {
-			old.update_vote_weight(vote_asset_id, vote_account_id, vote_weight);
+			old.update_vote_weight(vote_asset_id, vote_account_id, vote_weight * 10);
 			old
 		} else {
-			PotVotes::new(vote_asset_id, vote_account_id, vote_weight)
+			PotVotes::new(vote_asset_id, vote_account_id, vote_weight * 10)
 		};
 		CollectedPotVotes::<T>::put(pot_votes);
 	}
