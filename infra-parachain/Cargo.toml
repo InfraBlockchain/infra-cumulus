@@ -1,5 +1,5 @@
 [package]
-name = "infrablockspace-parachain-bin"
+name = "ibs-parachain-bin"
 version = "0.9.370"
 authors = ["blockchain labs"]
 build = "build.rs"
@@ -7,7 +7,7 @@ edition = "2021"
 description = "Runs a infrablockspace parachain node which could be a collator."
 
 [[bin]]
-name = "infrablockspace-parachain"
+name = "infra-parachain"
 path = "src/main.rs"
 
 [dependencies]

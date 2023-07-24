@@ -43,7 +43,7 @@ cumulus_based = true
 [[parachains.collators]]
 name = "alice"
 validator = true
-command = "./target/release/infrablockspace-parachain"
+command = "./target/release/infra-parachain"
 args = ["-lparachain=debug", "-l=xcm=trace"]
 rpc_port = 9500
 ws_port = 9501
@@ -51,7 +51,7 @@ ws_port = 9501
 [[parachains.collators]]
 name = "bob"
 validator = true
-command = "./target/release/infrablockspace-parachain"
+command = "./target/release/infra-parachain"
 args = ["-lparachain=debug", "-l=xcm=trace"]
 rpc_port = 9510
 ws_port = 9511
@@ -75,7 +75,7 @@ ws_port = 9601
 [[parachains.collators]]
 name = "bob"
 validator = true
-command = "./target/release/infrablockspace-parachain"
+command = "./target/release/parachain-template-node"
 args = ["-lparachain=debug", "-l=xcm=trace"]
 rpc_port = 9610
 ws_port = 9611
