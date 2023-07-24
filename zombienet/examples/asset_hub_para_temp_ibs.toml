@@ -36,7 +36,7 @@ ws_port = 7501
 
 [[parachains]]
 id = 1000
-chain = "infra-asset-system-local"
+chain = "infra-asset-hub-local"
 cumulus_based = true
 
 # run alice & bob as parachain collator

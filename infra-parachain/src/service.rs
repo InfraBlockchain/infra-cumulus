@@ -79,11 +79,11 @@ impl sc_executor::NativeExecutionDispatch for InfraAssetSytemExecutor {
 	type ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
 
 	fn dispatch(method: &str, data: &[u8]) -> Option<Vec<u8>> {
-		infra_asset_system_runtime::api::dispatch(method, data)
+		infra_asset_hub_runtime::api::dispatch(method, data)
 	}
 
 	fn native_version() -> sc_executor::NativeVersion {
-		infra_asset_system_runtime::native_version()
+		infra_asset_hub_runtime::native_version()
 	}
 }
 

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! # Infra Asset System Runtime
+//! # Infra Asset Hub TestNet Runtime
 //!
 //! Infra Asset System is a parachain that provides an interface to create, manage, and use assets. Assets
 //! may be fungible or non-fungible.
@@ -85,7 +85,7 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot, EnsureSigned,
 };
-pub use pallet_sudo::Call as SudoCall;
+
 use pallet_system_token_payment::{CreditToBucket, TransactionFeeCharger};
 pub use parachains_common as common;
 use parachains_common::{
@@ -260,9 +260,8 @@ parameter_types! {
 }
 
 /// We allow root and the Relay Chain council to execute privileged asset operations.
-/// ToDo: There would be no DotLocation for InfraBlockspace, so we need to change this
-pub type AssetsForceOrigin =
-	EitherOfDiverse<EnsureRoot<AccountId>, EnsureXcm<IsMajorityOfBody<DotLocation, ExecutiveBody>>>;
+/// We allow root and the Relay Chain council to execute privileged asset operations.
+pub type AssetsForceOrigin = EnsureRoot<AccountId>;
 
 // Called "Trust Backed" assets because these are generally registered by some account, and users of
 // the asset assume it has some claimed backing. The pallet is called `Assets` in
@@ -455,11 +454,6 @@ impl InstanceFilter<RuntimeCall> for ProxyType {
 	}
 }
 
-impl pallet_sudo::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type RuntimeCall = RuntimeCall;
-}
-
 impl pallet_proxy::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type RuntimeCall = RuntimeCall;
@@ -635,7 +629,6 @@ construct_runtime!(
 		// RandomnessCollectiveFlip = 2 removed
 		Timestamp: pallet_timestamp::{Pallet, Call, Storage, Inherent} = 3,
 		ParachainInfo: parachain_info::{Pallet, Storage, Config} = 4,
-		Sudo: pallet_sudo::{Pallet, Call, Storage, Config<T>, Event<T>} = 5,
 
 		// Monetary stuff.
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,

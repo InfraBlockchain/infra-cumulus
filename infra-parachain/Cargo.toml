@@ -20,7 +20,9 @@ log = "0.4.17"
 serde = { version = "1.0.152", features = ["derive"] }
 
 # Local
-infra-asset-system-runtime = { path = "../parachains/runtimes/assets/infra-asset-system" }
+infra-asset-hub-runtime = { path = "../parachains/runtimes/assets/infra-asset-hub" }
+infra-asset-hub-testnet-runtime = { path = "../parachains/runtimes/assets/infra-asset-hub-testnet" }
+infra-asset-hub-devnet-runtime = { path = "../parachains/runtimes/assets/infra-asset-hub-devnet" }
 jsonrpsee = { version = "0.16.2", features = ["server"] }
 parachains-common = { path = "../parachains/common" }
 

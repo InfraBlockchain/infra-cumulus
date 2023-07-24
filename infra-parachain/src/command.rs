@@ -41,7 +41,9 @@ enum Runtime {
 	/// This is the default runtime (actually based on rococo)
 	#[default]
 	Default,
-	InfraAssetSystem,
+	InfraAssetHub,
+	InfraAssetHubTestNet,
+	InfraAssetHubDevNet,
 }
 
 trait RuntimeResolver {
@@ -75,8 +77,12 @@ fn runtime(id: &str) -> Runtime {
 	let id = id.replace("_", "-");
 	let (_, id, _) = extract_parachain_id(&id);
 
-	if id.starts_with("infra-asset-system") {
-		Runtime::InfraAssetSystem
+	if id.starts_with("infra-asset-hub") {
+		Runtime::InfraAssetHub
+	} else if id.starts_with("infra-asset-hub-testnet") {
+		Runtime::InfraAssetHubTestNet
+	} else if id.starts_with("infra-asset-hub-devnet") {
+		Runtime::InfraAssetHubDevNet
 	} else {
 		log::warn!("No specific runtime was recognized for ChainSpec's id: '{}', so Runtime::default() will be used", id);
 		Runtime::default()
@@ -86,37 +92,67 @@ fn runtime(id: &str) -> Runtime {
 fn load_spec(id: &str) -> std::result::Result<Box<dyn ChainSpec>, String> {
 	let (id, _, _) = extract_parachain_id(id);
 	Ok(match id {
-		// -- Infra Asset System
-		"infra-asset-system-dev" =>
-			Box::new(chain_spec::infra_asset_system::infra_asset_system_development_config()),
-		"infra-asset-system-local" =>
-			Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config()),
+		// -- Infra Asset Hub
+		"infra-asset-hub-dev" =>
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_development_config()),
+		"infra-asset-hub-local" =>
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_local_config()),
 		// the chain spec as used for generating the upgrade genesis values
-		"infra-asset-system-genesis" =>
-			Box::new(chain_spec::infra_asset_system::infra_asset_system_config()),
+		"infra-asset-hub-genesis" =>
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_config()),
 		// the shell-based chain spec as used for syncing
-		// ToDo: change to infra asset system
-		"infra-asset-system" =>
-			Box::new(chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_bytes(
-				&include_bytes!("../../parachains/chain-specs/statemine.json")[..],
+		// ToDo: change to infra asset hub chain spec
+		"infra-asset-hub" =>
+			Box::new(chain_spec::infra_asset_hub::InfraAssetHubChainSpec::from_json_bytes(
+				&include_bytes!("../../parachains/chain-specs/statemine.json")[..], // ToDo: Should be changed
 			)?),
+		// -- Asset Hub TestNet
+		"infra-asset-hub-testnet-dev" => 
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_testnet_development_config()),
+		"infra-asset-hub-testnet-local" => 
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_testnet_local_config()),
+		"infra-asset-hub-testnet-genesis" =>
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_testnet_config()),
+		// ToDo: Change to json path
+		"infra-asset-hub-testnet" => 
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_testnet_config()),
+		// -- Asset Hub DevNet
+		"infra-asset-hub-devnet-dev" => 
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_devnet_development_config()), 
+		"infra-asset-hub-devnet-local" => 
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_devnet_local_config()),
+		"infra-asset-hub-devnet-genesis" =>
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_devnet_config()),
+		// ToDo: Change to json path
+		"infra-asset-hub-devnet" => 
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_devnet_config()),
 		// -- Fallback (generic chainspec)
 		"" => {
-			log::warn!("No ChainSpec.id specified, so using default one, based on infra-asset-system runtime");
-			Box::new(chain_spec::infra_asset_system::infra_asset_system_local_config())
+			log::warn!("No ChainSpec.id specified, so using default one, based on infra-asset-hub runtime");
+			Box::new(chain_spec::infra_asset_hub::infra_asset_hub_local_config())
 		},
 
 		// -- Loading a specific spec from disk
 		path => {
 			let path: PathBuf = path.into();
 			match path.runtime() {
-				Runtime::InfraAssetSystem => Box::new(
-					chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(
+				Runtime::InfraAssetHub => Box::new(
+					chain_spec::infra_asset_hub::InfraAssetHubChainSpec::from_json_file(
+						path,
+					)?,
+				),
+				Runtime::InfraAssetHubTestNet => Box::new(
+					chain_spec::infra_asset_hub::InfraAssetHubTestChainSpec::from_json_file(
+						path,
+					)?,
+				),
+				Runtime::InfraAssetHubDevNet => Box::new(
+					chain_spec::infra_asset_hub::InfraAssetHubDevChainSpec::from_json_file(
 						path,
 					)?,
 				),
 				Runtime::Default => Box::new(
-					chain_spec::infra_asset_system::InfraAssetSystemChainSpec::from_json_file(
+					chain_spec::infra_asset_hub::InfraAssetHubChainSpec::from_json_file(
 						path,
 					)?,
 				),
@@ -171,7 +207,7 @@ impl SubstrateCli for Cli {
 	}
 
 	fn support_url() -> String {
-		"https://github.com/paritytech/cumulus/issues/new".into()
+		"https://github.com/InfraBlockchain/infra-cumulus/issues/new".into()
 	}
 
 	fn copyright_start_year() -> i32 {
@@ -184,15 +220,17 @@ impl SubstrateCli for Cli {
 
 	fn native_runtime_version(chain_spec: &Box<dyn ChainSpec>) -> &'static RuntimeVersion {
 		match chain_spec.runtime() {
-			Runtime::InfraAssetSystem => &infra_asset_system_runtime::VERSION,
-			Runtime::Default => &infra_asset_system_runtime::VERSION,
+			Runtime::InfraAssetHub => &infra_asset_hub_runtime::VERSION,
+			Runtime::InfraAssetHubTestNet => &infra_asset_hub_testnet_runtime::VERSION,
+			Runtime::InfraAssetHubDevNet => &infra_asset_hub_devnet_runtime::VERSION,
+			Runtime::Default => &infra_asset_hub_runtime::VERSION,
 		}
 	}
 }
 
 impl SubstrateCli for RelayChainCli {
 	fn impl_name() -> String {
-		"IBS parachain".into()
+		"Ibs parachain".into()
 	}
 
 	fn impl_version() -> String {
@@ -201,7 +239,7 @@ impl SubstrateCli for RelayChainCli {
 
 	fn description() -> String {
 		format!(
-			"IBS parachain\n\nThe command-line arguments provided first will be \
+			"Ibs parachain\n\nThe command-line arguments provided first will be \
 		passed to the parachain node, while the arguments provided after -- will be passed \
 		to the relay chain node.\n\n\
 		{} [parachain-args] -- [relay_chain-args]",
@@ -214,7 +252,7 @@ impl SubstrateCli for RelayChainCli {
 	}
 
 	fn support_url() -> String {
-		"https://github.com/paritytech/cumulus/issues/new".into()
+		"https://github.com/InfraBlockchain/infra-cumulus/issues/new".into()
 	}
 
 	fn copyright_start_year() -> i32 {
@@ -234,8 +272,8 @@ impl SubstrateCli for RelayChainCli {
 macro_rules! construct_benchmark_partials {
 	($config:expr, |$partials:ident| $code:expr) => {
 		match $config.chain_spec.runtime() {
-			Runtime::InfraAssetSystem => {
-				let $partials = new_partial::<infra_asset_system_runtime::RuntimeApi, _>(
+			Runtime::InfraAssetHub => {
+				let $partials = new_partial::<infra_asset_hub_runtime::RuntimeApi, _>(
 					&$config,
 					crate::service::aura_build_import_queue::<_, AuraId>,
 				)?;
@@ -252,7 +290,7 @@ macro_rules! construct_async_run {
 		match runner.config().chain_spec.runtime() {
 			Runtime::Default => {
 				runner.async_run(|$config| {
-					let $components = new_partial::<infra_asset_system_runtime::RuntimeApi, _>(
+					let $components = new_partial::<infra_asset_hub_runtime::RuntimeApi, _>(
 						&$config,
 						crate::service::aura_build_import_queue::<_, AuraId>,
 					)?;
@@ -260,9 +298,9 @@ macro_rules! construct_async_run {
 					{ $( $code )* }.map(|v| (v, task_manager))
 				})
 			},
-			Runtime::InfraAssetSystem => {
+			Runtime::InfraAssetHub => {
 				runner.async_run(|$config| {
-					let $components = new_partial::<infra_asset_system_runtime::RuntimeApi, _>(
+					let $components = new_partial::<infra_asset_hub_runtime::RuntimeApi, _>(
 						&$config,
 						crate::service::aura_build_import_queue::<_, AuraId>,
 					)?;
@@ -270,6 +308,26 @@ macro_rules! construct_async_run {
 					{ $( $code )* }.map(|v| (v, task_manager))
 				})
 			},
+			Runtime::InfraAssetHubTestNet => {
+				runner.async_run(|$config| {
+					let $components = new_partial::<infra_asset_hub_testnet_runtime::RuntimeApi, _>(
+						&$config,
+						crate::service::aura_build_import_queue::<_, AuraId>,
+					)?;
+					let task_manager = $components.task_manager;
+					{ $( $code )* }.map(|v| (v, task_manager))
+				})
+			},
+			Runtime::InfraAssetHubDevNet => {
+				runner.async_run(|$config| {
+					let $components = new_partial::<infra_asset_hub_devnet_runtime::RuntimeApi, _>(
+						&$config,
+						crate::service::aura_build_import_queue::<_, AuraId>,
+					)?;
+					let task_manager = $components.task_manager;
+					{ $( $code )* }.map(|v| (v, task_manager))
+				})
+			}
 		}
 	}}
 }
@@ -348,7 +406,7 @@ pub fn run() -> Result<()> {
 				BenchmarkCmd::Pallet(cmd) =>
 					if cfg!(feature = "runtime-benchmarks") {
 						runner.sync_run(|config| match config.chain_spec.runtime() {
-							Runtime::InfraAssetSystem =>
+							Runtime::InfraAssetHub =>
 								cmd.run::<Block, InfraAssetSytemExecutor>(config),
 							_ => Err(format!(
 								"Chain '{:?}' doesn't support benchmarking",
@@ -541,19 +599,33 @@ pub fn run() -> Result<()> {
 
 				match config.chain_spec.runtime() {
 					Runtime::Default => crate::service::start_generic_aura_node::<
-						infra_asset_system_runtime::RuntimeApi,
+						infra_asset_hub_runtime::RuntimeApi,
 						AuraId,
 					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into),
-					Runtime::InfraAssetSystem => crate::service::start_generic_aura_node::<
-						infra_asset_system_runtime::RuntimeApi,
+					Runtime::InfraAssetHub => crate::service::start_generic_aura_node::<
+						infra_asset_hub_runtime::RuntimeApi,
 						AuraId,
 					>(config, infrablockspace_config, collator_options, id, hwbench)
 					.await
 					.map(|r| r.0)
 					.map_err(Into::into),
+					Runtime::InfraAssetHubTestNet => crate::service::start_generic_aura_node::<
+						infra_asset_hub_testnet_runtime::RuntimeApi,
+						AuraId,
+					>(config, infrablockspace_config, collator_options, id, hwbench)
+					.await
+					.map(|r| r.0)
+					.map_err(Into::into),
+					Runtime::InfraAssetHubDevNet => crate::service::start_generic_aura_node::<
+						infra_asset_hub_devnet_runtime::RuntimeApi,
+						AuraId,
+					>(config, infrablockspace_config, collator_options, id, hwbench)
+					.await
+					.map(|r| r.0)
+					.map_err(Into::into)
 				}
 			})
 		},

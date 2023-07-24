@@ -20,7 +20,7 @@ use serde::{Deserialize, Serialize};
 use sp_core::{Pair, Public};
 use sp_runtime::traits::{IdentifyAccount, Verify};
 
-pub mod infra_asset_system;
+pub mod infra_asset_hub;
 
 /// The default XCM version to set in genesis config.
 const SAFE_XCM_VERSION: u32 = xcm::prelude::XCM_VERSION;

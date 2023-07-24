@@ -1,5 +1,5 @@
 [package]
-name = "infra-asset-system-runtime"
+name = "infra-asset-hub-testnet-runtime"
 version = "0.1.0"
 authors = ["blockchain labs"]
 edition = "2021"
