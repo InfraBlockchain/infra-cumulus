@@ -125,9 +125,9 @@ pub fn infra_asset_hub_local_config() -> InfraAssetHubChainSpec {
 
 	InfraAssetHubChainSpec::from_genesis(
 		// Name
-		"Infra Asset System Local",
+		"Infra Asset Hub Local",
 		// ID
-		"infra_asset_system_local",
+		"infra_asset_hub_local",
 		ChainType::Local,
 		move || {
 			infra_asset_hub_genesis(
@@ -176,9 +176,9 @@ pub fn infra_asset_hub_development_config() -> InfraAssetHubChainSpec {
 
 	InfraAssetHubChainSpec::from_genesis(
 		// Name
-		"Infra Asset System Development",
+		"Infra Asset Hub Development",
 		// ID
-		"infra_asset_system_dev",
+		"infra_asset_hub_dev",
 		ChainType::Local,
 		move || {
 			infra_asset_hub_genesis(
