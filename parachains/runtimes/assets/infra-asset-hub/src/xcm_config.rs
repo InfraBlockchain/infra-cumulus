@@ -15,7 +15,7 @@
 
 use super::{
 	AccountId, AllPalletsWithSystem, AssetLink, Assets, Authorship, Balance, Balances,
-	InfrablockspaceXcm, ParachainInfo, ParachainSystem, Runtime, RuntimeCall, RuntimeEvent,
+	IbsXcm, ParachainInfo, ParachainSystem, Runtime, RuntimeCall, RuntimeEvent,
 	RuntimeOrigin, WeightToFee, XcmpQueue,
 };
 use assets_common::matching::{StartsWith, StartsWithExplicitGlobalConsensus};
@@ -53,7 +53,8 @@ parameter_types! {
 	pub const Local: MultiLocation = MultiLocation::here();
 	pub TrustBackedAssetsPalletLocation: MultiLocation =
 		PalletInstance(<Assets as PalletInfoAccess>::index() as u8).into();
-	pub CheckingAccount: AccountId = InfrablockspaceXcm::check_account();
+	pub CheckingAccount: AccountId = IbsXcm::check_account();
+	pub GovernanceLocation: MultiLocation = MultiLocation::parent();
 }
 
 /// Type for specifying how a `MultiLocation` can be converted into an `AccountId`. This is used
@@ -344,11 +345,11 @@ impl xcm_executor::Config for XcmConfig {
 			>,
 		>,
 	);
-	type ResponseHandler = InfrablockspaceXcm;
+	type ResponseHandler = IbsXcm;
 	type AssetTrap =
-		TrappistDropAssets<AssetId, AssetLink, Assets, Balances, InfrablockspaceXcm, AccountId>;
-	type AssetClaims = InfrablockspaceXcm;
-	type SubscriptionService = InfrablockspaceXcm;
+		TrappistDropAssets<AssetId, AssetLink, Assets, Balances, IbsXcm, AccountId>;
+	type AssetClaims = IbsXcm;
+	type SubscriptionService = IbsXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
 	type MaxAssetsIntoHolding = MaxAssetsIntoHolding;
 	type AssetLocker = ();
@@ -368,7 +369,7 @@ pub type LocalOriginToLocation = SignedToAccountId32<RuntimeOrigin, AccountId, R
 /// queues.
 pub type XcmRouter = (
 	// Two routers - use UMP to communicate with the relay chain:
-	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, InfrablockspaceXcm, ()>,
+	cumulus_primitives_utility::ParentAsUmp<ParachainSystem, IbsXcm, ()>,
 	// ..and XCMP to communicate with the sibling chains.
 	XcmpQueue,
 );

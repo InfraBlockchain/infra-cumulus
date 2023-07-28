@@ -249,11 +249,11 @@ pub fn infra_asset_hub_genesis(
 				true,                                                 // is_sufficient
 				1000,                                                 // min_balance
 			)],
-			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
+			metadata: vec![(99, "iBOOT".into(), "iBOOT".into(), 2)],
 			accounts: vec![(
 				99,
 				get_account_id_from_seed::<sr25519::Public>("Alice"),
-				1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
+				100_000_000_000, // 1_000_000_000 iTEST
 			)],
 			..Default::default()
 		},
@@ -262,7 +262,7 @@ pub fn infra_asset_hub_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		infrablockspace_xcm: infra_asset_hub_runtime::InfrablockspaceXcmConfig {
+		ibs_xcm: infra_asset_hub_runtime::IbsXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 	}
@@ -463,13 +463,13 @@ pub fn infra_asset_hub_testnet_genesis(
 				99,                                                   // asset_id
 				get_account_id_from_seed::<sr25519::Public>("Alice"), // owner
 				true,                                                 // is_sufficient
-				1000,                                                 // min_balance
+				100,                                                 // min_balance
 			)],
-			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
+			metadata: vec![(99, "iBOOT".into(), "iBOOT".into(), 2)],
 			accounts: vec![(
 				99,
 				get_account_id_from_seed::<sr25519::Public>("Alice"),
-				1_000_000_000_000_000_000_000, // 1_000_000_000 iTEST
+				100_000_000_000, // 1_000_000_000 iTEST
 			)],
 			..Default::default()
 		},
@@ -478,7 +478,7 @@ pub fn infra_asset_hub_testnet_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
-		infrablockspace_xcm: infra_asset_hub_runtime::InfrablockspaceXcmConfig {
+		ibs_xcm: infra_asset_hub_runtime::IbsXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 	}
@@ -640,7 +640,7 @@ pub fn infra_asset_hub_devnet_genesis(
 				true,                                                 // is_sufficient
 				1000,                                                 // min_balance
 			)],
-			metadata: vec![(99, "iTEST".into(), "iTEST".into(), 12)],
+			metadata: vec![(99, "iBOOT".into(), "iBOOT".into(), 12)],
 			accounts: vec![(
 				99,
 				get_account_id_from_seed::<sr25519::Public>("Alice"),
@@ -654,7 +654,7 @@ pub fn infra_asset_hub_devnet_genesis(
 		aura_ext: Default::default(),
 		sudo: infra_asset_hub_devnet_runtime::SudoConfig { key: Some(root_key) },
 		parachain_system: Default::default(),
-		infrablockspace_xcm: infra_asset_hub_devnet_runtime::InfrablockspaceXcmConfig {
+		ibs_xcm: infra_asset_hub_devnet_runtime::IbsXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
 	}

@@ -40,7 +40,7 @@ use frame_support::{
 	ensure,
 	inherent::{InherentData, InherentIdentifier, ProvideInherent},
 	storage,
-	traits::{pot::VotingHandler, Get},
+	traits::{ibs_support::pot::VotingHandler, Get},
 	weights::Weight,
 	RuntimeDebug,
 };

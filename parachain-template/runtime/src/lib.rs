@@ -290,6 +290,11 @@ impl pallet_assets::Config for Runtime {
 	type RemoveItemsLimit = ConstU32<1000>;
 }
 
+impl pallet_system_token::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type AuthorizedOrigin = EnsureRoot<AccountId>;
+}
+
 parameter_types! {
 	pub const FeeTreasuryId: PalletId = PalletId(*b"infrapid");
 }
@@ -302,6 +307,7 @@ impl pallet_system_token_payment::Config for Runtime {
 		pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto>,
 		CreditToBucket<Runtime>,
 	>;
+	type FeeTableProvider = SystemToken;
 	/// The type that handles the voting info.
 	type VotingHandler = ParachainSystem;
 	type PalletId = FeeTreasuryId;
@@ -532,8 +538,7 @@ construct_runtime!(
 		Balances: pallet_balances = 10,
 		TransactionPayment: pallet_transaction_payment = 11,
 		Assets: pallet_assets = 12,
-		InfraAssetTxPayment: pallet_system_token_payment = 13,
-
+		SystemTokenPayment: pallet_system_token_payment = 13,
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship = 20,
@@ -550,6 +555,7 @@ construct_runtime!(
 
 		AssetLink: pallet_asset_link = 34,
 		SystemTokenAggregator: system_token_aggregator = 35,
+		SystemToken: pallet_system_token = 36,
 	}
 );
 

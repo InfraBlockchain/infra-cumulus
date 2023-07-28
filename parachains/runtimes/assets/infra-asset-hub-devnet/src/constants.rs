@@ -26,7 +26,7 @@ pub mod currency {
 	pub const MILLICENTS: Balance = constants::currency::MILLICENTS;
 
 	pub const fn deposit(items: u32, bytes: u32) -> Balance {
-		// 1/100 of Polkadot
+		// 1/100 of some system token
 		constants::currency::deposit(items, bytes) / 100
 	}
 }
