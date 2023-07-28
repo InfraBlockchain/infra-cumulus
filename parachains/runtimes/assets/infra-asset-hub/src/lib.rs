@@ -87,15 +87,14 @@ use frame_system::{
 };
 
 use pallet_system_token_payment::{CreditToBucket, TransactionFeeCharger};
-pub use parachains_common as common;
 use parachains_common::{
-	impls::DealWithFees, opaque, AccountId, AssetIdForTrustBackedAssets, AuraId, Balance,
+	impls::DealWithFees, opaque, AccountId, AssetId, AssetIdForTrustBackedAssets, AuraId, Balance,
 	BlockNumber, Hash, Header, Index, Signature, AVERAGE_ON_INITIALIZE_RATIO, HOURS,
 	MAXIMUM_BLOCK_WEIGHT, NORMAL_DISPATCH_RATIO, SLOT_DURATION,
 };
 use xcm_config::{
-	DotLocation, TrustBackedAssetsConvertedConcreteId, XcmConfig, XcmOriginToTransactDispatchOrigin,
-	GovernanceLocation,
+	DotLocation, GovernanceLocation, TrustBackedAssetsConvertedConcreteId, XcmConfig,
+	XcmOriginToTransactDispatchOrigin,
 };
 
 #[cfg(any(feature = "std", test))]
@@ -250,10 +249,10 @@ impl pallet_system_token_payment::Config for Runtime {
 }
 
 parameter_types! {
-	pub const AssetDeposit: Balance = 10 * UNITS; // 10 UNITS deposit to create fungible asset class
-	pub const AssetAccountDeposit: Balance = deposit(1, 16);
+	pub const DepositToCreateAsset: Balance = 1 * UNITS; // 1 UNITS deposit to create fungible asset class
+	pub const DepositToMaintainAsset: Balance = deposit(1, 16);
 	pub const ApprovalDeposit: Balance = EXISTENTIAL_DEPOSIT;
-	pub const AssetsStringLimit: u32 = 50;
+	pub const StringLimit: u32 = 50;
 	/// Key = 32 bytes, Value = 36 bytes (32+1+1+1+1)
 	// https://github.com/paritytech/substrate/blob/069917b/frame/assets/src/lib.rs#L257L271
 	pub const MetadataDepositBase: Balance = deposit(1, 68);
@@ -575,7 +574,7 @@ impl pallet_uniques::Config for Runtime {
 	type CollectionId = u32;
 	type ItemId = u32;
 	type Currency = Balances;
-	type ForceOrigin = AssetsForceOrigin;
+	type ForceOrigin = RootOrigin;
 	type CollectionDeposit = CollectionDeposit;
 	type ItemDeposit = ItemDeposit;
 	type MetadataDepositBase = UniquesMetadataDepositBase;

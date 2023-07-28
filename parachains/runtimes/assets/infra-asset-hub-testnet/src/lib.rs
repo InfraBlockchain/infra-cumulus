@@ -85,7 +85,6 @@ use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot, EnsureSigned,
 };
-
 use pallet_system_token_payment::{CreditToBucket, TransactionFeeCharger};
 pub use parachains_common as common;
 use parachains_common::{
@@ -107,6 +106,7 @@ use pallet_xcm::{EnsureXcm, IsMajorityOfBody};
 use xcm::latest::BodyId;
 use xcm_executor::XcmExecutor;
 
+use parachains_common::AssetId;
 use weights::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight};
 
 impl_opaque_keys! {
@@ -249,10 +249,10 @@ impl pallet_system_token_payment::Config for Runtime {
 }
 
 parameter_types! {
-	pub const AssetDeposit: Balance = 1 * UNITS; // 10 UNITS deposit to create fungible asset class
-	pub const AssetAccountDeposit: Balance = deposit(1, 16);
+	pub const DepositToCreateAsset: Balance = 1 * UNITS; // 1 UNITS deposit to create fungible asset class
+	pub const DepositToMaintainAsset: Balance = deposit(1, 16);
 	pub const ApprovalDeposit: Balance = EXISTENTIAL_DEPOSIT;
-	pub const AssetsStringLimit: u32 = 50;
+	pub const StringLimit: u32 = 50;
 	/// Key = 32 bytes, Value = 36 bytes (32+1+1+1+1)
 	// https://github.com/paritytech/substrate/blob/069917b/frame/assets/src/lib.rs#L257L271
 	pub const MetadataDepositBase: Balance = deposit(1, 68);
@@ -489,7 +489,7 @@ impl cumulus_pallet_xcmp_queue::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type XcmExecutor = XcmExecutor<XcmConfig>;
 	type ChannelInfo = ParachainSystem;
-	type VersionWrapper = InfrablockspaceXcm;
+	type VersionWrapper = IbsXcm;
 	type ExecuteOverweightOrigin = EnsureRoot<AccountId>;
 	type ControllerOrigin = EitherOfDiverse<
 		EnsureRoot<AccountId>,
@@ -574,7 +574,7 @@ impl pallet_uniques::Config for Runtime {
 	type CollectionId = u32;
 	type ItemId = u32;
 	type Currency = Balances;
-	type ForceOrigin = AssetsForceOrigin;
+	type ForceOrigin = RootOrigin;
 	type CollectionDeposit = CollectionDeposit;
 	type ItemDeposit = ItemDeposit;
 	type MetadataDepositBase = UniquesMetadataDepositBase;
@@ -710,7 +710,7 @@ mod benches {
 		[pallet_collator_selection, CollatorSelection]
 		[cumulus_pallet_xcmp_queue, XcmpQueue]
 		// XCM
-		[pallet_xcm, InfrablockspaceXcm]
+		[pallet_xcm, IbsXcm]
 		// NOTE: Make sure you point to the individual modules below.
 		[pallet_xcm_benchmarks::fungible, XcmBalances]
 		[pallet_xcm_benchmarks::generic, XcmGeneric]

@@ -316,6 +316,7 @@ impl pallet_system_token_payment::Config for Runtime {
 		pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto>,
 		CreditToBlockAuthor,
 	>;
+	type FeeTableProvider = ();
 	/// The type that handles the voting info.
 	type VotingHandler = ParachainSystem;
 	type PalletId = FeeTreasuryId;

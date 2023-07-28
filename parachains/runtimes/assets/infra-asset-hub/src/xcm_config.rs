@@ -14,9 +14,9 @@
 // limitations under the License.
 
 use super::{
-	AccountId, AllPalletsWithSystem, AssetLink, Assets, Authorship, Balance, Balances,
-	IbsXcm, ParachainInfo, ParachainSystem, Runtime, RuntimeCall, RuntimeEvent,
-	RuntimeOrigin, WeightToFee, XcmpQueue,
+	AccountId, AllPalletsWithSystem, AssetLink, Assets, Authorship, Balance, Balances, IbsXcm,
+	ParachainInfo, ParachainSystem, Runtime, RuntimeCall, RuntimeEvent, RuntimeOrigin, WeightToFee,
+	XcmpQueue,
 };
 use assets_common::matching::{StartsWith, StartsWithExplicitGlobalConsensus};
 use frame_support::{
@@ -221,7 +221,8 @@ impl Contains<RuntimeCall> for SafeCallFilter {
 			RuntimeCall::Utility(pallet_utility::Call::as_derivative { .. }) |
 			RuntimeCall::AssetLink(pallet_asset_link::Call::link_system_token { .. }) |
 			RuntimeCall::Assets(
-				pallet_assets::Call::set_sufficient { .. } |
+				pallet_assets::Call::set_sufficient_and_system_token_weight { .. } |
+				pallet_assets::Call::set_sufficient_with_unlink_system_token { .. } |
 				pallet_assets::Call::force_create_with_metadata { .. } |
 				pallet_assets::Call::force_set_metadata { .. } |
 				pallet_assets::Call::create { .. } |
@@ -346,8 +347,7 @@ impl xcm_executor::Config for XcmConfig {
 		>,
 	);
 	type ResponseHandler = IbsXcm;
-	type AssetTrap =
-		TrappistDropAssets<AssetId, AssetLink, Assets, Balances, IbsXcm, AccountId>;
+	type AssetTrap = TrappistDropAssets<AssetId, AssetLink, Assets, Balances, IbsXcm, AccountId>;
 	type AssetClaims = IbsXcm;
 	type SubscriptionService = IbsXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
