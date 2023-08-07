@@ -26,7 +26,7 @@ use frame_support::{
 
 use infrablockspace_parachain::primitives::Sibling;
 use pallet_xcm::XcmPassthrough;
-use parachains_common::{xcm_config::AssetFeeAsExistentialDepositMultiplier, AssetId};
+use parachains_common::xcm_config::AssetFeeAsExistentialDepositMultiplier;
 use sp_runtime::traits::ConvertInto;
 use xcm::latest::prelude::*;
 use xcm_builder::{
@@ -38,7 +38,6 @@ use xcm_builder::{
 	WeightInfoBounds,
 };
 use xcm_executor::{traits::WithOriginFilter, XcmExecutor};
-use xcm_primitives::TrappistDropAssets;
 parameter_types! {
 	pub UniversalLocationNetworkId: NetworkId = UniversalLocation::get().global_consensus().unwrap();
 	pub const DotLocation: MultiLocation = Here.into_location();
@@ -216,11 +215,14 @@ impl Contains<RuntimeCall> for SafeCallFilter {
 				pallet_collator_selection::Call::leave_intent { .. },
 			) |
 			RuntimeCall::Session(pallet_session::Call::purge_keys { .. }) |
+			RuntimeCall::SystemToken(pallet_system_token::Call::set_fee_table { .. }) |
 			RuntimeCall::XcmpQueue(..) |
 			RuntimeCall::DmpQueue(..) |
 			RuntimeCall::Utility(pallet_utility::Call::as_derivative { .. }) |
 			RuntimeCall::AssetLink(pallet_asset_link::Call::link_system_token { .. }) |
 			RuntimeCall::Assets(
+				pallet_assets::Call::update_para_fee_rate { .. } |
+				pallet_assets::Call::update_system_token_weight { .. } |
 				pallet_assets::Call::set_sufficient_and_system_token_weight { .. } |
 				pallet_assets::Call::set_sufficient_with_unlink_system_token { .. } |
 				pallet_assets::Call::force_create_with_metadata { .. } |
@@ -347,7 +349,7 @@ impl xcm_executor::Config for XcmConfig {
 		>,
 	);
 	type ResponseHandler = IbsXcm;
-	type AssetTrap = TrappistDropAssets<AssetId, AssetLink, Assets, Balances, IbsXcm, AccountId>;
+	type AssetTrap = IbsXcm;
 	type AssetClaims = IbsXcm;
 	type SubscriptionService = IbsXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;

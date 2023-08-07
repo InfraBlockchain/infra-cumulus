@@ -33,7 +33,13 @@ validator = true
 rpc_port = 7500
 ws_port = 7501
 
+[[relaychain.nodes]]
+name = "ferdie"
+validator = true
+rpc_port = 7600
+ws_port = 7601
 
+# Asset-Hub
 [[parachains]]
 id = 1000
 chain = "infra-asset-hub-local"
@@ -48,17 +54,65 @@ args = ["-lparachain=debug", "-l=xcm=trace"]
 rpc_port = 9500
 ws_port = 9501
 
-[[parachains.collators]]
-name = "bob"
-validator = true
-command = "./target/release/infra-parachain"
-args = ["-lparachain=debug", "-l=xcm=trace"]
-rpc_port = 9510
-ws_port = 9511
+# [[parachains.collators]]
+# name = "bob"
+# validator = true
+# command = "./target/release/infra-parachain"
+# args = ["-lparachain=debug", "-l=xcm=trace"]
+# rpc_port = 9510
+# ws_port = 9511
 
+# Template-node
+# [[parachains]]
+# id = 2000
+# chain = "local"
+# cumulus_based = true
 
+# # run alice & bob as parachain collator
+# [[parachains.collators]]
+# name = "alice"
+# validator = true
+# command = "./target/release/parachain-template-node"
+# args = ["-lparachain=debug", "-l=xcm=trace"]
+# rpc_port = 9600
+# ws_port = 9601
+
+# # run alice as parachain collator
+# [[parachains.collators]]
+# name = "bob"
+# validator = true
+# command = "./target/release/parachain-template-node"
+# args = ["-lparachain=debug", "-l=xcm=trace"]
+# rpc_port = 9610
+# ws_port = 9611
+
+# DID
 [[parachains]]
-id = 2000
+id = 1337
+chain = "infra-did-substrate-local"
+cumulus_based = true
+
+# run alice & bob as parachain collator
+[[parachains.collators]]
+name = "alice"
+validator = true
+command = "../infra-did-substrate/target/release/infradid"
+args = ["-lparachain=debug", "-l=xcm=trace"]
+rpc_port = 9700
+ws_port = 9701
+
+# # run alice as parachain collator
+# [[parachains.collators]]
+# name = "bob"
+# validator = true
+# command = "../infra-did-substrate/target/release/infradid"
+# args = ["-lparachain=debug", "-l=xcm=trace"]
+# rpc_port = 9710
+# ws_port = 9711
+
+# EVM
+[[parachains]]
+id = 1338
 chain = "local"
 cumulus_based = true
 
@@ -66,27 +120,83 @@ cumulus_based = true
 [[parachains.collators]]
 name = "alice"
 validator = true
-command = "./target/release/parachain-template-node"
+command = "../infra-evm-parachain/target/release/infra-evm"
 args = ["-lparachain=debug", "-l=xcm=trace"]
-rpc_port = 9600
-ws_port = 9601
+rpc_port = 9800
+ws_port = 9801
 
-# run alice as parachain collator
-[[parachains.collators]]
-name = "bob"
-validator = true
-command = "./target/release/parachain-template-node"
-args = ["-lparachain=debug", "-l=xcm=trace"]
-rpc_port = 9610
-ws_port = 9611
+# # run alice as parachain collator
+# [[parachains.collators]]
+# name = "bob"
+# validator = true
+# command = "../infra-evm-parachain/target/release/infra-evm"
+# args = ["-lparachain=debug", "-l=xcm=trace"]
+# rpc_port = 9810
+# ws_port = 9811
+
+
+# [[hrmp_channels]]
+# sender = 1000
+# recipient = 2000
+# max_capacity = 8
+# max_message_size = 1048576
+# [[hrmp_channels]]
+# sender = 2000
+# recipient = 1000
+# max_capacity = 8
+# max_message_size = 1048576
 
 [[hrmp_channels]]
 sender = 1000
-recipient = 2000
+recipient = 1337
 max_capacity = 8
 max_message_size = 1048576
 [[hrmp_channels]]
-sender = 2000
+sender = 1337
 recipient = 1000
+max_capacity = 8
+max_message_size = 1048576
+
+[[hrmp_channels]]
+sender = 1000
+recipient = 1338
+max_capacity = 8
+max_message_size = 1048576
+[[hrmp_channels]]
+sender = 1338
+recipient = 1000
+max_capacity = 8
+max_message_size = 1048576
+
+# [[hrmp_channels]]
+# sender = 2000
+# recipient = 1337
+# max_capacity = 8
+# max_message_size = 1048576
+# [[hrmp_channels]]
+# sender = 1337
+# recipient = 2000
+# max_capacity = 8
+# max_message_size = 1048576
+
+# [[hrmp_channels]]
+# sender = 2000
+# recipient = 1338
+# max_capacity = 8
+# max_message_size = 1048576
+# [[hrmp_channels]]
+# sender = 1338
+# recipient = 2000
+# max_capacity = 8
+# max_message_size = 1048576
+
+[[hrmp_channels]]
+sender = 1337
+recipient = 1338
+max_capacity = 8
+max_message_size = 1048576
+[[hrmp_channels]]
+sender = 1338
+recipient = 1337
 max_capacity = 8
 max_message_size = 1048576

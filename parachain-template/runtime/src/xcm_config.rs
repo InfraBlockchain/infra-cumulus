@@ -22,7 +22,6 @@ use xcm_builder::{
 	SignedAccountId32AsNative, SignedToAccountId32, SovereignSignedViaLocation, TakeWeightCredit,
 };
 use xcm_executor::{traits::JustTry, XcmExecutor};
-use xcm_primitives::TrappistDropAssets;
 
 parameter_types! {
 	pub UniversalLocationNetworkId: NetworkId = UniversalLocation::get().global_consensus().unwrap();
@@ -212,8 +211,7 @@ impl xcm_executor::Config for XcmConfig {
 	);
 
 	type ResponseHandler = InfrablockspaceXcm;
-	type AssetTrap =
-		TrappistDropAssets<AssetId, AssetLink, Assets, Balances, InfrablockspaceXcm, AccountId>;
+	type AssetTrap = InfrablockspaceXcm;
 	type AssetClaims = InfrablockspaceXcm;
 	type SubscriptionService = InfrablockspaceXcm;
 	type PalletInstancesInfo = AllPalletsWithSystem;
