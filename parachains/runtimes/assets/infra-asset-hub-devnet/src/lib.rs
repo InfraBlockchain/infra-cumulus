@@ -605,11 +605,12 @@ impl pallet_asset_link::Config for Runtime {
 parameter_types! {
 	pub const MaxVotedValidators: u32 = 1024;
 	pub const WeightFactor: u64 = 1;
+	pub const AggregatedPeriod: BlockNumber = 10;
 }
 
 impl system_token_aggregator::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
-	type Assets = Assets;
+	type Period = AggregatedPeriod;
 	type AssetMultiLocationGetter = AssetLink;
 }
 
