@@ -22,7 +22,9 @@ use assets_common::matching::{StartsWith, StartsWithExplicitGlobalConsensus};
 use frame_support::{
 	match_types, parameter_types,
 	traits::{ConstU32, Contains, Everything, Nothing, PalletInfoAccess},
+	weights::IdentityFee,
 };
+use parachains_common::xcm_config::IdentityAssetFeeAsExistentialDepositMultiplier;
 
 use infrablockspace_parachain::primitives::Sibling;
 use pallet_xcm::XcmPassthrough;
@@ -298,9 +300,9 @@ pub type Barrier = (
 	AllowSubscriptionsFrom<Everything>,
 );
 
-pub type AssetFeeAsExistentialDepositMultiplierFeeCharger = AssetFeeAsExistentialDepositMultiplier<
+pub type IdentityAssetFeeForXCM = IdentityAssetFeeAsExistentialDepositMultiplier<
 	Runtime,
-	WeightToFee,
+	IdentityFee<Balance>,
 	pallet_assets::BalanceToAssetBalance<Balances, Runtime, ConvertInto, ()>,
 	(),
 >;
@@ -338,7 +340,7 @@ impl xcm_executor::Config for XcmConfig {
 	type Trader = (
 		cumulus_primitives_utility::TakeFirstAssetTrader<
 			AccountId,
-			AssetFeeAsExistentialDepositMultiplierFeeCharger,
+			IdentityAssetFeeForXCM,
 			ForeignAssetsConvertedConcreteId,
 			Assets,
 			cumulus_primitives_utility::XcmFeesTo32ByteAccount<

@@ -78,13 +78,15 @@ use frame_support::{
 	dispatch::DispatchClass,
 	parameter_types,
 	traits::{AsEnsureOriginWithArg, ConstU32, ConstU64, ConstU8, EitherOfDiverse, InstanceFilter},
-	weights::{ConstantMultiplier, Weight},
+	weights::{ConstantMultiplier, IdentityFee, Weight},
 	PalletId, RuntimeDebug,
 };
 use frame_system::{
 	limits::{BlockLength, BlockWeights},
 	EnsureRoot, EnsureSigned,
 };
+use pallet_transaction_payment::{ConstFeeMultiplier, Multiplier};
+use sp_runtime::traits::One;
 
 use pallet_system_token_payment::{CreditToBucket, TransactionFeeCharger};
 use parachains_common::{
@@ -219,16 +221,18 @@ impl pallet_balances::Config for Runtime {
 parameter_types! {
 	/// Relay Chain `TransactionByteFee` / 10
 	pub const TransactionByteFee: Balance = 1 * MILLICENTS;
+	/// We use ConstFeeMultiplier, not dynamic fee multiplier
+	pub FeeMultiplier: Multiplier = Multiplier::one();
 }
 
 impl pallet_transaction_payment::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type OnChargeTransaction =
 		pallet_transaction_payment::CurrencyAdapter<Balances, DealWithFees<Runtime>>;
-	type WeightToFee = WeightToFee;
+	type WeightToFee = IdentityFee<Balance>;
 	type LengthToFee = ConstantMultiplier<Balance, TransactionByteFee>;
-	type FeeMultiplierUpdate = SlowAdjustingFeeUpdate<Self>;
-	type OperationalFeeMultiplier = ConstU8<5>;
+	type FeeMultiplierUpdate = ConstFeeMultiplier<FeeMultiplier>;
+	type OperationalFeeMultiplier = ConstU8<1>;
 }
 
 parameter_types! {

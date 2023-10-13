@@ -3,7 +3,7 @@ use core::marker::PhantomData;
 use frame_support::{
 	log,
 	traits::{fungibles::Inspect, tokens::BalanceConversion, ContainsPair},
-	weights::{Weight, WeightToFee, WeightToFeePolynomial},
+	weights::{Weight, WeightToFee as WeightToFeeForIdentity, WeightToFeePolynomial},
 };
 use sp_runtime::traits::Get;
 use sp_std::fmt::Debug;
@@ -91,6 +91,62 @@ impl<CurrencyBalance, Runtime, WeightToFee, BalanceConverter, AssetInstance>
 where
 	Runtime: pallet_assets::Config<AssetInstance>,
 	WeightToFee: WeightToFeePolynomial<Balance = CurrencyBalance>,
+	BalanceConverter: BalanceConversion<
+		CurrencyBalance,
+		<Runtime as pallet_assets::Config<AssetInstance>>::AssetId,
+		<Runtime as pallet_assets::Config<AssetInstance>>::Balance,
+	>,
+	AccountIdOf<Runtime>:
+		From<infrablockspace_primitives::AccountId> + Into<infrablockspace_primitives::AccountId>,
+	CurrencyBalance: Debug,
+{
+	fn charge_weight_in_fungibles(
+		asset_id: <pallet_assets::Pallet<Runtime, AssetInstance> as Inspect<
+			AccountIdOf<Runtime>,
+		>>::AssetId,
+		weight: Weight,
+	) -> Result<
+		<pallet_assets::Pallet<Runtime, AssetInstance> as Inspect<AccountIdOf<Runtime>>>::Balance,
+		XcmError,
+	> {
+		log::trace!(target: "xcm::charge_weight_in_fungibles",
+			"charge_weight_in_fungibles asset: asset_id: {:?}, weight: {:?}",
+			asset_id, weight);
+		let amount = WeightToFee::weight_to_fee(&weight);
+
+		log::trace!(target: "xcm::charge_weight_in_fungibles",
+			"charge_weight_in_fungibles asset: amount: {:?}", amount);
+
+		// If the amount gotten is not at least the ED, then make it be the ED of the asset
+		// This is to avoid burning assets and decreasing the supply
+		let asset_amount = BalanceConverter::to_asset_balance(amount, asset_id)
+			.map_err(|_| XcmError::TooExpensive)?;
+		Ok(asset_amount)
+	}
+}
+
+/// A `ChargeFeeInFungibles` implementation that converts the output of
+/// a given WeightToFee implementation an amount charged in
+/// a particular assetId from pallet-assets
+pub struct IdentityAssetFeeAsExistentialDepositMultiplier<
+	Runtime,
+	WeightToFee,
+	BalanceConverter,
+	AssetInstance: 'static,
+>(PhantomData<(Runtime, WeightToFee, BalanceConverter, AssetInstance)>);
+impl<CurrencyBalance, Runtime, WeightToFee, BalanceConverter, AssetInstance>
+	cumulus_primitives_utility::ChargeWeightInFungibles<
+		AccountIdOf<Runtime>,
+		pallet_assets::Pallet<Runtime, AssetInstance>,
+	>
+	for IdentityAssetFeeAsExistentialDepositMultiplier<
+		Runtime,
+		WeightToFee,
+		BalanceConverter,
+		AssetInstance,
+	> where
+	Runtime: pallet_assets::Config<AssetInstance>,
+	WeightToFee: WeightToFeeForIdentity<Balance = CurrencyBalance>,
 	BalanceConverter: BalanceConversion<
 		CurrencyBalance,
 		<Runtime as pallet_assets::Config<AssetInstance>>::AssetId,
